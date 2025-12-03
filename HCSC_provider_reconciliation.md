@@ -21,11 +21,21 @@
   - **Credentialing**: `credentialing_status`, `credentialing_last_verified_date`, license info.
   - **Access & Experience**: `accepting_new_patients_flag`, `panel_status`, `telehealth_flag`, languages.
   - **Location & Contact**: practice/billing addresses, `phone`, `email`, lat/long, counties.
+- **Recon table schema** (current working design):
+  - `provider_id`, `field`, `simplyr_value`, `lake_value`, `gap_type`, `root_cause`, `recommendation`, `next_steps`, `owner_group`, `domain_group`, `severity_score`, `suggested_workflow`, `priority_bucket`, plus audit metadata (`rule_id`, `first_detected_ts`, `last_seen_ts`, `is_current_gap`, `evidence_json`). Partition by `business_date` (and optionally geography or owner group).
+- **Sample snapshot (latest run)**:
+
+  | provider_id | field     | simplyr_value | lake_value  | gap_type  | root_cause | recommendation | Next Steps | owner_group | domain_group | severity_score | suggested_workflow | priority_bucket |
+  |-------------|-----------|---------------|-------------|-----------|------------|----------------|------------|-------------|---------------|----------------|--------------------|-----------------|
+  | P100000     | npi       | 1685061829    | 1873963800  | Mismatch  | _TBD_      | _TBD_          | _TBD_      | _TBD_       | _TBD_         | _TBD_          | _TBD_              | _TBD_           |
+  | P100000     | last_name | Smith         | Wong        | Mismatch  | _TBD_      | _TBD_          | _TBD_      | _TBD_       | _TBD_         | _TBD_          | _TBD_              | _TBD_           |
+  | P100000     | gender    | M             | F           | Mismatch  | _TBD_      | _TBD_          | _TBD_      | _TBD_       | _TBD_         | _TBD_          | _TBD_              | _TBD_           |
+
+  > **Note**: Root cause / recommendation columns are intentionally blank in the raw recon table. They will be populated by the agentic layer, preserving deterministic facts separately from AI enrichment.
 - **Examples from data**:
   - `P100000` – NPI mismatch (`1065939459` vs `1014581341`), gender mismatch (`M` vs `U`), contract status drift (Pending vs Inactive), address differences. Severity high due to identity conflict.
   - `P100001` – Simplyr pending but Lake active; network tier and credentialing expiry out of sync; languages and telehealth flags differ.
   - `P100005` – Simplyr shows pending contract/closed panel vs Lake indicates active participation; addresses across IL/TX differ; multiple custom attributes misaligned.
-- **Recon table schema** (`provider_id`, `field`, `simplyr_value`, `lake_value`, `gap_type`, `severity_score`, `rule_id`, `first_detected_ts`, `last_seen_ts`, `is_current_gap`, `evidence_json`). Partitioned by `business_date` and optionally by geography or owner group.
 - **Evidence capture**: include hashed addresses, coordinate distance, credential age in days, plan overlap analysis, etc., to support explainability downstream.
 
 ### 2.3 Deterministic Outputs
