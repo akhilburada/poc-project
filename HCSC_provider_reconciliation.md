@@ -1,66 +1,66 @@
 # HCSC Provider Reconciliation Blueprint
 
-## 1. Data Assets
+## Input Layer
 
-### 1.1 Simplyr Operational Extract (`HCSC_provider_simplyr_data.csv`)
-- 50 provider rows in sample with 110 attributes spanning identity, contracting, credentialing, participation, contact, geo, compliance, and 60 custom attributes.
-- Mix of individuals, facilities, clinics, and ancillary entities; includes multi-plan participation (PlanA/PlanB/PlanC) and multi-specialty combinations.
-- Key business signals:
-  - Contract lifecycle (`contract_status`, `contract_effective_date`, `contract_end_date`).
-  - Credentialing checkpoints (`credentialing_status`, `credentialing_last_verified_date`, `network_flag/tier`).
-  - Access and consumer experience data (`accepting_new_patients_flag`, `telehealth_flag`, `languages_spoken`).
-  - Regulatory IDs (DEA, Medicaid, Medicare, UPIN, CAQH, state license) and expirations.
-  - Practice vs billing addresses with lat/long for geo validation.
+### Source Feeds
+- **Simplyr Operational Extract (`HCSC_provider_simplyr_data.csv`)**
+  - ~50 sample providers, 110+ attributes covering identity, contracting, credentialing, access, regulatory IDs, geo coordinates, and 60 custom flags.
+  - Illustrative row: `P100000` (Ana Garcia) with `npi=1065939459`, pending contract status, verified credentialing, network standard tier, multilingual capabilities, and distinct practice vs billing addresses.
+- **Enterprise Data Lake Snapshot (`HCSC_provider_data_lake.csv`)**
+  - Schema-aligned dataset sourced from curated lake (`source_system=LAKE`) with ingestion batch lineage (IDs 1000–1900 range).
+  - Contains alternate truths for the same provider IDs; e.g., `P100000` shows `npi=1014581341`, `gender=U`, different contract lifecycle, and divergent address history.
 
-### 1.2 Data Lake Snapshot (`HCSC_provider_data_lake.csv`)
-- Mirrors Simplyr schema but sourced from centralized lake; values can drift due to ingestion latency, upstream corrections, or manual overrides.
-- Contains mixed system provenance (`source_system = LAKE`, `ingestion_batch_id` series in 1400–1900 range) which is essential for lineage.
-- Observed differences vs Simplyr even for the same provider IDs (e.g., `P100000` identity + contract fields).
+### Data Engineering Requirements
+- **Schema Contracts & Validation**: enforce consistent dtypes (ISO dates, enumerated statuses), canonical identifiers (zero-padded NPI, uppercase group IDs), and null thresholds; quarantine malformed records.
+- **Ingestion Operations**: idempotent Spark/PySpark jobs per source with `run_id`, `ingestion_ts`, `source_system`. Automated drift detection on added/removed columns and lookup tables for code normalization (taxonomy, specialty, plan IDs).
+- **Recon Table Construction (`HCSC_provider_recon_table.csv`)**:
+  - Row-per-gap schema: `provider_id`, `field`, `simplyr_value`, `lake_value`, `gap_type`, plus enrichment placeholders (`root_cause`, `recommendation`, `owner_group`, etc.).
+  - Example gaps already surfaced:
+    - `P100000` `npi`: Simplyr `1685061829` vs Lake `1873963800` → `Mismatch`.
+    - `P100000` `last_name`: `Smith` vs `Wong` → `Mismatch`.
+    - `P100000` `gender`: `M` vs `F` → `Mismatch`.
+- **Gap Taxonomy & Severity**: rule pack classifies deltas (`Mismatch`, `Missing Source`, `Stale Credential`, `Location Conflict`) and computes severity scores based on regulatory/business impact.
 
-### 1.3 Recon Table (`HCSC_provider_recon_table.csv`)
-- Narrow structure capturing row-per-gap with columns: `provider_id`, `field`, `simplyr_value`, `lake_value`, `gap_type`, `root_cause`, `recommendation`, `Next Steps`, `owner_group`, `domain_group`, `severity_score`, `suggested_workflow`, `priority_bucket`.
-- Current sample rows:
-  - `P100000` | `npi` | Simplyr `1685061829` vs Lake `1873963800` → `Mismatch`.
-  - `P100000` | `last_name` | `Smith` vs `Wong` → `Mismatch`.
-  - `P100000` | `gender` | `M` vs `F` → `Mismatch`.
-- Remaining enrichment columns are blank, highlighting need for agentic intelligence to populate them.
+## AI Usage
 
-## 2. Reconciliation Layer (Task)
-- **Schema Contracts**: Freeze column definitions for both sources, enforce consistent dtypes (ISO date strings, enumerations for statuses/tier flags) and canonical ID formatting (e.g., zero-padded NPIs).
-- **Ingestion Controls**: Idempotent Spark/PySpark jobs per source with `run_id`, `ingestion_ts`, and `source_system`. Include schema drift alarms and quarantine zones for malformed rows.
-- **Gap Taxonomy**: Rules classify deltas into categories such as `Mismatch`, `Missing in Simplyr`, `Missing in Lake`, `Stale Credential`, `Location Conflict`. Configurable rule pack stores business logic separately from code.
-- **Recon Persistence**: Partition recon table by `business_date` and `provider_segment`; store supporting JSON evidence (hashes, coordinate deltas) plus audit fields (`first_detected_ts`, `last_seen_ts`, `is_current_gap`).
-- **Data Quality Metrics**: Capture counts per rule, severity distributions, and compute-level stats to feed monitoring dashboards.
-- **Examples**:
-  - Identity drift (`npi`, `last_name`, `gender`) for `P100000` flagged as high severity.
-  - Contract vs credential status misalignment (e.g., Simplyr `Active` vs Lake `Terminated`).
-  - Address variations where practice/billing values diverge; lat/long used for geospatial tolerance checks.
+### Agentic Intelligence Layer
+- **Inputs**: recon rows + contextual slices (provider history, prior resolutions, policy snippets, SLA definitions). Retrieval interface keyed by `provider_id` exposes both structured attributes and linked documents.
+- **Reasoning Flow**:
+  - Deterministic pre-processing tags gap type/severity, ensures deterministic facts remain authoritative.
+  - LLM/embedding pipeline interprets mismatches, groups them into business domains (Credentialing, Network Ops, Provider Directory, Claims), and crafts remediation guidance and ownership cues.
+- **Outputs Generated by AI**:
+  - `recommendation`: prescriptive narrative (e.g., "Recredential provider using Lake contract since Simplyr pending >180 days").
+  - `Next Steps`: actionable checklist with SLA reminders.
+  - `owner_group` & `domain_group`: operational routing across Credentialing, Network Ops, etc.
+  - `severity_score`, `priority_bucket`, `suggested_workflow`: quantifies urgency and whether to auto-ticket, bulk-update, or require manual review.
+  - `explanation_markdown` / `confidence`: citations referencing source values to maintain trust.
+- **Guardrails & Feedback**:
+  - Consistency checks prevent hallucinated fields; any recommendation must reference actual `simplyr_value`/`lake_value` pairs.
+  - Confidence downgraded when `credentialing_last_verified_date` is stale or evidence missing.
+  - Human reviewers can override AI output; feedback captured for prompt tuning and future fine-tuning.
+- **Workflow Integration**: agent emits JSON payloads for downstream systems (ServiceNow, Jira, Pega) once recommendations are approved, ensuring deterministic inputs feed orchestration.
 
-## 3. Agentic Intelligence Layer
-- **Inputs**: Recon rows + provider context (historical gaps, policy docs, SLA definitions). Provide retrieval interface keyed by `provider_id`.
-- **Reasoning Flow**: Hybrid rules + LLM. Deterministic rules tag gap type/severity; LLM generates recommendation text, assigns `owner_group` (Credentialing, Network Ops, Provider Directory, Claims), and proposes remediation.
-- **Outputs**: Populate recon columns `recommendation`, `Next Steps`, `owner_group`, `domain_group`, `severity_score`, `suggested_workflow`, `priority_bucket`, plus `confidence` and `explanation_markdown` fields.
-- **Guardrails**: Validate that suggested actions reference actual data values, require citations of source columns, and downgrade confidence for stale verification dates (>365 days) or missing evidence.
-- **Feedback Loop**: Business users approve/override recommendations; feedback stored for prompt refinement and potential fine-tuning.
-- **Workflow Hooks**: Map owner groups to downstream systems (ServiceNow/Jira/Pega). Agent emits JSON payloads ready for automated ticket creation once human approval thresholds are met.
+## Output
 
-## 4. Visualization Layer (Business Consumption)
-- **Dataset**: Power BI model built on enriched recon table with incremental refresh by `run_id`. Add dimensional tables for domains, severity, owner teams.
-- **Core Views**:
-  - Executive landing page: KPIs for open gaps, critical severity counts, agent confidence summary.
-  - Operations queue: Table by owner group with triage filters (`priority_bucket`, `plan_participation_list`, `credentialing_status`).
-  - Provider drill-through: Display Simplyr vs Lake values, agent explanation, workflow status, historical recurrence trend.
-- **Storytelling Features**: Bookmarks to compare "pre-agent" vs "post-agent" recon states, highlight overrides, and show downstream workflow triggers.
-- **Adoption Tools**: Export options (CSV/Power Automate), SLA timers, and RLS so teams only see relevant providers.
+### Enriched Recon Table
+- Single source of truth containing both raw gaps and AI-enriched insights, partitioned by `business_date` and `provider_segment` for auditability.
+- Columns now fully populated (`root_cause`, `recommendation`, `owner_group`, `suggested_workflow`, `priority_bucket`), enabling Power BI consumption and workflow automation.
 
-## 5. Cross-Cutting Considerations
-- **Data Governance**: Mask PII/PHI for demos, enforce least-privilege access, log all agent decisions for audit.
-- **Observability**: Monitor ingestion latency, rule failure spikes, agent inference errors, and Power BI refresh health.
-- **Testing**: Maintain synthetic datasets mirroring Simplyr/Lake anomalies for regression and LLM evaluation; implement golden-set assertions for key rule packs.
-- **Runbook**: Document batch schedules, manual remediation steps, escalation path for critical gaps, and recovery procedures (re-run recon, replay agent enrichment, refresh BI).
+### Visualization Layer (Business Consumption)
+- **Power BI Dataset**: built directly on enriched recon table with incremental refresh keyed on `run_id`. Dim tables for severity, domain, owner team support slicing and row-level security.
+- **Experience Highlights**:
+  - Executive landing page: KPIs for open gaps, high-severity counts, AI confidence distribution.
+  - Operations queue: filterable table by owner group, severity, plan participation, credentialing status, with export/push-to-workflow buttons.
+  - Provider drill-through: side-by-side Simplyr vs Lake values, AI recommendation text, workflow status, history of overrides.
+  - Bookmarks show "Task → Intelligence → Visualization" narrative to mirror demo storyline.
 
-## 6. Demo Preparation Checklist
-1. Generate refreshed recon table using provided CSVs and highlight representative gaps (identity, credentialing, address, network tier).
-2. Mock agent enrichment for selected rows (fill recommendation/owner/severity/workflow fields) to showcase layer-two intelligence even before full automation.
-3. Wire Power BI to enriched table; create bookmarks that narrate the three-layer story (Task → Intelligence → Visualization).
-4. Prepare talking points mapping demo screens to eventual agentic automation roadmap, emphasizing how manual UI steps will transition to orchestrated agents post sign-off.
+### Downstream Actions & Governance
+- **Workflow Hooks**: `suggested_workflow` drives automation—auto-ticket when severity high and confidence ≥ threshold, manual review queue otherwise.
+- **Monitoring & Compliance**: logs for ingestion latency, rule performance, AI inference errors, Power BI refresh status; masking of PII/PHI for demo contexts and least-privilege access enforced.
+- **Runbook**: documented cadence (recon job before agent execution, then Power BI refresh), escalation path for critical gaps, recovery steps (re-run pipeline, regenerate AI outputs, refresh visuals).
+
+### Demo Checklist
+1. Refresh recon using provided CSVs; highlight representative gaps (identity drift, credentialing misalignment, tier conflicts).
+2. Run AI enrichment (or mock values) to populate recommendations/owners/severity/workflow fields.
+3. Connect Power BI to enriched table; validate bookmarks depicting the three-layer journey.
+4. Prepare talking points linking Input Layer (deterministic data), AI Usage (agentic reasoning), and Output (business-ready insights + workflows).
