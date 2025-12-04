@@ -1,74 +1,122 @@
 # Provider Data Reconciliation & Recommendation Agent
 
-## 1. Purpose
-Deliver a three-layer, business-ready workflow that reconciles provider records between SIMPLYR PDM data and LAKE data, enriches detected gaps with agentic insights, and exposes the full story through a consumable analytics surface (Power BI). The demo must prove we can:
-- Deterministically reconcile two large provider datasets ahead of any LLM/agent execution.
-- Run an intelligent layer that classifies gaps, recommends next actions, and assigns operational ownership.
-- Present the enriched recon table so business stakeholders can filter, slice, and act without wading through raw files.
+## 1. Executive Summary
+Blue Cross HCSC asked for a pragmatic demonstration that proves we can (a) reconcile provider records between their operational PDM domain (SIMPLYR) and analytic LAKE domain, (b) add intelligent recommendations that speak the language of Credentialing/Network Ops/Provider Directory/Claims, and (c) surface the enriched story through a business-facing experience (Power BI now, workflow later). The success signal is a deterministic, reviewable recon dataset that an AI agent enhances with root-cause hypotheses, owner cues, and actionable next steps.
 
-## 2. Layered Architecture
-| Layer | Responsibility | Tech Notes |
+## 2. Target Outcomes
+- **Deterministic truth set** – Spark/Python job produces `recon_table` rows for every provider-field discrepancy before any agent executes.
+- **Explainable intelligence** – Agent reads recon facts, reasons over provider context, and writes back structured recommendations plus severity/ownership metadata.
+- **Business-ready storytelling** – Power BI (or equivalent) consumes the enriched table so stakeholders can filter, slice, assign, and eventually trigger workflows.
+- **Demo readiness** – Remote demo in second week of December showing all three layers, with emphasis on the business/agent experience.
+
+## 3. System-at-a-Glance
+```
+SIMPLYR (PDM)  --->
+                   \     (Spark/Python Reconciliation) -->  recon_table core columns
+LAKE (Analytic)  --->                                         |
+                                                           Agent enrichment (LLM + rules) --> recon_table enriched columns
+                                                                                               |
+                                                                                           Power BI / future workflow
+```
+All compute before the agent is deterministic, logged, and repeatable. The agent sits downstream, never mutating raw source files—only appending insights to the recon facts.
+
+## 4. Data Contracts
+| Asset | Format | Refresh | Notes |
+| --- | --- | --- | --- |
+| `simplyr_data` | CSV (120 cols) | Weekly snapshot | Authoritative provider master from SIMPLYR/PDM. Includes demographics, contracts, credentialing flags, geocodes, 60 custom attributes, etc. |
+| `data_late.csv` | CSV (same schema) | Weekly | Represents LAKE / downstream systems that may lag or drift. |
+| `recon_table.csv` | CSV / Delta table | Per run | Stores field-level discrepancies and enrichment metadata. Schema snippet below. |
+
+### Recon Table Schema (initial + enrichment columns)
+- `provider_id`
+- `field`
+- `simplyr_value`
+- `lake_value`
+- `gap_type` (Missing/Mismatch/Stale/Formatting)
+- `root_cause`
+- `recommendation`
+- `next_steps`
+- `owner_group` (Team or queue)
+- `domain_group` (Credentialing, Network Ops, Provider Directory, Claims)
+- `severity_score` (1–5)
+- `suggested_workflow`
+- `priority_bucket` (P0/P1/P2)
+- `ingestion_batch_id`, `source_system`, `last_update_ts`
+
+## 5. Layer 1 – Reconciliation (Task Layer)
+1. **Ingestion** – Spark/Python pulls SIMPLYR & LAKE files (support SFTP or blob). Each run tagged with batch ID + timestamp.
+2. **Normalization** – Standardize data types, date formats, trimming, enumerations, case sensitivity, zip formatting. Build config-driven mapping file so change management is easy.
+3. **Comparison Logic**
+   - Row alignment by `provider_id` (and fallback composite keys if duplicates).
+   - Column-level diff with tolerance rules (e.g., +/- for latitude/longitude, case-insensitive for emails).
+   - Emit recon row when: values differ, value missing on either side, stale effective dates, conflicting flags.
+4. **Quality Checks** – Validate row counts, field coverage %, unusual spikes (control chart), and produce summary metrics for the agent’s context.
+5. **Persist & Audit** – Write deterministic recon table plus run metadata. Store raw inputs + outputs in immutable storage for replay. Trigger success/failure notification.
+
+## 6. Layer 2 – Intelligence (Agent Layer)
+**Mission**: read recon rows, add context that helps business teams prioritize and resolve gaps.
+
+### Reasoning Inputs
+- Recon row (field, values, gap type).
+- Provider metadata (status, specialty, language, plan participation, credential dates).
+- Historical behavior (has this provider tripped same gap before?).
+- Domain heuristics (lookup tables: which fields map to Credentialing vs Network Ops, severity rules, etc.).
+
+### Processing Steps
+1. **Load recon batch** filtered to rows without recommendations yet.
+2. **Context build** – enrich with provider attributes and heuristics so prompt covers business context.
+3. **Prompt/RULE evaluation** – combination of deterministic rules (e.g., `credentialing_status` mismatch -> Credentialing) plus LLM reasoning to craft root cause + actionable recommendation in business tone.
+4. **Ownership & Workflow mapping** – map to `owner_group`, `domain_group`, severity, and recommended workflow (JIRA queue, ServiceNow, email runbook).
+5. **Write-back** – update recon table columns. Maintain lineage of agent version + prompt ID.
+6. **Feedback hooks** – capture user overrides (from UI mock) so prompts improve later.
+
+### Example Output
+> Provider P100006 shows SIMPLYR credentialing status “Verified” vs LAKE “Pending”. This is a Credentialing issue (owner Credentialing Ops). Severity high because provider is Out-of-Network in LAKE but In-Network in SIMPLYR. Recommendation: trigger expedited credentialing refresh, verify CAQH ID, update LAKE feed.
+
+## 7. Layer 3 – Visualization (Business Layer)
+- **Dataset** – Power BI dataset pointing to enriched recon table. Supports incremental refresh per batch.
+- **Core visuals**
+  - KPI cards for total gaps, critical gaps, batches awaiting review.
+  - Domain split (stacked bar), severity donut, timeline per ingestion batch.
+  - Interactive table (provider ID, domain, specialty, gap type, owner, severity, recommendation status). Row click opens detail.
+  - Detail pane: SIMPLYR vs LAKE values, agent recommendation, next steps checklist, acceptance status.
+- **Filters** – domain group, owner group, severity, geography (state/county), plan participation, ingestion batch.
+- **Future workflow** – once client ready, hooking accepted recommendations to ServiceNow/JIRA automation.
+
+## 8. Demo Blueprint (Remote – 30 min)
+1. **Hook (Layer 3 first)** – Show Power BI view summarizing critical issues, highlight ability to filter by Credentialing, drill to provider detail.
+2. **Agent Walkthrough (Layer 2)** – Transition to UI mock (built in React/Figma). Upload SIMPLYR/LAKE files, run recon, show AI reasoning panel with confidence, editable recommendations, acceptance buttons—all clickable.
+3. **Foundational Proof (Layer 1)** – Briefly show recon table output (CSV/Delta) to prove deterministic facts exist before agent.
+4. **Close** – Outline path to production: automate recon, integrate real agent, extend to workflow.
+
+## 9. Delivery Owner Matrix
+| Workstream | Primary | Secondary |
 | --- | --- | --- |
-| **Task / Reconciliation** | Compare SIMPLYR vs LAKE files across ~120 provider attributes; log every mismatch into `recon_table.csv`. | Spark or Python batch job runs prior to agent. Outputs deterministic facts: `provider_id`, `field`, `simplyr_value`, `lake_value`, plus metadata (timestamps, source batch IDs). |
-| **Intelligence / Agent** | Read recon table, interpret each gap, label domains (Credentialing, Network Ops, Provider Directory, Claims), recommend remediation, assign owner group, severity, workflow, and priority. | Agent can start as scripted reasoning with curated prompts. Future state: autonomous agent triggered post-batch, writing enriched columns back to recon table (JSON or wide columns). |
-| **Visualization / Business Consumption** | Provide rapid insight into gaps, recommendations, and next steps. Power BI dashboard is primary vehicle; shows counts, severities, owner work queues, geo filters, etc. | Consumes enriched recon table. Enables drill-through to provider-level detail, evidence (SIMPLYR vs LAKE), and agent commentary. |
+| Sample data & recon schema | Venu + Core Data Eng | Analytics support |
+| UI mock & demo orchestration | Zuber | Practice design team |
+| Power BI mock | Venu (initial dataset) / BI partner | TBD |
+| Client engagement & scheduling | Sandeep | Venu |
+| Agent prompt design | Zuber (prompt), Venu (rules) | GenAI CoE |
 
-## 3. Data Assets
-- `simplyr_data`: Source-of-truth snapshot from SIMPLYR/PDM. Includes provider demographics, contract information, credentialing flags, location metadata, 60+ custom attributes, geocodes, and IDs (TIN, CAQH, NPI, etc.).
-- `data_late.csv`: Parallel snapshot from the LAKE domain, representing downstream or lagged data. Schema mirrors `simplyr_data` so field-by-field comparison is feasible.
-- `recon_table.csv` (schema defined): Stores reconciliation output plus enrichment placeholders:
-  - `provider_id`, `field`, `simplyr_value`, `lake_value`
-  - `gap_type` (Missing, Mismatch, Stale, etc.)
-  - `root_cause` hypothesis (e.g., late credentialing feed, partial contract load)
-  - `recommendation`, `Next Steps`
-  - `owner_group` (TEAM-XYZ), `domain_group` (Credentialing/Network Ops/Provider Directory/Claims)
-  - `severity_score`, `suggested_workflow`, `priority_bucket`
+## 10. Timeline (compressed)
+- **Week of Nov 24** – Finalize sample SIMPLYR/LAKE files, recon schema, storyteller notes.
+- **Week of Dec 1** – Hand assets to Zuber, finalize UI mock + prompts; craft Power BI visuals.
+- **Week of Dec 8 (target)** – Remote demo (30 min). Use same assets for follow-up.
 
-## 4. Reconciliation Flow (Layer 1)
-1. **Ingest Files:** Scheduled Spark/Python job pulls daily/weekly SIMPLYR & LAKE extracts.
-2. **Normalize:** Standardize casing, trim whitespace, harmonize date formats, map enumerations (plan codes, flag values).
-3. **Compare:** For each provider + column, evaluate equality. Emit a recon row when values differ or when one side lacks data.
-4. **Persist:** Write recon results to `recon_table.csv` (or lakehouse table) with batch IDs so runs are auditable.
-5. **Quality Checks:** Count mismatches per column, detect spike anomalies, ensure coverage ratios.
+## 11. Future Enhancements
+1. **Full agent orchestration** – trigger agent automatically after each recon batch, store outputs in Delta Lakehouse.
+2. **Vector-assisted reconciliation** – leverage embeddings to catch semantic similarities (e.g., “St.” vs “Street”).
+3. **Closed-loop learning** – capture reviewer overrides to retrain prompts or adjust rule weights.
+4. **Workflow integration** – push accepted recommendations to ServiceNow/JIRA; feed status back into recon table.
+5. **Provider chatbot** – reuse enriched recon data to power conversational assistant (HCSC’s additional ask).
 
-## 5. Intelligence Flow (Layer 2)
-1. **Gap Intake:** Agent loads fresh recon rows.
-2. **Context Build:** Augment with provider metadata (specialty, status, plan participation) to improve reasoning.
-3. **Prompt/Rule Evaluation:** Apply domain heuristics + LLM reasoning to categorize gaps, suggest root causes, and recommend actions. Example—credentialing status mismatch → assign to Credentialing, severity high if provider Active in SIMPLYR but Terminated in LAKE.
-4. **Ownership & Workflow:** Map gaps to owner groups (e.g., `Credentialing Ops`, `Network Operations`, `Provider Directory`, `Claims Data Mgmt`). Suggest JIRA/ServiceNow queue or automation playbook.
-5. **Write-Back:** Update recon table columns (`gap_type`, `recommendation`, etc.) so downstream consumers see enriched context.
-
-## 6. Visualization Flow (Layer 3)
-- **Dataset:** Power BI dataset refreshes from enriched recon table.
-- **Dashboards:**
-  - Overview KPIs (total gaps, by severity/domain/owner).
-  - Provider drill-through cards with SIMPLYR vs LAKE values and agent notes.
-  - Geo filters (state/county) leveraging latitude/longitude.
-  - Trend visuals by ingestion batch.
-- **Future Automation:** From dashboard selections, trigger workflows (e.g., service tickets) once client approves integration.
-
-## 7. Demo Strategy (Dec Week 2)
-- **Narrative:** Lead with Business layer (Power BI mock), then peel back to agent reasoning (UI mock), finally show deterministic recon foundation.
-- **Mock UI:** Use prebuilt UI simulation (file upload → AI analysis → reviewer overrides) to illustrate agent experience without standing up full infra.
-- **Sample Data:** Provide curated SIMPLYR/LAKE CSVs plus initial recon table so demo is grounded yet repeatable.
-- **Talking Points:** Emphasize deterministic compute, agentic enrichment, and ability to operationalize insights.
-
-## 8. Future Enhancements
-- Full agent orchestration (event-driven triggers post-batch).
-- Embedding-based fuzzy matching for reconciliation step (semantic comparisons, historical learning).
-- Feedback loops so business overrides reinforce agent prompts.
-- Workflow automation (ServiceNow/JIRA) fed directly from recon insights.
-- Expanded chatbot scenario once provider gap agent proves value.
-
-## 9. Roles & Responsibilities
-- **Venu / Core Data Team:** Prepare sample datasets, define recon schema, ensure deterministic pipeline narrative.
-- **Zuber / UI & Demo Lead:** Build/refine UI mock, integrate sample data, craft agent reasoning story, drive demo.
-- **Sandeep / Engagement Lead:** Coordinate client scheduling, ensure messaging aligns with HCSC needs, manage follow-ups.
-
-## 10. Key Dates
-- **Now – Nov End:** Finalize sample data + recon schema, align narrative.
-- **Early Dec:** Hand over assets to Zuber, build/refine UI mock & Power BI views.
-- **Second Week of Dec:** Remote demo (~30 mins) focusing on business outcomes, backed by recon + agent story.
+## 12. Glossary
+- **SIMPLYR/PDM** – Provider Data Management source system (authoritative roster).
+- **LAKE** – Downstream data lake / warehouse copy of provider data.
+- **Recon Table** – Field-level mismatch log with enrichment; single source for gaps.
+- **Domain Group** – Business function responsible for remediation (Credentialing, Network Ops, Provider Directory, Claims).
+- **Agent** – LLM + rule-based reasoning service that annotates recon rows with next-best actions.
+- **Batch ID** – Unique identifier for each reconciliation run, used for lineage and BI refresh.
 
 ---
-This README is the living reference for anyone joining the effort—update as the architecture or deliverables evolve.
+Update this document as architecture, prompts, or demo scope evolves. It should give any newcomer enough depth to contribute after one read-through.
