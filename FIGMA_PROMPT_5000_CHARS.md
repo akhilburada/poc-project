@@ -1,91 +1,70 @@
-# HCSC Provider Data Reconciliation - Enterprise Web App
+# HCSC Provider Reconciliation - 4-Step Workflow App
 
-Build a polished 4-step workflow app for healthcare data reconciliation. 100% frontend with hardcoded data. Professional enterprise design.
+Build enterprise web app. 100% frontend, hardcoded data. Professional design.
 
-## LOGIN PAGE
-- Full-screen dark blue gradient (#0F172A → #1E3A5F)
-- Centered white card (480px), rounded-xl, large shadow
-- Logo: "🏥 HCSC Provider Reconciliation"
-- Username input (user icon), Password input (lock icon, show/hide toggle)
-- Remember me checkbox
-- Blue "Sign In →" button (#2563EB)
-- Credentials: username="admin", password="admin123"
-- Show error toast for wrong credentials
+## LOGIN
+Dark blue gradient bg (#0F172A→#1E3A5F), white card, logo "🏥 HCSC Provider Reconciliation"
+Credentials: username="admin" password="admin123"
+Blue button "Sign In →" (#2563EB)
 
-## MAIN LAYOUT (after login)
-- Fixed header (64px): "HCSC Reconciliation" left, step indicator center, "👤 Admin" right
-- Step progress: ●━━●━━○━━○ (4 steps)
-- States: Completed=green✓, Current=blue pulse, Pending=gray
+## LAYOUT
+Header: Logo left, steps center "●━●━○━○", user right
+Steps: 1.Upload 2.Reconcile 3.AI Analysis 4.Export
 
-## STEP 1: DATA UPLOAD
-Title: "Upload Provider Data Files"
-Subtitle: "Upload Simplyr and Data Lake CSV files"
-
-Two cards side-by-side:
-- Left: "📁 SIMPLYR SOURCE" - dashed border drop zone, "Drag & drop or browse"
-- Right: "📁 DATA LAKE" - same layout
-After upload show: ✅ filename.csv | 99 records | 58 fields | 127KB
-Button: "Continue to Step 2 →" (disabled until both uploaded, then blue)
+## STEP 1: UPLOAD
+Two cards: "📁 SIMPLYR" and "📁 DATA LAKE" drag-drop zones
+After upload: ✅ 99 records | 58 fields
+Button: "Continue →" (disabled until both uploaded)
 
 ## STEP 2: RECONCILIATION
-**Processing (3 seconds):**
-"🔄 Running Reconciliation..." with progress bar 0→100%
-Checklist: ✅Loading Simplyr ✅Loading Lake ✅Matching records ⏳Comparing fields...
+Show processing 3sec, then results table:
+Summary: 247 gaps | 72 providers affected
+Priority: 🔴23 Critical | 🟠64 High | 🟡112 Medium | 🟢48 Low
 
-**Results:**
-Summary box: Providers: 99 | Fields Compared: 5,742 | Total Gaps: 247 | Providers with Gaps: 72 (72.7%)
-Priority row: [🔴 CRITICAL 23] [🟠 HIGH 64] [🟡 MEDIUM 112] [🟢 LOW 48]
-Domain bar chart: Claims 89 (36%), Credentialing 62 (25%), Network 54 (22%), Directory 42 (17%)
-Button: "Continue to AI Analysis →"
+**Gaps Table (Task Layer Output):**
+| Provider | Field | Simplyr | Lake | Type |
+|----------|-------|---------|------|------|
+| P100000 | npi | 1065939459 | 1014581341 | Mismatch |
+| P100000 | tin | 534360412 | 260622691 | Mismatch |
+| P100000 | credentialing_status | Verified | Expired | Mismatch |
+| P100000 | specialty_primary | Family Medicine | Orthopedics | Mismatch |
+| P100000 | dob | 1/1/1962 | 1/1/1994 | Mismatch |
+| P100001 | npi | 1502778451 | 1600215021 | Mismatch |
+| P100001 | first_name | Priya | John | Mismatch |
+| P100001 | tin | 607697301 | 122193804 | Mismatch |
+| P100002 | npi | 1010168041 | 1510441276 | Mismatch |
+| P100002 | specialty | Dermatology | Cardiology | Mismatch |
+
+Button: "Run AI Analysis →"
 
 ## STEP 3: AI ANALYSIS
-**Processing (4 sec):** "🧠 AI Analysis..." with progress bar
+Show processing 4sec, then enriched table:
 
-**Results - Data Table:**
-Filter pills: [🔴23] [🟠64] [🟡112] [🟢48] [All: 247]
-Search box, sortable columns
+**AI-Enriched Table (Intelligence Layer):**
+| Provider | Field | Simplyr | Lake | Type | Root Cause | Recommendation | Owner | Domain | Score | Priority |
+|----------|-------|---------|------|------|------------|----------------|-------|--------|-------|----------|
+| P100000 | npi | 1065939459 | 1014581341 | Mismatch | Provider ID collision. 27 mismatches (22.5%). Different providers mapped to same ID. | CRITICAL: Do NOT sync. Validate NPIs in NPPES. Escalate to Data Governance. | Claims Ops | Claims | 10 | 🔴Critical |
+| P100000 | tin | 534360412 | 260622691 | Mismatch | TIN confirms different legal entities. Part of ID collision. | CRITICAL: Hold payments. Verify W-9. | Claims Ops | Claims | 10 | 🔴Critical |
+| P100000 | credentialing_status | Verified | Expired | Mismatch | Status conflict causes claim denials. | Verify with CAQH. Update Lake if Verified. | Cred Team | Credentialing | 9 | 🔴Critical |
+| P100001 | npi | 1502778451 | 1600215021 | Mismatch | Systemic issue. Names differ (Priya vs John). | CRITICAL: Pattern detected. Audit ID process. | Claims Ops | Claims | 10 | 🔴Critical |
+| P100002 | npi | 1010168041 | 1510441276 | Mismatch | Third collision. Credentials differ (DO vs PA). | Systemic audit required. | Claims Ops | Claims | 10 | 🔴Critical |
 
-| Provider | Field | Simplyr Value | Lake Value | Type | Severity | Domain |
-|----------|-------|---------------|------------|------|----------|--------|
-| P100000 | npi | 1065939459 | 1014581341 | Mismatch | 🔴 10 | Claims |
-| P100000 | tin | 534360412 | 260622691 | Mismatch | 🔴 10 | Claims |
-| P100000 | credentialing_status | Verified | Expired | Mismatch | 🔴 9 | Credentialing |
-| P100001 | npi | 1502778451 | 1600215021 | Mismatch | 🔴 10 | Claims |
-| P100001 | first_name | Priya | John | Mismatch | 🔴 9 | Directory |
-| P100002 | npi | 1010168041 | 1510441276 | Mismatch | 🔴 10 | Claims |
-| P100002 | specialty | Dermatology | Cardiology | Mismatch | 🟠 8 | Directory |
-| P100003 | contract_status | Active | Terminated | Mismatch | 🟠 8 | Network |
-| P100004 | license_state | NY | CA | Mismatch | 🟠 7 | Credentialing |
-| P100005 | phone | 2125551212 | (empty) | Missing | 🟡 5 | Directory |
+Click row → Side panel with:
+- Severity badge, comparison table
+- "🤖 ROOT CAUSE": AI analysis text
+- "💡 RECOMMENDATION": Action items
+- "📋 NEXT STEPS": Checklist
+- "👤 OWNER": Team name
+- [Approve] [Reject] buttons
 
-Pagination: "Showing 1-10 of 247"
-
-**Side Panel (slides from right on row click):**
-Header: "🔴 CRITICAL • Severity 10/10" with X close
-Content:
-- Provider: P100000 | Field: npi | Domain: Claims
-- Comparison box: SIMPLYR: 1065939459 | LAKE: 1014581341
-- "🤖 AI ROOT CAUSE": "Provider ID collision detected. 27 field mismatches (22.5%) including NPI, TIN, DOB, specialty. Two different providers mapped to same Provider ID."
-- "💡 RECOMMENDATION": "CRITICAL - DO NOT AUTO-SYNC. 1) Validate both NPIs against NPPES registry 2) If different providers, correct mapping in Lake 3) Escalate to Data Governance team"
-- "📋 NEXT STEPS": □ Query NPPES for validation □ Create ServiceNow ticket □ Notify Claims Operations
-- "👤 OWNER": Claims Operations Team
-- Buttons: [✓ Approve] [✗ Reject] [📝 Add Note]
+**Bucketization Summary Cards:**
+By Domain: Claims 89 (36%) | Credentialing 62 (25%) | Network 54 (22%) | Directory 42 (17%)
+By Root Cause: ID Collision 98 (40%) | Sync Failure 67 (27%) | Delay 42 (17%) | Entry Error 25 (10%)
 
 ## STEP 4: EXPORT
-Title: "📥 Export Results"
-Summary: ✅ Reconciliation Complete | 247 gaps | 247 recommendations | Dec 5, 2025
+4 cards: Excel (full), PDF (summary), CSV (critical only), JSON (raw)
+Button: "Start New"
 
-Four export cards (2x2):
-1. "📊 Full Report (Excel)" - All gaps with AI analysis → [Download]
-2. "📄 Executive Summary (PDF)" - Key metrics for leadership → [Download]
-3. "📋 Critical Gaps (CSV)" - 23 critical items only → [Download]
-4. "📁 Raw Data (JSON)" - For system integration → [Download]
-Button: "🔄 Start New Reconciliation"
-
-## DESIGN SPECS
-Colors: Primary #2563EB, Critical #DC2626, High #EA580C, Medium #CA8A04, Low #22C55E
-Background: #F8FAFC, Cards: white, Border: #E2E8F0, Text: #0F172A / #64748B
-Font: Inter (400/600 weights)
-Cards: rounded-xl, shadow-sm, 24px padding
-Animations: 200ms step transitions, 300ms side panel slide, progress bar fills smoothly
-Table: hover rows #F1F5F9, clickable for detail panel
+## DESIGN
+Colors: #2563EB primary, #DC2626 critical, #EA580C high, #CA8A04 medium, #22C55E low
+Font: Inter, Cards: rounded-xl shadow
