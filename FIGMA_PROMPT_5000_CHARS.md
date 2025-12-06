@@ -1,70 +1,85 @@
-# HCSC Provider Reconciliation - 4-Step Workflow App
+# HCSC Provider Data Reconciliation - Enterprise Workflow App
 
-Build enterprise web app. 100% frontend, hardcoded data. Professional design.
+Create polished 4-step workflow. 100% frontend, hardcoded data. Modern enterprise design.
 
 ## LOGIN
-Dark blue gradient bg (#0F172A→#1E3A5F), white card, logo "🏥 HCSC Provider Reconciliation"
-Credentials: username="admin" password="admin123"
-Blue button "Sign In →" (#2563EB)
+Dark blue gradient bg. White centered card (450px). Logo "🏥 HCSC Provider Reconciliation". Username/password inputs. Blue "Sign In" button. Creds: admin/admin123
 
-## LAYOUT
-Header: Logo left, steps center "●━●━○━○", user right
-Steps: 1.Upload 2.Reconcile 3.AI Analysis 4.Export
+## HEADER (all pages)
+Fixed 60px bar. Logo left, step progress center (●━●━○━○), user avatar right. Steps: Upload→Reconcile→AI Analysis→Export
 
-## STEP 1: UPLOAD
-Two cards: "📁 SIMPLYR" and "📁 DATA LAKE" drag-drop zones
-After upload: ✅ 99 records | 58 fields
-Button: "Continue →" (disabled until both uploaded)
+---
+
+## STEP 1: DATA UPLOAD
+Two side-by-side cards with drag-drop zones. "SIMPLYR" and "DATA LAKE" labels.
+
+After upload shows: ✅ filename, 99 records, 58 fields, 127KB, Remove button.
+
+Button: "Continue to Reconciliation →" (enabled when both uploaded)
+
+---
 
 ## STEP 2: RECONCILIATION
-Show processing 3sec, then results table:
-Summary: 247 gaps | 72 providers affected
-Priority: 🔴23 Critical | 🟠64 High | 🟡112 Medium | 🟢48 Low
+Loading: Progress bar "🔄 Running Reconciliation..." 3 sec animation
 
-**Gaps Table (Task Layer Output):**
+Results Summary: [99 Providers] [5,742 Fields] [247 Gaps] [72% Affected]
+Priority pills: 🔴23 Critical | 🟠64 High | 🟡112 Medium | 🟢48 Low
+
+**Raw Gaps Table (NO AI columns):**
 | Provider | Field | Simplyr | Lake | Type |
 |----------|-------|---------|------|------|
 | P100000 | npi | 1065939459 | 1014581341 | Mismatch |
 | P100000 | tin | 534360412 | 260622691 | Mismatch |
-| P100000 | credentialing_status | Verified | Expired | Mismatch |
-| P100000 | specialty_primary | Family Medicine | Orthopedics | Mismatch |
-| P100000 | dob | 1/1/1962 | 1/1/1994 | Mismatch |
+| P100000 | specialty | Family Medicine | Orthopedics | Mismatch |
 | P100001 | npi | 1502778451 | 1600215021 | Mismatch |
 | P100001 | first_name | Priya | John | Mismatch |
-| P100001 | tin | 607697301 | 122193804 | Mismatch |
 | P100002 | npi | 1010168041 | 1510441276 | Mismatch |
-| P100002 | specialty | Dermatology | Cardiology | Mismatch |
+| P100003 | contract_status | Active | Terminated | Mismatch |
+| P100005 | phone | 2125551212 | (empty) | Missing |
 
-Button: "Run AI Analysis →"
+Pagination: 1-15 of 247. Button: "Run AI Analysis →"
+
+---
 
 ## STEP 3: AI ANALYSIS
-Show processing 4sec, then enriched table:
+Loading: "🧠 Analyzing..." 4 sec animation (Patterns→Root causes→Recommendations→Severity)
 
-**AI-Enriched Table (Intelligence Layer):**
-| Provider | Field | Simplyr | Lake | Type | Root Cause | Recommendation | Owner | Domain | Score | Priority |
-|----------|-------|---------|------|------|------------|----------------|-------|--------|-------|----------|
-| P100000 | npi | 1065939459 | 1014581341 | Mismatch | Provider ID collision. 27 mismatches (22.5%). Different providers mapped to same ID. | CRITICAL: Do NOT sync. Validate NPIs in NPPES. Escalate to Data Governance. | Claims Ops | Claims | 10 | 🔴Critical |
-| P100000 | tin | 534360412 | 260622691 | Mismatch | TIN confirms different legal entities. Part of ID collision. | CRITICAL: Hold payments. Verify W-9. | Claims Ops | Claims | 10 | 🔴Critical |
-| P100000 | credentialing_status | Verified | Expired | Mismatch | Status conflict causes claim denials. | Verify with CAQH. Update Lake if Verified. | Cred Team | Credentialing | 9 | 🔴Critical |
-| P100001 | npi | 1502778451 | 1600215021 | Mismatch | Systemic issue. Names differ (Priya vs John). | CRITICAL: Pattern detected. Audit ID process. | Claims Ops | Claims | 10 | 🔴Critical |
-| P100002 | npi | 1010168041 | 1510441276 | Mismatch | Third collision. Credentials differ (DO vs PA). | Systemic audit required. | Claims Ops | Claims | 10 | 🔴Critical |
+Domain filters: [Claims 89] [Credentialing 62] [Network 54] [Directory 42]
 
-Click row → Side panel with:
-- Severity badge, comparison table
-- "🤖 ROOT CAUSE": AI analysis text
-- "💡 RECOMMENDATION": Action items
-- "📋 NEXT STEPS": Checklist
-- "👤 OWNER": Team name
-- [Approve] [Reject] buttons
+**Enriched Table (adds AI columns):**
+| Provider | Field | Gap | Root Cause | Recommendation | Owner | Domain | Score |
+|----------|-------|-----|------------|----------------|-------|--------|-------|
+| P100000 | npi | Mismatch | ID collision. Different providers same ID | DO NOT sync. Validate NPPES. Escalate | Claims Ops | Claims | 🔴10 |
+| P100000 | tin | Mismatch | TIN confirms different entities | Hold payments. Verify W-9 | Claims Ops | Claims | 🔴10 |
+| P100001 | npi | Mismatch | Systemic collision. Names differ | Audit ID generation | Claims Ops | Claims | 🔴10 |
+| P100001 | first_name | Mismatch | Different individuals | Do not reconcile | Directory | Directory | 🔴9 |
+| P100003 | contract | Mismatch | Payment eligibility affected | Verify contract system | Network | Network | 🟠8 |
+| P100005 | phone | Missing | Contact incomplete | Sync from Simplyr | Directory | Directory | 🟡5 |
 
-**Bucketization Summary Cards:**
-By Domain: Claims 89 (36%) | Credentialing 62 (25%) | Network 54 (22%) | Directory 42 (17%)
-By Root Cause: ID Collision 98 (40%) | Sync Failure 67 (27%) | Delay 42 (17%) | Entry Error 25 (10%)
+**Row click → Right slide panel:**
+- Score/Domain/Owner header
+- Side-by-side value comparison
+- 🤖 ROOT CAUSE: "Provider ID collision detected. 27 field mismatches..."
+- 💡 RECOMMENDATION: "CRITICAL - Do NOT auto-sync. Validate NPIs..."
+- 📋 NEXT STEPS: Checkboxes (Query NPPES, Create ticket, Notify Claims)
+- [Approve] [Reject] [Note] buttons
+
+Button: "Continue to Export →"
+
+---
 
 ## STEP 4: EXPORT
-4 cards: Excel (full), PDF (summary), CSV (critical only), JSON (raw)
-Button: "Start New"
+Summary: ✅ 247 gaps analyzed | Dec 5, 2025
+
+Four download cards (2x2):
+📊 Full Report (Excel) | 📄 Executive Summary (PDF)
+📋 Critical Gaps (CSV) | 📁 Raw Data (JSON)
+
+Button: "🔄 Start New Reconciliation"
+
+---
 
 ## DESIGN
-Colors: #2563EB primary, #DC2626 critical, #EA580C high, #CA8A04 medium, #22C55E low
-Font: Inter, Cards: rounded-xl shadow
+Primary #2563EB, Critical #DC2626, High #EA580C, Medium #CA8A04, Low #22C55E
+Background #F8FAFC, Cards white rounded-xl shadow-sm
+Font: Inter, monospace for data. Smooth 200ms transitions.
