@@ -74,23 +74,19 @@ Loading 4sec → Results. ⚠️ Alert: "Provider ID Collision - 196 gaps (39.6%
 [All 495] [Claims 178] [Cred 124] [Network 108] [Directory 85]
 Each tab filters table: Claims=npi/tin, Cred=license/CAQH, Network=contract, Dir=name/address
 
-🔍 Search: [provider, field, keyword...]
+**AI DECISION TABLE (updates based on tab selected):**
+| Gap | Domain | Owner | Severity | Action | Reason |
+|-----|--------|-------|----------|--------|--------|
+| P100000.npi | Claims | Claims Ops | 🔴10 | DO NOT sync. Escalate | Different providers same ID |
+| P100000.tin | Claims | Claims Ops | 🔴10 | Hold payments | Different legal entities |
+| P100000.cred | Cred | Cred Team | 🔴9 | Verify CAQH | Verified vs Expired |
+| P100001.npi | Claims | Claims Ops | 🔴10 | Audit ID system | Priya≠John collision |
+| P100001.name | Directory | Dir Team | 🔴9 | Do not reconcile | Identity mismatch |
+| P100002.npi | Claims | Claims Ops | 🔴10 | Escalate IT | Luis≠David collision |
+| P100003.contract | Network | Net Team | 🟠8 | Verify contract | Active vs Terminated |
+| P100005.phone | Directory | Dir Team | 🟡5 | Sync Simplyr | Missing contact |
 
-**AI DECISION TABLE (updates based on tab):**
-| Gap | Domain | Severity | Action | Confidence | Status |
-|-----|--------|----------|--------|------------|--------|
-| P100000.npi | Claims | 🔴10 | Escalate | 🟢98% | ⏳ Pending |
-| P100000.tin | Claims | 🔴10 | Hold | 🟢95% | ✅ Approved |
-| P100000.cred | Cred | 🔴9 | Verify CAQH | 🟡78% | ⏳ Pending |
-| P100001.npi | Claims | 🔴10 | Audit | 🟢96% | ❌ Rejected |
-| P100001.name | Directory | 🔴9 | No sync | 🟢92% | 👁️ Reviewed |
-| P100002.npi | Claims | 🔴10 | Escalate | 🟢97% | ⏳ Pending |
-| P100003.contract | Network | 🟠8 | Verify | 🟡72% | ⏳ Pending |
-| P100005.phone | Directory | 🟡5 | Sync | 🟢88% | ⏳ Pending |
-
-Status: ✅Approved ⏳Pending ❌Rejected 👁️Reviewed
-
-**Row click → slide panel:** Root Cause, Recommendation, [Approve][Reject][Note]
+**Row click → slide panel:** Values, Root Cause, Recommendation, Next Steps checkboxes, [Approve][Reject][Note]
 
 Bucketization tabs: [By Provider] [By Domain] [By Root Cause] [By Priority]
 
