@@ -9,18 +9,18 @@ Dark glassmorphism. Raw gaps comparison (NO AI columns). Background: #0A0F1C→#
 ```
 🔄 Running Reconciliation...
 ████████████████░░░░░░░░  72%
-✅ Loading Simplyr (99 records)
-✅ Loading Data Lake (99 records)
-⏳ Comparing 5,742 field pairs...
+✅ Loading Simplyr (200 records)
+✅ Loading Data Lake (200 records)
+⏳ Comparing 24,000 field pairs...
 ```
 
 ## RESULTS
 
 **Summary Cards (glass, clickable):**
-[99 Providers] [5,742 Fields] [247 Gaps] [72.7% Affected]
+[200 Providers] [24,000 Fields] [495 Gaps] [73.5% Affected]
 
 **Priority Pills (clickable filters):**
-[🔴 23 Critical] [🟠 64 High] [🟡 112 Medium] [🟢 48 Low]
+[🔴 47 Critical] [🟠 128 High] [🟡 224 Medium] [🟢 96 Low]
 
 **Filters:** Provider dropdown, Field dropdown, Search box
 
@@ -56,7 +56,7 @@ Dark glassmorphism. Raw gaps comparison (NO AI columns). Background: #0A0F1C→#
 **Interactions:**
 - Column headers: click to sort
 - Rows: hover highlight, click opens detail popup
-- Pagination: "1-25 of 247" with arrows
+- Pagination: "1-25 of 495" with arrows
 
 **Row Click Popup:**
 ```
