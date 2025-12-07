@@ -1,106 +1,88 @@
 # HCSC Provider Reconciliation - Interactive Prototype
 
-Fully clickable dark glassmorphism UI. 4-step workflow. All buttons/tabs/rows interactive.
+Dark glassmorphism UI. 4-step workflow. All buttons/tabs/rows clickable.
 
 ## THEME
-Background: #0A0F1C→#1A1F3C gradient. Cards: glass blur. Accent: cyan #06B6D4. Critical #EF4444, High #F97316, Medium #EAB308, Low #22C55E. Glow effects, hover states on everything.
+Background: #0A0F1C→#1A1F3C. Cards: glass blur. Accent: cyan #06B6D4. Critical #EF4444, High #F97316, Medium #EAB308, Low #22C55E.
 
 ## LOGIN
-Glass card center. Username/password inputs (typeable). "SIGN IN" button → navigates to Step 1. Creds: admin/admin123. Wrong login shows error toast.
+Glass card. Username/password inputs. "SIGN IN" → Step 1. Creds: admin/admin123
 
-## HEADER (all pages)
-Step indicators clickable to jump between completed steps. Avatar dropdown: Profile, Settings, Logout.
+## HEADER
+Step progress [●━○━○━○] clickable. Avatar dropdown: Profile, Settings, Logout.
 
 ---
 
 ## STEP 1: UPLOAD
-Two drag-drop zones clickable → shows file picker. After upload:
-```
-✅ simplyr_sample.csv        ✅ datalake_sample.csv
-Providers: 99                Providers: 99
-Fields: 58                   Fields: 58
-```
-[Preview] button → modal with data table. [Remove] button → clears file.
-"Start Reconciliation →" button → navigates to Step 2
+Two drag-drop cards: "Simplyr Data" and "Data Lake"
+
+After upload, [Preview] button → modal shows 5 rows × 58 columns:
+
+**Simplyr Data Preview (horizontal scroll):**
+| provider_id | npi | first_name | last_name | suffix | gender | dob | tin | specialty_primary | contract_status | ... |
+|-------------|-----|------------|-----------|--------|--------|-----|-----|-------------------|-----------------|-----|
+| P100000 | 1065939459 | Ana | Garcia | DO | M | 1/1/1962 | 534360412 | Family Medicine | Pending | ... |
+| P100001 | 1502778451 | Priya | Smith | PA | M | 1/1/1974 | 607697301 | Pediatrics | Pending | ... |
+| P100002 | 1010168041 | Luis | Johnson | DO | U | 1/1/1974 | 809296119 | Dermatology | Inactive | ... |
+| P100003 | 1592491251 | Priya | Smith | DO | M | 1/1/1961 | 379378356 | Cardiology | Active | ... |
+| P100004 | 1154519413 | Mike | Johnson | MD | M | 1/1/1996 | 514610493 | Family Medicine | Active | ... |
+
+**Data Lake Preview:**
+| provider_id | npi | first_name | last_name | suffix | gender | dob | tin | specialty_primary | contract_status | ... |
+|-------------|-----|------------|-----------|--------|--------|-----|-----|-------------------|-----------------|-----|
+| P100000 | 1014581341 | Ana | Garcia | | U | 1/1/1994 | 260622691 | Orthopedics | Inactive | ... |
+| P100001 | 1600215021 | John | Johnson | PA | F | 1/1/1957 | 122193804 | Orthopedics | Active | ... |
+| P100002 | 1510441276 | David | Kim | PA | U | 1/1/1988 | 569288394 | Cardiology | Active | ... |
+| P100003 | 1050474560 | David | Patel | DO | U | 1/1/1993 | 150649038 | Family Medicine | Terminated | ... |
+| P100004 | 1306713563 | Luis | Johnson | PA | F | 1/1/1997 | 439634360 | Orthopedics | Pending | ... |
+
+[Remove] clears file. "Start Reconciliation →" → Step 2
 
 ---
 
 ## STEP 2: RECONCILIATION
-Loading animation 3sec → Results view
-
-Summary cards clickable → filter table. Priority pills clickable → filter by severity:
-🔴23 Critical | 🟠64 High | 🟡112 Medium | 🟢48 Low
+Loading 3sec → Results. Summary: 🔴23 Critical | 🟠64 High | 🟡112 Medium | 🟢48 Low (247 total)
 
 **GAPS TABLE:**
 | Provider | Field | Simplyr | Lake | Type |
 |----------|-------|---------|------|------|
 | P100000 | npi | 1065939459 | 1014581341 | Mismatch |
-| P100000 | tin | 534360412 | 260622691 | Mismatch |
 | P100000 | dob | 1/1/1962 | 1/1/1994 | Mismatch |
 | P100000 | specialty | Family Medicine | Orthopedics | Mismatch |
-| P100001 | npi | 1502778451 | 1600215021 | Mismatch |
 | P100001 | first_name | Priya | John | Mismatch |
 | P100001 | last_name | Smith | Johnson | Mismatch |
-| P100002 | npi | 1010168041 | 1510441276 | Mismatch |
 | P100002 | first_name | Luis | David | Mismatch |
 | P100003 | contract | Active | Terminated | Mismatch |
-| P100005 | phone | 2125551212 | (empty) | Missing |
 
-Column headers clickable → sort. Rows clickable → highlight. Provider dropdown filter. Pagination arrows work.
-"🧠 Run AI Analysis →" → navigates to Step 3
+Sortable columns, row click highlights, pagination. "🧠 Run AI Analysis →" → Step 3
 
 ---
 
 ## STEP 3: AI ANALYSIS
-Loading 4sec → Results
+Loading 4sec → Results. ⚠️ Alert: "Provider ID Collision - 98 gaps (39.7%)"
 
-⚠️ Alert banner clickable → expands details about Provider ID Collision (98 gaps)
+Domain tabs: [All] [Claims 89] [Credentialing 62] [Network 54] [Directory 42]
 
-Domain tabs ALL clickable: [All] [Claims 89] [Credentialing 62] [Network 54] [Directory 42]
+**AI DECISION TABLE (Agent analyzes each gap):**
+| Gap | Domain | Owner Group | Severity | Recommendation | Why |
+|-----|--------|-------------|----------|----------------|-----|
+| P100000.npi | Claims | Claims Operations | 🔴10 Critical | DO NOT sync. Validate NPPES. Escalate | 27 mismatches=different providers mapped to same ID |
+| P100000.tin | Claims | Claims Operations | 🔴10 Critical | Hold payments. Verify W-9 | TIN confirms different legal entities |
+| P100000.cred_status | Credentialing | Cred Team | 🔴9 Critical | Verify CAQH. Update Lake | Verified vs Expired causes claim denials |
+| P100001.npi | Claims | Claims Operations | 🔴10 Critical | Audit ID generation | Systemic collision: Priya Smith ≠ John Johnson |
+| P100001.first_name | Provider Directory | Directory Team | 🔴9 Critical | Do not reconcile | Different individuals confirmed by name mismatch |
+| P100002.npi | Claims | Claims Operations | 🔴10 Critical | Escalate to IT | 3rd collision: Luis DO ≠ David PA |
+| P100003.contract | Network Ops | Network Team | 🟠8 High | Verify contract system | Active vs Terminated affects payment eligibility |
+| P100005.phone | Provider Directory | Directory Team | 🟡5 Medium | Sync from Simplyr | Contact info incomplete in Lake |
 
-**AI TABLE:**
-| Provider | Field | Root Cause | Recommendation | Owner | Score |
-|----------|-------|------------|----------------|-------|-------|
-| P100000 | npi | ID collision. Different providers | DO NOT sync. Escalate | Claims | 🔴10 |
-| P100000 | tin | Different entities | Hold payments | Claims | 🔴10 |
-| P100001 | npi | Systemic collision | Audit ID process | Claims | 🔴10 |
-| P100001 | first_name | Different individuals | Investigate | Directory | 🔴9 |
-| P100002 | npi | 3rd collision detected | Escalate to IT | Claims | 🔴10 |
-| P100003 | contract | Payment affected | Verify system | Network | 🟠8 |
-| P100005 | phone | Contact incomplete | Sync from Simplyr | Directory | 🟡5 |
+**Row click → slide panel:** Values, Root Cause, Recommendation, Next Steps checkboxes, [Approve][Reject][Note]
 
-**Each row clickable → opens slide panel:**
-- Value comparison section
-- AI root cause text
-- Recommendation text  
-- Next steps with clickable checkboxes
-- [Approve] [Reject] [Note] buttons all clickable
-- [✕] closes panel
+Bucketization tabs: [By Provider] [By Domain] [By Root Cause] [By Priority]
 
-**Bucketization tabs clickable:**
-[By Provider] [By Domain] [By Root Cause] [By Priority] - each shows different summary table
-
-"Export Results →" → navigates to Step 4
+"Export →" → Step 4
 
 ---
 
 ## STEP 4: EXPORT
-4 download cards ALL clickable:
-📊 Full Report (Excel) → download
-📄 Executive Summary (PDF) → download  
-🔴 Critical Gaps (CSV) → download
-📁 Raw Data (JSON) → download
-
-[Start New Reconciliation] → returns to Step 1
-[Email Report] → modal
-[Print] → print dialog
-
----
-
-## INTERACTIONS
-- All buttons: hover glow + cursor pointer
-- All tabs: active state highlight
-- All rows: hover highlight, click selects
-- All inputs: focus state, typeable
-- Modals: backdrop click closes
-- Tooltips on icons
+4 download cards: 📊Full Report(Excel) | 📄Summary(PDF) | 🔴Critical(CSV) | 📁Raw(JSON)
+[New Reconciliation] [Email] [Print]
