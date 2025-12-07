@@ -2,16 +2,14 @@
 
 Dark glassmorphism UI. 4-step workflow. All buttons/tabs/rows clickable.
 
-## THEME (toggle 🌙/☀️ in header)
-**Dark:** BG #0A0F1C→#1A1F3C, glass cards, text #FFF
-**Light:** BG #F8FAFC, white cards, text #1E293B
-Accent: #06B6D4. Severity: 🔴#EF4444 🟠#F97316 🟡#EAB308 🟢#22C55E
+## THEME
+Background: #0A0F1C→#1A1F3C. Cards: glass blur. Accent: cyan #06B6D4. Critical #EF4444, High #F97316, Medium #EAB308, Low #22C55E.
 
 ## LOGIN
-Glass card. Inputs: admin/admin123. "SIGN IN" → Step 1
+Glass card. Username/password inputs. "SIGN IN" → Step 1. Creds: admin/admin123
 
 ## HEADER
-[●━○━○━○] steps | [🌙/☀️] theme toggle | Avatar: Profile, Logout
+Step progress [●━○━○━○] clickable. Avatar dropdown: Profile, Settings, Logout.
 
 ---
 
@@ -45,8 +43,9 @@ After upload, [Preview] button → modal shows 5 rows × 120 columns:
 ## STEP 2: RECONCILIATION
 Loading 3sec → Results.
 
-**Summary Cards:**
+**Summary Cards + Donut Chart:**
 🔴47 Critical | 🟠128 High | 🟡224 Medium | 🟢96 Low (495 gaps, 200 providers)
+[Donut chart showing 10%/26%/45%/19% distribution]
 
 **GAPS TABLE:**
 | Provider | Field | Simplyr | Lake | Type |
@@ -70,9 +69,13 @@ Loading 4sec → Results. ⚠️ Alert: "Provider ID Collision - 196 gaps (39.6%
 
 **Bulk Actions Bar:** ☑️ Select All | [Approve Selected] [Assign To ▼] [Tag ▼]
 
-**Domain Tabs (click to filter):**
-[All 495] [Claims 178] [Cred 124] [Network 108] [Directory 85]
-Each tab filters table: Claims=npi/tin, Cred=license/CAQH, Network=contract, Dir=name/address
+**Domain Filter Tabs (clickable - each filters table):**
+[All 495] [Claims 178] [Credentialing 124] [Network 108] [Directory 85]
+
+Click [Claims] → shows only npi/tin/billing gaps
+Click [Credentialing] → shows only license/cred_status/CAQH gaps
+Click [Network] → shows only contract/network_tier gaps
+Click [Directory] → shows only name/address/phone gaps
 
 **AI DECISION TABLE (updates based on tab selected):**
 | Gap | Domain | Owner | Severity | Action | Reason |
