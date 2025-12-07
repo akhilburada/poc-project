@@ -61,19 +61,25 @@ Sortable columns, row click highlights, pagination. "🧠 Run AI Analysis →" �
 ## STEP 3: AI ANALYSIS
 Loading 4sec → Results. ⚠️ Alert: "Provider ID Collision - 196 gaps (39.6%)"
 
-Domain tabs: [All] [Claims 178] [Credentialing 124] [Network 108] [Directory 85]
+**Domain Filter Tabs (clickable - each filters table):**
+[All 495] [Claims 178] [Credentialing 124] [Network 108] [Directory 85]
 
-**AI DECISION TABLE (Agent analyzes each gap):**
-| Gap | Domain | Owner Group | Severity | Recommendation | Why |
-|-----|--------|-------------|----------|----------------|-----|
-| P100000.npi | Claims | Claims Operations | 🔴10 Critical | DO NOT sync. Validate NPPES. Escalate | 27 mismatches=different providers mapped to same ID |
-| P100000.tin | Claims | Claims Operations | 🔴10 Critical | Hold payments. Verify W-9 | TIN confirms different legal entities |
-| P100000.cred_status | Credentialing | Cred Team | 🔴9 Critical | Verify CAQH. Update Lake | Verified vs Expired causes claim denials |
-| P100001.npi | Claims | Claims Operations | 🔴10 Critical | Audit ID generation | Systemic collision: Priya Smith ≠ John Johnson |
-| P100001.first_name | Provider Directory | Directory Team | 🔴9 Critical | Do not reconcile | Different individuals confirmed by name mismatch |
-| P100002.npi | Claims | Claims Operations | 🔴10 Critical | Escalate to IT | 3rd collision: Luis DO ≠ David PA |
-| P100003.contract | Network Ops | Network Team | 🟠8 High | Verify contract system | Active vs Terminated affects payment eligibility |
-| P100005.phone | Provider Directory | Directory Team | 🟡5 Medium | Sync from Simplyr | Contact info incomplete in Lake |
+Click [Claims] → shows only npi/tin/billing gaps
+Click [Credentialing] → shows only license/cred_status/CAQH gaps
+Click [Network] → shows only contract/network_tier gaps
+Click [Directory] → shows only name/address/phone gaps
+
+**AI DECISION TABLE (updates based on tab selected):**
+| Gap | Domain | Owner | Severity | Action | Reason |
+|-----|--------|-------|----------|--------|--------|
+| P100000.npi | Claims | Claims Ops | 🔴10 | DO NOT sync. Escalate | Different providers same ID |
+| P100000.tin | Claims | Claims Ops | 🔴10 | Hold payments | Different legal entities |
+| P100000.cred | Cred | Cred Team | 🔴9 | Verify CAQH | Verified vs Expired |
+| P100001.npi | Claims | Claims Ops | 🔴10 | Audit ID system | Priya≠John collision |
+| P100001.name | Directory | Dir Team | 🔴9 | Do not reconcile | Identity mismatch |
+| P100002.npi | Claims | Claims Ops | 🔴10 | Escalate IT | Luis≠David collision |
+| P100003.contract | Network | Net Team | 🟠8 | Verify contract | Active vs Terminated |
+| P100005.phone | Directory | Dir Team | 🟡5 | Sync Simplyr | Missing contact |
 
 **Row click → slide panel:** Values, Root Cause, Recommendation, Next Steps checkboxes, [Approve][Reject][Note]
 
