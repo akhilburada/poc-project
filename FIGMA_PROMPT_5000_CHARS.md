@@ -16,7 +16,7 @@ Step progress [●━○━○━○] clickable. Avatar dropdown: Profile, Setti
 ## STEP 1: UPLOAD
 Two drag-drop cards: "Simplyr Data" and "Data Lake"
 
-After upload, [Preview] button → modal shows 5 rows × 58 columns:
+After upload, [Preview] button → modal shows 5 rows × 120 columns:
 
 **Simplyr Data Preview (horizontal scroll):**
 | provider_id | npi | first_name | last_name | suffix | gender | dob | tin | specialty_primary | contract_status | ... |
@@ -41,7 +41,7 @@ After upload, [Preview] button → modal shows 5 rows × 58 columns:
 ---
 
 ## STEP 2: RECONCILIATION
-Loading 3sec → Results. Summary: 🔴23 Critical | 🟠64 High | 🟡112 Medium | 🟢48 Low (247 total)
+Loading 3sec → Results. Summary: 🔴47 Critical | 🟠128 High | 🟡224 Medium | 🟢96 Low (495 total gaps across 200 providers)
 
 **GAPS TABLE:**
 | Provider | Field | Simplyr | Lake | Type |
@@ -59,9 +59,9 @@ Sortable columns, row click highlights, pagination. "🧠 Run AI Analysis →" �
 ---
 
 ## STEP 3: AI ANALYSIS
-Loading 4sec → Results. ⚠️ Alert: "Provider ID Collision - 98 gaps (39.7%)"
+Loading 4sec → Results. ⚠️ Alert: "Provider ID Collision - 196 gaps (39.6%)"
 
-Domain tabs: [All] [Claims 89] [Credentialing 62] [Network 54] [Directory 42]
+Domain tabs: [All] [Claims 178] [Credentialing 124] [Network 108] [Directory 85]
 
 **AI DECISION TABLE (Agent analyzes each gap):**
 | Gap | Domain | Owner Group | Severity | Recommendation | Why |
