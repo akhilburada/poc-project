@@ -45,9 +45,8 @@ After upload, [Preview] button → modal shows 5 rows × 120 columns:
 ## STEP 2: RECONCILIATION
 Loading 3sec → Results.
 
-**Summary Cards + Donut Chart:**
+**Summary Cards:**
 🔴47 Critical | 🟠128 High | 🟡224 Medium | 🟢96 Low (495 gaps, 200 providers)
-[Donut chart showing 10%/26%/45%/19% distribution]
 
 **GAPS TABLE:**
 | Provider | Field | Simplyr | Lake | Type |
