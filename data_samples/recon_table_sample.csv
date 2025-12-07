@@ -1,0 +1,5 @@
+provider_id,field,simplyr_value,lake_value,gap_type,root_cause,recommendation,next_steps,owner_group,domain_group,severity_score,suggested_workflow,priority_bucket
+P100000,npi,1685061829,1873963800,Mismatch,,,,,,,
+P100000,last_name,Smith,Wong,Mismatch,,,,,,,,
+P100000,gender,M,F,Mismatch,,,,,,,,
+P100000,tin,477063431,990091683,Mismatch,,,,,,,,
