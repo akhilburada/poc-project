@@ -41,7 +41,11 @@ After upload, [Preview] button → modal shows 5 rows × 120 columns:
 ---
 
 ## STEP 2: RECONCILIATION
-Loading 3sec → Results. Summary: 🔴47 Critical | 🟠128 High | 🟡224 Medium | 🟢96 Low (495 total gaps across 200 providers)
+Loading 3sec → Results.
+
+**Summary Cards + Donut Chart:**
+🔴47 Critical | 🟠128 High | 🟡224 Medium | 🟢96 Low (495 gaps, 200 providers)
+[Donut chart showing 10%/26%/45%/19% distribution]
 
 **GAPS TABLE:**
 | Provider | Field | Simplyr | Lake | Type |
@@ -61,7 +65,11 @@ Sortable columns, row click highlights, pagination. "🧠 Run AI Analysis →" �
 ## STEP 3: AI ANALYSIS
 Loading 4sec → Results. ⚠️ Alert: "Provider ID Collision - 196 gaps (39.6%)"
 
-**Domain Filter Tabs (clickable - each filters table):**
+**SLA Timers:** 🔴47 Critical ⏱️18h left | 🟠128 High ⏱️48h left
+
+**Bulk Actions Bar:** ☑️ Select All | [Approve Selected] [Assign To ▼] [Tag ▼]
+
+**Domain Filter Tabs (clickable - filters table):**
 [All 495] [Claims 178] [Credentialing 124] [Network 108] [Directory 85]
 
 Click [Claims] → shows only npi/tin/billing gaps
