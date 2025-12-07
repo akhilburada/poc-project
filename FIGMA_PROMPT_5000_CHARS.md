@@ -2,14 +2,14 @@
 
 Dark glassmorphism UI. 4-step workflow. All buttons/tabs/rows clickable.
 
-## THEME
-Background: #0A0F1C→#1A1F3C. Cards: glass blur. Accent: cyan #06B6D4. Critical #EF4444, High #F97316, Medium #EAB308, Low #22C55E.
+## THEME (🌙/☀️ toggle in header)
+Dark: #0A0F1C, glass. Light: #F8FAFC, white. Accent #06B6D4. 🔴#EF4444 🟠#F97316 🟡#EAB308 🟢#22C55E
 
 ## LOGIN
-Glass card. Username/password inputs. "SIGN IN" → Step 1. Creds: admin/admin123
+Glass card. admin/admin123. "SIGN IN" → Step 1
 
 ## HEADER
-Step progress [●━○━○━○] clickable. Avatar dropdown: Profile, Settings, Logout.
+[●━○━○━○] | [🌙/☀️] | Avatar: Profile, Logout
 
 ---
 
