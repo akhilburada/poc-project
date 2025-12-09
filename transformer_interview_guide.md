@@ -107,7 +107,280 @@ After training, the embedding matrix captures:
 
 ---
 
-# 3. COMPLETE DATA FLOW
+# 3. UNDERSTANDING QUERY, KEY, VALUE (Q, K, V)
+
+**This is the CORE of attention - understand this first!**
+
+---
+
+## The Real-World Analogy: Library Search
+
+```
+Imagine you're in a library looking for information:
+
+YOU have a QUESTION (Query):
+   "I want to learn about machine learning"
+
+Each BOOK has a LABEL (Key):
+   Book 1: "Cooking recipes"
+   Book 2: "Machine learning basics"
+   Book 3: "History of France"
+   Book 4: "Deep learning guide"
+
+Each BOOK has CONTENT (Value):
+   Book 1: [recipes, ingredients, cooking tips...]
+   Book 2: [ML algorithms, neural networks, training...]
+   Book 3: [French revolution, Napoleon, Paris...]
+   Book 4: [backprop, transformers, GPT...]
+
+PROCESS:
+1. Compare your Question with each Label → Get relevance scores
+   - "Cooking recipes" vs your question → Low match (0.1)
+   - "Machine learning basics" vs your question → High match (0.8)
+   - "History of France" vs your question → Low match (0.05)
+   - "Deep learning guide" vs your question → High match (0.7)
+
+2. Normalize scores (softmax) → They sum to 1
+   - Cooking: 0.05
+   - ML basics: 0.50  ← Most relevant!
+   - History: 0.02
+   - Deep learning: 0.43
+
+3. Get weighted mix of Content
+   - Your answer = 0.05×(Cooking content) + 0.50×(ML content) + 
+                   0.02×(History content) + 0.43×(DL content)
+   
+   Result: Mostly ML and DL information!
+```
+
+---
+
+## In Transformers: Every Word Searches Every Other Word
+
+```
+Sentence: "The cat sat on the mat"
+
+When processing "sat":
+- "sat" has a QUERY: "What information do I need?"
+- Every word has a KEY: "Here's what I offer"
+- Every word has a VALUE: "Here's my actual information"
+
+"sat" compares its Query with all Keys:
+- Query_sat vs Key_the  → Low relevance (article, not important)
+- Query_sat vs Key_cat  → HIGH relevance (who is sitting!)
+- Query_sat vs Key_sat  → Medium relevance (myself)
+- Query_sat vs Key_on   → Low relevance
+- Query_sat vs Key_the  → Low relevance  
+- Query_sat vs Key_mat  → HIGH relevance (where sitting!)
+
+Result: "sat" gathers information mostly from "cat" and "mat"
+        Now "sat" knows WHO sat and WHERE!
+```
+
+---
+
+## How Are Q, K, V Created?
+
+### Step 1: Start with Word Embeddings
+
+```
+Each word starts as a vector (from embedding matrix):
+
+"I"    → [0.2, -0.5, 0.8, ..., 0.3]   (512 numbers)
+"love" → [0.6, 0.1, -0.4, ..., 0.7]   (512 numbers)
+"AI"   → [-0.3, 0.9, 0.2, ..., -0.1]  (512 numbers)
+
+These are the raw word representations.
+```
+
+### Step 2: Transform into Q, K, V using Learned Weights
+
+```
+The model has THREE weight matrices (learned during training):
+
+W_Q (Query weights):  512 × 512 matrix
+W_K (Key weights):    512 × 512 matrix
+W_V (Value weights):  512 × 512 matrix
+
+For each word, we create THREE different vectors:
+
+┌─────────────────────────────────────────────────────────────────┐
+│  For word "love":                                                │
+│                                                                  │
+│  Q_love = embedding_love × W_Q                                  │
+│         = [0.6, 0.1, -0.4, ..., 0.7] × [512×512 matrix]         │
+│         = [0.3, -0.2, 0.9, ..., 0.1]  ← Query vector            │
+│                                                                  │
+│  K_love = embedding_love × W_K                                  │
+│         = [0.6, 0.1, -0.4, ..., 0.7] × [512×512 matrix]         │
+│         = [0.5, 0.4, -0.1, ..., 0.8]  ← Key vector              │
+│                                                                  │
+│  V_love = embedding_love × W_V                                  │
+│         = [0.6, 0.1, -0.4, ..., 0.7] × [512×512 matrix]         │
+│         = [-0.2, 0.7, 0.3, ..., 0.6]  ← Value vector            │
+└─────────────────────────────────────────────────────────────────┘
+
+Same process for every word in the sentence!
+```
+
+### Step 3: Result - Every Word Has Q, K, V
+
+```
+After transformation:
+
+Word "I":
+   Q_I = [...]    "What am I looking for?"
+   K_I = [...]    "What do I offer to others?"
+   V_I = [...]    "What information do I contain?"
+
+Word "love":
+   Q_love = [...]  "What am I looking for?"
+   K_love = [...]  "What do I offer to others?"
+   V_love = [...]  "What information do I contain?"
+
+Word "AI":
+   Q_AI = [...]   "What am I looking for?"
+   K_AI = [...]   "What do I offer to others?"
+   V_AI = [...]   "What information do I contain?"
+```
+
+---
+
+## Why Three DIFFERENT Vectors?
+
+```
+Q, K, V serve different purposes:
+
+QUERY (Q): "What am I searching for?"
+   - Represents what this word NEEDS from other words
+   - A verb might query for its subject/object
+   - A pronoun might query for what it refers to
+
+KEY (K): "What can others find in me?"
+   - Represents what this word OFFERS to other words
+   - Like a label or index for the word
+   - Used to match against queries
+
+VALUE (V): "What information will I give?"
+   - The actual CONTENT to pass along
+   - When a word is attended to, its Value is retrieved
+   - Contains the useful information
+
+───────────────────────────────────────────────────
+ANALOGY: Dating App
+
+Query = "What am I looking for in a partner?"
+Key = "How do I describe myself?"
+Value = "My actual personality/information"
+
+Matching process:
+1. Compare my Query with everyone's Key
+2. Find high matches (compatibility scores)
+3. Get their Values (learn about them)
+───────────────────────────────────────────────────
+```
+
+---
+
+## Why Use Weight Matrices (W_Q, W_K, W_V)?
+
+```
+Q1: Why not just use the embedding directly?
+
+The raw embedding is the SAME for all purposes.
+But we need DIFFERENT representations for different roles:
+
+- When QUERYING: Word needs to express what it's looking for
+- When being a KEY: Word needs to express what it offers
+- When being a VALUE: Word needs to provide actual content
+
+Weight matrices TRANSFORM the embedding into specialized versions!
+
+───────────────────────────────────────────────────
+Q2: How are W_Q, W_K, W_V learned?
+
+Same as all neural network weights:
+- Start with random values
+- During training, backpropagation adjusts them
+- They learn to create useful Q, K, V representations
+- After training, they know how to transform words properly
+───────────────────────────────────────────────────
+```
+
+---
+
+## The Complete Attention Process (Summary)
+
+```
+INPUT: 3 word embeddings (each 512-dim)
+       "I", "love", "AI"
+
+STEP 1: Create Q, K, V for each word
+        Q = embeddings × W_Q  → 3 query vectors
+        K = embeddings × W_K  → 3 key vectors
+        V = embeddings × W_V  → 3 value vectors
+
+STEP 2: Calculate attention scores
+        For each word, compare its Q with ALL Ks
+        scores = Q × K^T (dot product)
+        
+        Result: 3×3 matrix (every word to every word)
+        
+                    K_I    K_love   K_AI
+               ┌─────────┬─────────┬─────────┐
+        Q_I    │  score  │  score  │  score  │
+               ├─────────┼─────────┼─────────┤
+        Q_love │  score  │  score  │  score  │
+               ├─────────┼─────────┼─────────┤
+        Q_AI   │  score  │  score  │  score  │
+               └─────────┴─────────┴─────────┘
+
+STEP 3: Scale scores
+        Divide by √(dimension) to keep values manageable
+
+STEP 4: Softmax (per row)
+        Convert scores to probabilities (sum to 1)
+        
+                    K_I    K_love   K_AI    SUM
+               ┌─────────┬─────────┬─────────┐
+        Q_I    │  0.50   │  0.30   │  0.20   │ = 1.0
+               ├─────────┼─────────┼─────────┤
+        Q_love │  0.25   │  0.55   │  0.20   │ = 1.0
+               ├─────────┼─────────┼─────────┤
+        Q_AI   │  0.15   │  0.25   │  0.60   │ = 1.0
+               └─────────┴─────────┴─────────┘
+
+STEP 5: Weighted sum of Values
+        For each word, mix all Values using attention weights
+        
+        new_I    = 0.50×V_I + 0.30×V_love + 0.20×V_AI
+        new_love = 0.25×V_I + 0.55×V_love + 0.20×V_AI
+        new_AI   = 0.15×V_I + 0.25×V_love + 0.60×V_AI
+
+OUTPUT: 3 NEW vectors (each 512-dim)
+        Each word now contains information from ALL words!
+        "love" knows about "I" (subject) and "AI" (object)
+```
+
+---
+
+## Interview Quick Answers
+
+**Q: What are Q, K, V?**
+> Query is what a word is searching for. Key is what a word offers. Value is the information retrieved. Each word has all three, created by multiplying embedding with learned weight matrices.
+
+**Q: How are Q, K, V calculated?**
+> Q = embedding × W_Q, K = embedding × W_K, V = embedding × W_V. The weight matrices are learned during training.
+
+**Q: Why do we need separate Q, K, V? Why not use embedding directly?**
+> A word needs different representations for different purposes - what it's looking for (Q) vs what it offers (K) vs what information it contains (V). Weight matrices create these specialized versions.
+
+**Q: What do the attention scores mean?**
+> How relevant each word is to each other word. High score = high relevance = more information will be retrieved from that word's Value.
+
+---
+
+# 4. COMPLETE DATA FLOW
 
 ## Input: "I love AI" → Output: "J'aime l'IA"
 
@@ -883,7 +1156,7 @@ Goal: Minimize loss = Maximize probability of correct tokens
 
 ---
 
-# 4. THE THREE TYPES OF ATTENTION
+# 5. THE THREE TYPES OF ATTENTION
 
 | Attention Type | Where | Q From | K,V From | Mask? | Purpose |
 |---------------|-------|--------|----------|-------|---------|
@@ -893,7 +1166,7 @@ Goal: Minimize loss = Maximize probability of correct tokens
 
 ---
 
-# 5. HOW ATTENTION ACTUALLY WORKS (Simple Version)
+# 6. HOW ATTENTION ACTUALLY WORKS (Simple Version)
 
 ## The Q, K, V Concept
 
@@ -957,7 +1230,7 @@ Results are concatenated and mixed together
 
 ---
 
-# 6. LAYER NORMALIZATION & RESIDUAL CONNECTIONS
+# 7. LAYER NORMALIZATION & RESIDUAL CONNECTIONS
 
 ## Residual Connection (Skip Connection)
 
@@ -988,7 +1261,7 @@ Why?
 
 ---
 
-# 7. KEY DIMENSIONS
+# 8. KEY DIMENSIONS
 
 | Parameter | Original Paper | Meaning |
 |-----------|---------------|---------|
@@ -1001,7 +1274,7 @@ Why?
 
 ---
 
-# 8. INTERVIEW QUESTIONS & ANSWERS
+# 9. INTERVIEW QUESTIONS & ANSWERS
 
 ## Architecture Questions
 
@@ -1054,7 +1327,7 @@ Why?
 
 ---
 
-# 9. VISUAL SUMMARY
+# 10. VISUAL SUMMARY
 
 ```
 INPUT: "I love AI"
@@ -1121,7 +1394,7 @@ INPUT: "I love AI"
 
 ---
 
-# 10. QUICK FACTS FOR INTERVIEWS
+# 11. QUICK FACTS FOR INTERVIEWS
 
 - **Parameters in base model**: ~65 million
 - **Embedding parameters**: vocab_size × d_model = 37000 × 512 = 19M
@@ -1133,7 +1406,7 @@ INPUT: "I love AI"
 
 ---
 
-# 11. COMMON MISCONCEPTIONS
+# 12. COMMON MISCONCEPTIONS
 
 ❌ "Embeddings are pre-trained separately"
 ✓ Embeddings are trained together with the whole model (end-to-end)
