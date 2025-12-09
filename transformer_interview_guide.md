@@ -171,62 +171,269 @@ The encoder's job: **Build a rich understanding of the source sentence**
 ```
 3 vectors (one per word), each 512-dimensional
 Shape: (3 words, 512 dimensions)
+
+X = [
+    [0.12, -0.34, 0.56, ..., 0.23],   ← "I" (512 numbers)
+    [0.45, 0.12, -0.78, ..., -0.11],  ← "love" (512 numbers)
+    [-0.23, 0.89, 0.34, ..., 0.67]    ← "AI" (512 numbers)
+]
 ```
 
 ### Inside Each Encoder Layer (6 layers total)
 
 Each layer has 2 main parts:
 
-#### Part A: Self-Attention
+---
+
+#### Part A: Self-Attention (DETAILED)
+
+**Step 1: Create Query, Key, Value**
+
+The model has 3 learned weight matrices: W_Q, W_K, W_V (each is 512 × 512)
+
 ```
-"I" looks at:     "I" (itself), "love", "AI"
-"love" looks at:  "I", "love" (itself), "AI"  
-"AI" looks at:    "I", "love", "AI" (itself)
+For EACH word, we create 3 different vectors:
 
-Each word decides: "How much should I pay attention to each other word?"
+Q (Query) = "What am I looking for?"
+K (Key)   = "What do I contain that others might want?"
+V (Value) = "What information will I give if someone attends to me?"
 
-Example attention for "love":
-- "I": 30% attention (it's the subject doing the loving)
-- "love": 50% attention (the word itself is important)
-- "AI": 20% attention (it's what's being loved)
+How to calculate:
+┌─────────────────────────────────────────────────────────────────┐
+│  Q = X × W_Q    (input × weight matrix)                         │
+│  K = X × W_K                                                     │
+│  V = X × W_V                                                     │
+│                                                                  │
+│  X shape: (3 words, 512)                                        │
+│  W_Q shape: (512, 512)                                          │
+│  Q shape: (3 words, 512)                                        │
+└─────────────────────────────────────────────────────────────────┘
 
-Result: "love" now contains information from all 3 words!
+Result for our 3 words:
+Q = [Q_I, Q_love, Q_AI]       ← 3 query vectors
+K = [K_I, K_love, K_AI]       ← 3 key vectors  
+V = [V_I, V_love, V_AI]       ← 3 value vectors
 ```
 
-**Multi-Head Attention**: We do this 8 times in parallel, each "head" learning different patterns:
-- Head 1: Might learn grammatical relationships
-- Head 2: Might learn semantic relationships
-- Head 3: Might learn positional patterns
+**Step 2: Calculate Attention Scores**
+
+Each word compares its Query with ALL Keys:
+
+```
+"How relevant is each word to me?"
+
+For word "love":
+┌─────────────────────────────────────────────────────────────────┐
+│  score(love→I)    = Q_love · K_I    (dot product)              │
+│  score(love→love) = Q_love · K_love                             │
+│  score(love→AI)   = Q_love · K_AI                               │
+└─────────────────────────────────────────────────────────────────┘
+
+Dot product = multiply matching dimensions and sum
+If Q_love and K_I point in similar direction → HIGH score
+If they point in different directions → LOW score
+
+Full attention score matrix (all words):
+              K_I    K_love   K_AI
+         ┌─────────┬─────────┬─────────┐
+Q_I      │   1.2   │   0.8   │   0.5   │
+         ├─────────┼─────────┼─────────┤
+Q_love   │   2.1   │   1.8   │   0.9   │
+         ├─────────┼─────────┼─────────┤
+Q_AI     │   0.6   │   1.1   │   1.5   │
+         └─────────┴─────────┴─────────┘
+```
+
+**Step 3: Scale the Scores**
+
+```
+Divide by √64 (square root of dimension per head)
+
+Why? Large dot products → softmax becomes too "sharp" (nearly one-hot)
+Scaling keeps gradients healthy
+
+Scaled scores = scores / 8
+```
+
+**Step 4: Softmax → Attention Weights**
+
+```
+Convert scores to probabilities (each row sums to 1)
+
+              K_I    K_love   K_AI     SUM
+         ┌─────────┬─────────┬─────────┐
+Q_I      │  0.50   │  0.30   │  0.20   │ = 1.0
+         ├─────────┼─────────┼─────────┤
+Q_love   │  0.30   │  0.50   │  0.20   │ = 1.0
+         ├─────────┼─────────┼─────────┤
+Q_AI     │  0.20   │  0.35   │  0.45   │ = 1.0
+         └─────────┴─────────┴─────────┘
+
+Reading: "love" pays 30% attention to "I", 50% to itself, 20% to "AI"
+```
+
+**Step 5: Weighted Sum of Values**
+
+```
+For each word, mix the Values based on attention weights:
+
+new_love = 0.30 × V_I + 0.50 × V_love + 0.20 × V_AI
+           └─────────────────────────────────────────┘
+           "love" now contains info from ALL words!
+
+new_I    = 0.50 × V_I + 0.30 × V_love + 0.20 × V_AI
+new_AI   = 0.20 × V_I + 0.35 × V_love + 0.45 × V_AI
+```
+
+**Step 6: Output Projection**
+
+```
+Final step: multiply by another weight matrix W_O (512 × 512)
+
+attention_output = weighted_values × W_O
+
+This mixes all the information together
+```
+
+**Multi-Head Attention: Do This 8 Times in Parallel**
+
+```
+Instead of one attention with 512 dimensions:
+→ Split into 8 heads, each with 64 dimensions
+
+Head 1: Uses W_Q1, W_K1, W_V1 (each 512 → 64)
+Head 2: Uses W_Q2, W_K2, W_V2 (each 512 → 64)
+...
+Head 8: Uses W_Q8, W_K8, W_V8 (each 512 → 64)
+
+Each head learns DIFFERENT patterns:
+- Head 1: Might learn "who is the subject?"
+- Head 2: Might learn "what is the object?"
+- Head 3: Might learn "what words are nearby?"
+- Head 4: Might learn "what's the main verb?"
 - etc.
 
-#### Part B: Feed-Forward Network
-```
-Each position goes through:
-Linear layer (512 → 2048) → ReLU → Linear layer (2048 → 512)
-
-This is individual processing - no interaction between positions
-Adds computational power and non-linearity
+Finally: Concatenate all 8 heads → 8 × 64 = 512 dimensions
+         Then multiply by W_O to mix them
 ```
 
-#### Residual Connections + Layer Norm
+**After Self-Attention + Residual + LayerNorm**:
 ```
-After each part:
-output = LayerNorm(input + sublayer_output)
+output = LayerNorm(X + attention_output)
 
-Residual: Helps gradients flow (prevents vanishing gradient)
-LayerNorm: Keeps values stable (mean=0, variance=1)
+Residual (X +): Gradient flows directly, prevents vanishing gradient
+LayerNorm: Normalizes values for stability
 ```
 
-### What Comes Out of Encoder
+---
+
+#### Part B: Feed-Forward Network (DETAILED)
+
+After attention, each position is processed INDEPENDENTLY (no mixing between positions).
+
+**Structure**:
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  FFN has 2 linear layers with ReLU activation between them      │
+│                                                                  │
+│  Step 1: Expand                                                  │
+│  hidden = X × W1 + b1                                           │
+│  (3, 512) × (512, 2048) = (3, 2048)                             │
+│                                                                  │
+│  Step 2: ReLU activation                                        │
+│  hidden = ReLU(hidden)                                          │
+│  ReLU(x) = max(0, x)  ← keeps positive, zeros negative          │
+│                                                                  │
+│  Step 3: Compress back                                          │
+│  output = hidden × W2 + b2                                      │
+│  (3, 2048) × (2048, 512) = (3, 512)                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Why Expand then Compress?**
+```
+512 → 2048 → 512
+
+- More parameters = more learning capacity
+- ReLU adds non-linearity (network can learn complex patterns)
+- Think of it as "thinking space" - expand to process, compress to output
+- 2048 = 4× expansion is standard (can be adjusted)
+```
+
+**What FFN Does**:
+```
+- Processes each position's representation
+- Adds non-linear transformation
+- NO interaction between positions (unlike attention)
+- Attention = "gather information from others"
+- FFN = "process the gathered information"
+```
+
+**After FFN + Residual + LayerNorm**:
+```
+output = LayerNorm(attention_output + ffn_output)
+```
+
+---
+
+#### Complete Encoder Layer Flow
+```
+Input X (3 words × 512 dim)
+    │
+    ▼
+┌─────────────────────────┐
+│ Self-Attention          │
+│ Q, K, V → Scores →      │
+│ Softmax → Weighted Sum  │
+└───────────┬─────────────┘
+            │
+    ┌───────┴───────┐
+    │   + (Residual)│ ← Add original input
+    └───────┬───────┘
+            │
+    ┌───────┴───────┐
+    │  LayerNorm    │
+    └───────┬───────┘
+            │
+            ▼
+┌─────────────────────────┐
+│ Feed-Forward Network    │
+│ Linear → ReLU → Linear  │
+└───────────┬─────────────┘
+            │
+    ┌───────┴───────┐
+    │   + (Residual)│ ← Add attention output
+    └───────┬───────┘
+            │
+    ┌───────┴───────┐
+    │  LayerNorm    │
+    └───────┬───────┘
+            │
+            ▼
+Output (3 words × 512 dim) → Goes to next encoder layer
+```
+
+---
+
+### What Comes Out of Encoder (After 6 Layers)
 ```
 3 vectors (same shape as input: 3 × 512)
 
-But now each vector is CONTEXTUALIZED:
-- "I" vector now knows it's the subject
-- "love" vector knows it has subject "I" and object "AI"
-- "AI" vector knows it's being loved
+But now each vector is DEEPLY CONTEXTUALIZED:
 
-This encoder output is used by the decoder!
+Original "I":   Just knew "I am the word I"
+After Encoder:  "I am the subject, I am doing the loving, 
+                 the object is AI, I come first in sentence"
+
+Original "love": Just knew "I am the word love"
+After Encoder:   "I am a verb, my subject is I, my object is AI,
+                  I express positive emotion, I'm in middle position"
+
+Original "AI":   Just knew "I am the word AI"  
+After Encoder:   "I am the object being loved, the lover is I,
+                  I come at the end, I'm a technology term"
+
+This rich encoder output goes to the decoder!
 ```
 
 ---
@@ -235,74 +442,405 @@ This encoder output is used by the decoder!
 
 The decoder's job: **Generate the target sentence one token at a time**
 
+### Where Does the Target Come From?
+
+**THIS IS IMPORTANT**: During training, we have a **parallel corpus** (dataset of paired sentences):
+
+```
+Training Dataset (millions of pairs):
+┌────────────────────────────────────────────────────────┐
+│  Source (English)     │  Target (French)              │
+├───────────────────────┼───────────────────────────────┤
+│  "I love AI"          │  "J'aime l'IA"                │
+│  "Hello world"        │  "Bonjour monde"              │
+│  "The cat is black"   │  "Le chat est noir"          │
+│  "How are you?"       │  "Comment allez-vous?"       │
+│  ... millions more    │  ...                          │
+└───────────────────────┴───────────────────────────────┘
+
+The model learns from these pairs!
+- Source goes into Encoder
+- Target is used by Decoder (during training)
+- Model learns to predict target given source
+```
+
+**Where do parallel corpora come from?**
+- Human translators (UN documents, EU parliament)
+- Existing bilingual websites
+- Books translated to multiple languages
+- Crowdsourced translations
+
+---
+
 ### Training vs Inference
 
 **Training (Teacher Forcing)**:
 ```
-We know the target: "J'aime l'IA"
-Feed the WHOLE target (shifted) at once:
-Input:  [<BOS>, "J'", "aime", "l'", "IA"]
-Labels: ["J'", "aime", "l'", "IA", <EOS>]
+We KNOW the correct target from our dataset!
+
+Source: "I love AI"           → Encoder
+Target: "J'aime l'IA"         → Decoder uses this!
+
+Decoder Input (shifted right):
+[<BOS>, "J'", "aime", "l'", "IA"]
+
+What model should predict (labels):
+["J'", "aime", "l'", "IA", <EOS>]
+
+Teacher forcing = We give the model the CORRECT previous tokens
+                 (not its own predictions)
+Why? Faster, more stable training
 ```
 
 **Inference (Auto-regressive)**:
 ```
-Step 1: Input [<BOS>]           → Predict "J'"
-Step 2: Input [<BOS>, "J'"]     → Predict "aime"
-Step 3: Input [<BOS>, "J'", "aime"] → Predict "l'"
-... continue until <EOS>
+We DON'T know the target - we're generating it!
+
+Step 1: Input [<BOS>]               → Model predicts "J'"
+Step 2: Input [<BOS>, "J'"]         → Model predicts "aime"
+Step 3: Input [<BOS>, "J'", "aime"] → Model predicts "l'"
+Step 4: Input [<BOS>, "J'", "aime", "l'"] → Model predicts "IA"
+Step 5: Input [<BOS>, "J'", "aime", "l'", "IA"] → Model predicts <EOS>
+STOP!
+
+Each step uses the model's OWN previous predictions
 ```
+
+---
 
 ### Inside Each Decoder Layer (6 layers)
 
 Each layer has 3 main parts:
 
-#### Part A: Masked Self-Attention
+---
+
+#### Part A: Masked Self-Attention (DETAILED)
+
+**Same as encoder self-attention, BUT with a crucial difference: CAUSAL MASK**
+
+**Step 1: Create Q, K, V from Decoder Input**
+
 ```
-SAME as encoder self-attention BUT with a mask!
+Decoder input: [<BOS>, "J'", "aime", "l'", "IA"]
+                 pos0   pos1   pos2   pos3  pos4
 
-When generating "aime", the model can only see:
-- <BOS> ✓
-- "J'"  ✓
-- "aime" ✓ (current position)
-- "l'"  ✗ (MASKED - can't see future!)
-- "IA"  ✗ (MASKED - can't see future!)
-
-Why mask? During inference, future tokens don't exist!
-Training must simulate this constraint.
-```
-
-#### Part B: Cross-Attention (THE KEY COMPONENT!)
-```
-This is where ENCODER OUTPUT enters the decoder!
-
-Query (Q): From decoder - "What am I looking for?"
-Key (K):   From encoder - "What does the source have?"
-Value (V): From encoder - "What information to retrieve?"
-
-Example for "aime" position:
-Q_aime asks: "I need to generate a French word, what English word should I translate?"
-
-Attention scores (how much to look at each source word):
-- "I":    20%  
-- "love": 65%  ← Highest! "aime" is the translation of "love"
-- "AI":   15%
-
-Result: "aime" representation now contains mostly "love" information!
-
-This is the TRANSLATION ALIGNMENT the model learns!
+Same as encoder:
+Q = decoder_input × W_Q  → 5 query vectors
+K = decoder_input × W_K  → 5 key vectors
+V = decoder_input × W_V  → 5 value vectors
 ```
 
-#### Part C: Feed-Forward Network
-Same as encoder - individual position processing.
+**Step 2: Calculate Attention Scores**
 
-### What Comes Out of Decoder
+```
+Same as encoder: Q × K^T to get scores
+
+              K_BOS  K_J'  K_aime  K_l'  K_IA
+         ┌────────┬───────┬───────┬──────┬──────┐
+Q_BOS    │  2.1   │  1.5  │  0.8  │  0.6 │  0.4 │
+Q_J'     │  1.8   │  2.3  │  1.2  │  0.7 │  0.5 │
+Q_aime   │  1.1   │  1.9  │  2.0  │  1.3 │  0.9 │
+Q_l'     │  0.9   │  1.4  │  1.6  │  1.8 │  1.1 │
+Q_IA     │  0.7   │  1.2  │  1.4  │  1.5 │  2.2 │
+         └────────┴───────┴───────┴──────┴──────┘
+```
+
+**Step 3: Apply the Causal Mask (THE KEY DIFFERENCE!)**
+
+```
+MASK future positions with -infinity:
+
+              K_BOS  K_J'  K_aime  K_l'  K_IA
+         ┌────────┬───────┬───────┬──────┬──────┐
+Q_BOS    │  2.1   │  -∞   │  -∞   │  -∞  │  -∞  │  ← Can only see itself
+Q_J'     │  1.8   │  2.3  │  -∞   │  -∞  │  -∞  │  ← Can see BOS, itself
+Q_aime   │  1.1   │  1.9  │  2.0  │  -∞  │  -∞  │  ← Can see BOS, J', itself
+Q_l'     │  0.9   │  1.4  │  1.6  │  1.8 │  -∞  │  ← Can see first 4
+Q_IA     │  0.7   │  1.2  │  1.4  │  1.5 │  2.2 │  ← Can see all
+         └────────┴───────┴───────┴──────┴──────┘
+
+The mask is a upper triangular matrix of -infinity values
+```
+
+**Step 4: Softmax (with mask)**
+
+```
+softmax(-∞) = 0  ← Future positions get ZERO attention!
+
+After softmax:
+              K_BOS  K_J'  K_aime  K_l'  K_IA   SUM
+         ┌────────┬───────┬───────┬──────┬──────┐
+Q_BOS    │  1.00  │  0    │  0    │  0   │  0   │ = 1.0
+Q_J'     │  0.38  │  0.62 │  0    │  0   │  0   │ = 1.0
+Q_aime   │  0.22  │  0.39 │  0.39 │  0   │  0   │ = 1.0
+Q_l'     │  0.15  │  0.25 │  0.28 │  0.32│  0   │ = 1.0
+Q_IA     │  0.10  │  0.18 │  0.22 │  0.23│  0.27│ = 1.0
+         └────────┴───────┴───────┴──────┴──────┘
+
+Notice: Each row only has non-zero values for current and past positions!
+```
+
+**Step 5: Weighted Sum of Values**
+
+```
+For "aime" (position 2):
+new_aime = 0.22 × V_BOS + 0.39 × V_J' + 0.39 × V_aime + 0 × V_l' + 0 × V_IA
+         = 0.22 × V_BOS + 0.39 × V_J' + 0.39 × V_aime
+         
+"aime" CANNOT see "l'" or "IA" - they're masked out!
+```
+
+**Why is Masking Necessary?**
+```
+During INFERENCE:
+- When generating "aime", the words "l'" and "IA" DON'T EXIST YET
+- We can't look at something that hasn't been generated
+
+During TRAINING:
+- We have the full target, but we MUST simulate inference conditions
+- If model could see future tokens, it would just copy them (cheating!)
+- Mask ensures model learns to predict based only on past
+```
+
+**After Masked Self-Attention + Residual + LayerNorm**:
+```
+output = LayerNorm(decoder_input + masked_attention_output)
+```
+
+---
+
+#### Part B: Cross-Attention (DETAILED) - THE BRIDGE!
+
+**This is where the ENCODER OUTPUT enters the decoder!**
+
+**Key Insight**:
+```
+Q (Query)  → comes from DECODER (current target state)
+K (Key)    → comes from ENCODER (source sentence info)
+V (Value)  → comes from ENCODER (source sentence info)
+
+Decoder asks: "What information from the source do I need?"
+Encoder provides: "Here's what each source word contains"
+```
+
+**Step 1: Create Q from Decoder, K and V from Encoder**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Q = decoder_state × W_Q_cross                                   │
+│      (5 decoder positions × 512)                                 │
+│                                                                  │
+│  K = encoder_output × W_K_cross                                  │
+│      (3 encoder positions × 512)                                 │
+│                                                                  │
+│  V = encoder_output × W_V_cross                                  │
+│      (3 encoder positions × 512)                                 │
+│                                                                  │
+│  Note: W_Q_cross, W_K_cross, W_V_cross are DIFFERENT weights    │
+│        from the self-attention weights!                          │
+└─────────────────────────────────────────────────────────────────┘
+
+Result:
+Q = [Q_BOS, Q_J', Q_aime, Q_l', Q_IA]   ← 5 decoder queries
+K = [K_I, K_love, K_AI]                  ← 3 encoder keys
+V = [V_I, V_love, V_AI]                  ← 3 encoder values
+```
+
+**Step 2: Calculate Cross-Attention Scores**
+
+```
+Each DECODER position attends to ALL ENCODER positions
+
+Scores = Q × K^T
+(5 decoder, 512) × (512, 3 encoder) = (5, 3)
+
+            K_I    K_love   K_AI   (ENCODER)
+       ┌─────────┬─────────┬─────────┐
+Q_BOS  │   0.8   │   1.2   │   0.9   │  ← BOS looks at source
+Q_J'   │   2.5   │   0.7   │   0.6   │  ← "J'" looks at source
+Q_aime │   0.9   │   2.8   │   0.8   │  ← "aime" looks at source
+Q_l'   │   0.6   │   1.1   │   2.4   │  ← "l'" looks at source
+Q_IA   │   0.5   │   0.9   │   2.9   │  ← "IA" looks at source
+       └─────────┴─────────┴─────────┘
+(DECODER)
+
+Notice: EVERY decoder position can see ALL encoder positions
+        NO MASK here - we want full access to source!
+```
+
+**Step 3: Softmax → Cross-Attention Weights**
+
+```
+            K_I    K_love   K_AI    SUM
+       ┌─────────┬─────────┬─────────┐
+Q_BOS  │  0.28   │  0.42   │  0.30   │ = 1.0  (general attention)
+Q_J'   │  0.70   │  0.18   │  0.12   │ = 1.0  ← "J'" attends to "I"!
+Q_aime │  0.18   │  0.68   │  0.14   │ = 1.0  ← "aime" attends to "love"!
+Q_l'   │  0.15   │  0.25   │  0.60   │ = 1.0  ← "l'" attends to "AI"
+Q_IA   │  0.12   │  0.20   │  0.68   │ = 1.0  ← "IA" attends to "AI"!
+       └─────────┴─────────┴─────────┘
+
+THIS IS THE TRANSLATION ALIGNMENT!
+- "J'" (French "I") strongly attends to "I" (English) ✓
+- "aime" (French "love") strongly attends to "love" (English) ✓
+- "IA" (French "AI") strongly attends to "AI" (English) ✓
+
+The model LEARNS these alignments during training!
+```
+
+**Step 4: Weighted Sum of Encoder Values**
+
+```
+For "aime" position:
+new_aime = 0.18 × V_I + 0.68 × V_love + 0.14 × V_AI
+                        └─────────────┘
+                        Mostly "love" information!
+
+"aime" now contains:
+- 18% information about "I"
+- 68% information about "love" (its translation!)
+- 14% information about "AI"
+```
+
+**Step 5: Output Projection**
+
+```
+cross_attention_output = weighted_values × W_O_cross
+```
+
+**After Cross-Attention + Residual + LayerNorm**:
+```
+output = LayerNorm(masked_attn_output + cross_attention_output)
+```
+
+---
+
+#### Part C: Feed-Forward Network (DETAILED)
+
+**Same structure as encoder FFN, applied to each decoder position independently**
+
+```
+Input: (5 decoder positions × 512)
+
+┌─────────────────────────────────────────────────────────────────┐
+│  Step 1: Expand to higher dimension                             │
+│  hidden = input × W1 + b1                                       │
+│  (5, 512) × (512, 2048) = (5, 2048)                             │
+│                                                                  │
+│  Step 2: Non-linear activation                                  │
+│  hidden = ReLU(hidden)                                          │
+│  - Negative values → 0                                          │
+│  - Positive values → unchanged                                  │
+│  - Adds non-linearity so network can learn complex patterns     │
+│                                                                  │
+│  Step 3: Compress back                                          │
+│  output = hidden × W2 + b2                                      │
+│  (5, 2048) × (2048, 512) = (5, 512)                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**What FFN Does in Decoder**:
+```
+After attention layers, each position has:
+- Information from previous target tokens (masked self-attn)
+- Information from source sentence (cross-attn)
+
+FFN processes this combined information:
+- Applies learned transformations
+- Prepares representation for next layer or output
+- Adds capacity to learn complex mappings
+
+Important: FFN is applied INDEPENDENTLY to each position
+           No mixing between positions (that's attention's job)
+```
+
+**After FFN + Residual + LayerNorm**:
+```
+output = LayerNorm(cross_attn_output + ffn_output)
+
+This output either:
+- Goes to the next decoder layer (layers 1-5)
+- Goes to output projection (after layer 6)
+```
+
+---
+
+#### Complete Decoder Layer Flow
+```
+Decoder Input (5 positions × 512)
+    │
+    ▼
+┌─────────────────────────┐
+│ Masked Self-Attention   │
+│ Q, K, V from decoder    │
+│ + Causal mask           │
+│ (can't see future)      │
+└───────────┬─────────────┘
+            │
+    ┌───────┴───────┐
+    │   + Residual  │
+    └───────┬───────┘
+    ┌───────┴───────┐
+    │   LayerNorm   │
+    └───────┬───────┘
+            │
+            ▼
+┌─────────────────────────┐
+│ Cross-Attention         │
+│ Q from decoder          │
+│ K, V from ENCODER ◀─────┼──── Encoder Output (3 × 512)
+│ (sees full source)      │
+└───────────┬─────────────┘
+            │
+    ┌───────┴───────┐
+    │   + Residual  │
+    └───────┬───────┘
+    ┌───────┴───────┐
+    │   LayerNorm   │
+    └───────┬───────┘
+            │
+            ▼
+┌─────────────────────────┐
+│ Feed-Forward Network    │
+│ 512 → 2048 → 512        │
+└───────────┬─────────────┘
+            │
+    ┌───────┴───────┐
+    │   + Residual  │
+    └───────┬───────┘
+    ┌───────┴───────┐
+    │   LayerNorm   │
+    └───────┬───────┘
+            │
+            ▼
+Output (5 positions × 512) → Next decoder layer
+```
+
+---
+
+### What Comes Out of Decoder (After 6 Layers)
 ```
 5 vectors (one per target position), each 512-dimensional
-Each vector contains:
-- Information from previous target tokens (masked self-attention)
-- Information from source sentence (cross-attention)
-- Processed representations (FFN)
+
+Each vector now contains:
+┌─────────────────────────────────────────────────────────────────┐
+│  Position 0 (after BOS):                                        │
+│  - Knows it's the start of French sentence                      │
+│  - Has info from encoder about "I love AI"                      │
+│  - Ready to predict first word "J'"                             │
+│                                                                  │
+│  Position 1 (after J'):                                         │
+│  - Knows "J'" was generated                                     │
+│  - Strongly connected to "I" from source                        │
+│  - Ready to predict "aime"                                      │
+│                                                                  │
+│  Position 2 (after aime):                                       │
+│  - Knows "J' aime" so far                                       │
+│  - Strongly connected to "love" from source                     │
+│  - Ready to predict "l'"                                        │
+│                                                                  │
+│  ... and so on                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
