@@ -1,0 +1,100 @@
+{"input": "Rewrite to be friendlier: 'Send me the report by EOD.'", "output": "Could you please send me the report by end of day? Thanks!"}
+{"input": "Make more professional: 'Your app is broken. Fix it.'", "output": "It looks like the application isn’t working as expected. Could you investigate and provide a fix?"}
+{"input": "Simplify: 'Subsequent to our prior correspondence, I am following up.'", "output": "I’m following up on our previous message."}
+{"input": "Rewrite as a short SMS: 'I will be 10 minutes late due to traffic.'", "output": "Running ~10 mins late—traffic. See you soon."}
+{"input": "Fix grammar: 'Me and Alex were going to the store yesterday.'", "output": "Alex and I went to the store yesterday."}
+{"input": "Make less harsh: 'This is wrong. Do it again.'", "output": "I think there’s an issue with this—could you revise it and try again?"}
+{"input": "Rewrite to be assertive but polite: 'If you can, maybe send the file?'", "output": "Please send the file when you get a chance."}
+{"input": "Turn into an email subject: 'Request for invoice for November 2025'", "output": "Invoice Request — November 2025"}
+{"input": "Rewrite in 2 sentences for a cover letter: 'I like data and I want the job.'", "output": "I enjoy turning data into clear insights that drive decisions. I’m excited to bring that skill and a strong ownership mindset to this role."}
+{"input": "Shorten: 'At this point in time we are unable to proceed.'", "output": "We can’t proceed right now."}
+{"input": "Rewrite to sound confident: 'I think I can do this project.'", "output": "I’m confident I can deliver this project successfully."}
+{"input": "Rewrite as a polite decline: 'No, I won't join the call.'", "output": "Thanks for the invite, but I won’t be able to join the call."}
+{"input": "Rewrite in plain English: 'We will commence implementation following stakeholder alignment.'", "output": "We’ll start implementation once everyone agrees."}
+{"input": "Rewrite as bullets: 'We need design, then build, then test.'", "output": "- Design\n- Build\n- Test"}
+{"input": "Make more empathetic: 'Read the docs.'", "output": "The docs cover this—tell me where you’re stuck and I’ll point you to the right section."}
+{"input": "Remove passive voice: 'The decision was made to cancel.'", "output": "We decided to cancel."}
+{"input": "Write a thank-you note: 'Thanks for your help yesterday.'", "output": "Thank you for your help yesterday—I really appreciate it."}
+{"input": "Rewrite for LinkedIn (1 sentence): 'I started a new job as a backend engineer.'", "output": "Excited to share I’ve started a new role as a Backend Engineer!"}
+{"input": "Rewrite to be neutral: 'This feature is terrible.'", "output": "This feature isn’t meeting our needs right now; here are the main issues to address."}
+{"input": "Rewrite as meeting invite title: 'Let's talk about the roadmap next week.'", "output": "Roadmap Discussion — Next Week"}
+{"input": "Make concise: 'Please be advised that your request has been received.'", "output": "We received your request."}
+{"input": "Rewrite politely: 'Stop pinging me.'", "output": "I saw your messages—I’ll respond as soon as I can."}
+{"input": "Rewrite clearer: 'We need that thing done ASAP.'", "output": "Please complete this as soon as possible. Let me know your ETA."}
+{"input": "Rewrite to set boundary: 'I can do it tonight.'", "output": "I can start tonight, but I may need until tomorrow to finish."}
+{"input": "Rewrite as apology: 'I missed your email.'", "output": "Sorry I missed your email—thanks for following up."}
+{"input": "Summarize in 1 sentence: 'We shipped v2 yesterday. Load times improved, but some older Android devices have login errors. A hotfix is planned tomorrow.'", "output": "v2 improved load times, but older Android devices see login errors and a hotfix is planned for tomorrow."}
+{"input": "Summarize in 3 bullets: 'DB migration this weekend. Expect 2 hours read-only. Support should post a status update and monitor tickets.'", "output": "- Database migration this weekend\n- About 2 hours in read-only mode\n- Support posts a status update and monitors tickets"}
+{"input": "Give a TL;DR: 'Q4 revenue grew 8% YoY from enterprise renewals. SMB churn increased. Q1 focus: onboarding and pricing tests.'", "output": "TL;DR: Q4 grew 8% YoY via enterprise renewals, SMB churn rose, and Q1 will focus on onboarding and pricing tests."}
+{"input": "Summarize for a manager: 'Engineering is blocked because the API contract keeps changing. We need a locked spec and weekly sync.'", "output": "Engineering is blocked by changing API requirements; we need a locked spec and a weekly sync to reduce rework."}
+{"input": "Summarize as action list: 'Safari 15 bug reports; repro unclear. Ask QA for screen capture and console logs.'", "output": "- Ask QA to record a screen capture\n- Collect Safari 15 console logs\n- Update the bug with clear repro steps"}
+{"input": "Summarize in one line: 'Training failed because the dataset has invalid JSON on line 57.'", "output": "Training failed due to invalid JSON at line 57."}
+{"input": "Write an email subject: 'Incident report for partial outage affecting EU users on Dec 10.'", "output": "Dec 10 EU Partial Outage — Incident Report"}
+{"input": "Summarize: 'Deprecate v1 endpoints. Keep for 90 days, publish migration guide, add warnings.'", "output": "Deprecate v1 endpoints by keeping them for 90 days, publishing a migration guide, and adding response warnings."}
+{"input": "Summarize in 2 sentences: 'Variant B reduced checkout abandonment by 4% and slightly lowered AOV. Revenue per visitor increased 1.2% overall.'", "output": "Variant B reduced abandonment by 4% with a slight AOV drop, but increased revenue per visitor by 1.2% overall."}
+{"input": "Summarize as a title: 'Proposal to reduce costs by switching object storage providers.'", "output": "Proposal: Reduce Object Storage Costs by Switching Providers"}
+{"input": "Summarize in 3 bullets: 'Confirm requirements, draft spec, review, implement, QA.'", "output": "- Confirm requirements and draft spec\n- Review with stakeholders\n- Implement and run QA"}
+{"input": "Summarize: 'Customer wants SSO by March plus audit logs and a dedicated Slack channel; they'll sign a 2-year deal if we commit.'", "output": "Customer will sign a 2-year deal if we commit to SSO by March, audit logs, and a dedicated Slack channel."}
+{"input": "Summarize: 'We paused the rollout after error rates rose. We’re investigating and will update at 3pm.'", "output": "Rollout is paused due to increased errors; investigation is underway with an update planned at 3pm."}
+{"input": "Summarize: 'The meeting agreed to move the deadline from Friday to next Wednesday because QA needs more time.'", "output": "They moved the deadline from Friday to next Wednesday to give QA more time."}
+{"input": "Summarize: 'We should add caching, reduce payload size, and index the DB table to improve latency.'", "output": "To improve latency, add caching, reduce payload size, and add a database index."}
+{"input": "Extract the due date: 'Please deliver the proposal by 2025-12-20.'", "output": "2025-12-20"}
+{"input": "Extract names: 'Participants: Maya Chen, Omar Ali, Priya Singh.'", "output": "Maya Chen; Omar Ali; Priya Singh"}
+{"input": "Convert to JSON: name=Rita, role=Analyst, active=true", "output": "{\"name\":\"Rita\",\"role\":\"Analyst\",\"active\":true}"}
+{"input": "Normalize (lowercase, trim): '  Apple  , BANANA,  kiwi '", "output": "apple, banana, kiwi"}
+{"input": "Extract the email: 'Contact dev.team+alerts@example.com for urgent issues.'", "output": "dev.team+alerts@example.com"}
+{"input": "Convert to ISO date: 'Dec 16, 2025'", "output": "2025-12-16"}
+{"input": "Extract numbers: '12 errors Monday, 7 Tuesday, 0 Wednesday.'", "output": "12, 7, 0"}
+{"input": "Format E.164 (+1): '(415) 555-0132'", "output": "+14155550132"}
+{"input": "Extract domain: 'https://docs.example.org/path?q=1'", "output": "docs.example.org"}
+{"input": "Turn into checklist: 'buy milk; call bank; submit expense report'", "output": "- [ ] buy milk\n- [ ] call bank\n- [ ] submit expense report"}
+{"input": "Convert 'id, created_at, total_amount, currency' into a CSV header row (no spaces).", "output": "id,created_at,total_amount,currency"}
+{"input": "Extract the city: 'Ship to: 99 Market St, San Francisco, CA 94105'", "output": "San Francisco"}
+{"input": "Convert to JSON array: 'a; b; c'", "output": "[\"a\", \"b\", \"c\"]"}
+{"input": "Extract ticket ID: 'Incident INC-1842 is resolved.'", "output": "INC-1842"}
+{"input": "Convert to kebab-case: 'Group Chat Summarizer'", "output": "group-chat-summarizer"}
+{"input": "Convert to snake_case: 'Total Amount USD'", "output": "total_amount_usd"}
+{"input": "Extract the time: 'Next update at 3:15pm.'", "output": "3:15pm"}
+{"input": "Remove duplicates preserving order: 'a, b, a, c, b'", "output": "a, b, c"}
+{"input": "Convert to boolean: 'yes' (allowed: yes/no)", "output": "true"}
+{"input": "Convert to boolean: 'no' (allowed: yes/no)", "output": "false"}
+{"input": "In Python, write a function average(nums) that returns 0 for empty list.", "output": "```python\ndef average(nums):\n    if not nums:\n        return 0\n    return sum(nums) / len(nums)\n```"}
+{"input": "Write SQL to count users per country from users(country).", "output": "```sql\nSELECT country, COUNT(*) AS user_count\nFROM users\nGROUP BY country\nORDER BY user_count DESC;\n```"}
+{"input": "JavaScript: safely parse JSON with fallback {}.", "output": "```javascript\nfunction safeParseJson(s) {\n  try {\n    return JSON.parse(s);\n  } catch {\n    return {};\n  }\n}\n```"}
+{"input": "Write a regex that matches a US ZIP code (5 digits or 5-4).", "output": "^\\d{5}(-\\d{4})?$"}
+{"input": "Python: read a JSONL file line by line.", "output": "```python\nimport json\n\nwith open('data.jsonl', 'r', encoding='utf-8') as f:\n    for line in f:\n        obj = json.loads(line)\n        # use obj\n```"}
+{"input": "TypeScript type for: { id: string, ok: boolean, errors?: string[] }", "output": "```ts\nexport type ApiResponse = {\n  id: string;\n  ok: boolean;\n  errors?: string[];\n};\n```"}
+{"input": "SQL: select rows created in last 7 days (created_at timestamp).", "output": "```sql\nSELECT *\nFROM your_table\nWHERE created_at >= NOW() - INTERVAL '7 days';\n```"}
+{"input": "Python: raise a custom exception example.", "output": "```python\nclass ConfigError(Exception):\n    pass\n\nraise ConfigError('Missing API key')\n```"}
+{"input": "Provide a curl command to POST JSON to https://api.example.com/items.", "output": "```bash\ncurl -X POST https://api.example.com/items \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"name\":\"example\"}'\n```"}
+{"input": "Explain HTTP 429 in one sentence.", "output": "HTTP 429 means the client sent too many requests in a short time and is being rate-limited."}
+{"input": "Python: one-liner to deduplicate list while preserving order.", "output": "```python\nseen=set(); dedup=[x for x in items if not (x in seen or seen.add(x))]\n```"}
+{"input": "SQL: latest order per user (orders: user_id, created_at).", "output": "```sql\nSELECT o.*\nFROM orders o\nJOIN (\n  SELECT user_id, MAX(created_at) AS max_created_at\n  FROM orders\n  GROUP BY user_id\n) x\nON x.user_id = o.user_id AND x.max_created_at = o.created_at;\n```"}
+{"input": "Python: format datetime as YYYY-MM-DD.", "output": "```python\nfrom datetime import datetime\n\nprint(datetime.now().strftime('%Y-%m-%d'))\n```"}
+{"input": "JavaScript: merge two objects with b overriding a.", "output": "Use `{ ...a, ...b }` (properties in `b` override `a`)."}
+{"input": "Git: command to create a new branch named feature-x.", "output": "git checkout -b feature-x"}
+{"input": "Docker: command to build an image named app from current directory.", "output": "docker build -t app ."}
+{"input": "Python: parse ISO date string '2025-12-16' into a date.", "output": "```python\nfrom datetime import date\n\nd = date.fromisoformat('2025-12-16')\n```"}
+{"input": "Bash: list all .log files recursively.", "output": "find . -type f -name '*.log'"}
+{"input": "Python: create a dict from two lists keys and vals.", "output": "```python\nd = dict(zip(keys, vals))\n```"}
+{"input": "SQL: add an index on users(email).", "output": "```sql\nCREATE INDEX idx_users_email ON users(email);\n```"}
+{"input": "Compute 17*23.", "output": "391"}
+{"input": "What is 15% of 260?", "output": "39"}
+{"input": "If a train travels 120 km in 2 hours, average speed?", "output": "60 km/h"}
+{"input": "A box has 3 red, 5 blue balls. Probability of red?", "output": "3/8"}
+{"input": "Convert 0.75 to a fraction.", "output": "3/4"}
+{"input": "Solve: 2x + 5 = 17.", "output": "x = 6"}
+{"input": "Median of [3, 1, 9, 7, 5]?", "output": "5"}
+{"input": "Round 12.345 to 2 decimals.", "output": "12.35"}
+{"input": "Total cost: 4 items at $7.50 each.", "output": "$30.00"}
+{"input": "Simplify: x^2 * x^3.", "output": "x^5"}
+{"input": "What is 2^10?", "output": "1024"}
+{"input": "2 cups for 5 servings. Cups for 12 servings?", "output": "4.8 cups"}
+{"input": "Compute: (48/6) + (15-9).", "output": "14"}
+{"input": "Convert 68°F to °C (approx).", "output": "About 20°C"}
+{"input": "If you save $50 per week, how much in 8 weeks?", "output": "$400"}
+{"input": "Area of a rectangle 6 by 9?", "output": "54"}
+{"input": "Solve: 9 - 3x = 0.", "output": "x = 3"}
+{"input": "What is 30% of 90?", "output": "27"}
+{"input": "If p=0.2, what is 1-p?", "output": "0.8"}
+{"input": "Convert 3.5 hours to minutes.", "output": "210"}
