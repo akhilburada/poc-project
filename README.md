@@ -1,221 +1,239 @@
 # 🏥 Healthcare SLM Fine-tuning POC
 
-A **Proof of Concept** for fine-tuning Small Language Models (SLMs) on healthcare data using CPU-only infrastructure. This POC demonstrates real-time training visualization, before/after response comparison, and efficient domain adaptation.
+A **Proof of Concept** for customizing Small Language Models (SLMs) on healthcare data using **local Ollama models** (Phi3, Llama 3.2).
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red.svg)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Ollama](https://img.shields.io/badge/Ollama-Local-green.svg)
 
-## 🎯 Project Overview
+---
 
-This POC addresses the need for **on-premise, cost-effective AI solutions** in healthcare settings where:
-- Data privacy and security are paramount
-- GPU infrastructure may not be available
-- Quick customization to specific domains is required
-- Live demonstrations of AI capabilities are needed
+## 🎯 What This POC Does
 
-### Key Features
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         POC WORKFLOW                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. UPLOAD DATA ──► Healthcare Q&A dataset (JSON/CSV)           │
+│                                                                  │
+│  2. BEFORE ──────► Ask question to BASE model                   │
+│                    (Generic response, no healthcare knowledge)   │
+│                                                                  │
+│  3. TRAIN ───────► Embed healthcare knowledge into model        │
+│                    (< 5 minutes, real-time visualization)        │
+│                                                                  │
+│  4. AFTER ───────► Ask SAME question to TRAINED model           │
+│                    (Accurate, domain-specific response)          │
+│                                                                  │
+│  5. COMPARE ─────► Side-by-side Before vs After                 │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-| Feature | Description |
-|---------|-------------|
-| 📁 **File Upload** | Support for CSV, JSON, JSONL, and TXT formats |
-| 🚀 **Fast Training** | Optimized for < 5 minute training cycles |
-| 📊 **Real-time Visualization** | Live loss curves and learning rate schedules |
-| 💬 **Before/After Comparison** | Side-by-side response comparison |
-| 🔧 **LoRA Fine-tuning** | Efficient parameter-efficient training |
-| 💻 **CPU-Optimized** | No GPU required |
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.9 or higher
-- 4GB+ RAM recommended
-- No GPU required
+1. **Python 3.9+**
+2. **Ollama** installed and running with models:
+   - `phi3:mini` (recommended for fast demos)
+   - `llama3.2:1b` (alternative option)
 
-### Installation
+### Step 1: Install Ollama
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd healthcare-slm-poc
+# macOS
+brew install ollama
 
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Linux
+curl -fsSL https://ollama.com/install.sh | sh
 
-# Install dependencies
+# Windows
+# Download from https://ollama.com/download
+```
+
+### Step 2: Pull Models
+
+```bash
+# Start Ollama server
+ollama serve
+
+# In another terminal, pull models
+ollama pull phi3:mini
+ollama pull llama3.2:1b
+```
+
+### Step 3: Install Python Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### Running the Application
+### Step 4: Run the Application
 
 ```bash
-# Start the Streamlit app
 streamlit run app.py
 ```
 
-The application will open in your browser at `http://localhost:8501`
-
-## 📖 Usage Guide
-
-### Step 1: Upload Data
-
-Upload your healthcare Q&A dataset or use the built-in sample data.
-
-**Supported Formats:**
-
-**JSON/JSONL:**
-```json
-{
-  "instruction": "What are the symptoms of diabetes?",
-  "response": "Common symptoms include increased thirst..."
-}
-```
-
-**CSV:**
-```csv
-question,answer
-"What are diabetes symptoms?","Common symptoms include..."
-```
-
-**TXT:**
-```
-Q: What are diabetes symptoms?
-A: Common symptoms include increased thirst, frequent urination...
-```
-
-### Step 2: Configure Training
-
-Adjust training parameters in the sidebar:
-- **Model**: DistilGPT2 (default), GPT2, OPT-125M
-- **Epochs**: 1-5 (recommended: 2-3)
-- **Batch Size**: 1-8 (recommended: 4)
-- **Learning Rate**: 1e-5 to 2e-4
-- **LoRA**: Enable for efficient training
-
-### Step 3: Train & Compare
-
-1. Click "Start Training" to begin fine-tuning
-2. Watch real-time loss curves and metrics
-3. After training, use the chatbot to compare responses
-
-## 🏗️ Project Structure
-
-```
-healthcare-slm-poc/
-├── app.py                 # Main Streamlit application
-├── requirements.txt       # Python dependencies
-├── README.md             # This file
-├── src/
-│   ├── __init__.py
-│   ├── config.py         # Configuration settings
-│   ├── data_processor.py # Data processing utilities
-│   └── fine_tuner.py     # Fine-tuning pipeline
-├── sample_data/
-│   ├── healthcare_qa.json
-│   └── healthcare_qa.csv
-├── docs/
-│   └── SLM_vs_LLM_Analysis.md
-├── uploads/              # Uploaded files (created at runtime)
-└── trained_models/       # Saved models (created at runtime)
-```
-
-## 🔧 Technical Details
-
-### Model Architecture
-
-- **Base Model**: DistilGPT2 (82M parameters)
-- **Fine-tuning Method**: LoRA (Low-Rank Adaptation)
-- **Trainable Parameters**: ~0.5% of total (with LoRA)
-
-### LoRA Configuration
-
-```python
-LoraConfig(
-    r=8,                    # Rank of update matrices
-    lora_alpha=32,          # Scaling factor
-    lora_dropout=0.1,       # Dropout probability
-    target_modules=["c_attn", "c_proj"]  # GPT-2 attention layers
-)
-```
-
-### Training Optimizations for CPU
-
-1. **Small Batch Sizes**: Reduced memory footprint
-2. **Gradient Accumulation**: Simulates larger batches
-3. **Float32 Precision**: CPU-compatible (no FP16)
-4. **LoRA**: Reduces trainable parameters by ~99%
-5. **Limited Context Length**: 256-512 tokens
-
-## 📊 Performance Expectations
-
-| Dataset Size | Training Time | Memory Usage |
-|--------------|---------------|--------------|
-| 50 samples   | ~1-2 min      | ~2GB         |
-| 100 samples  | ~2-3 min      | ~2.5GB       |
-| 500 samples  | ~10-15 min    | ~3GB         |
-| 1000 samples | ~20-30 min    | ~3.5GB       |
-
-*Times measured on Intel i7 CPU with 16GB RAM*
-
-## 🩺 Healthcare Use Cases
-
-1. **Patient FAQ Bot**: Answer common health questions
-2. **Insurance Query Handler**: Explain coverage and benefits
-3. **Appointment Scheduling**: Natural language scheduling
-4. **Symptom Checker**: Initial symptom assessment
-5. **Medication Information**: Drug interactions and instructions
-
-## ⚠️ Important Limitations
-
-1. **Not for Medical Diagnosis**: This is a POC, not a medical device
-2. **Accuracy Varies**: Small models have limited reasoning ability
-3. **Training Data Quality**: Output quality depends on input data
-4. **Hallucination Risk**: Model may generate inaccurate information
-5. **Context Limitations**: Limited context window (256-512 tokens)
-
-## 🔒 Security Considerations
-
-- **On-Premise Deployment**: Data never leaves your infrastructure
-- **No External API Calls**: All processing is local
-- **Data Isolation**: Uploaded data is not persisted by default
-- **Model Isolation**: Fine-tuned models are stored locally
-
-## 📚 Further Reading
-
-- [SLM vs LLM Analysis](docs/SLM_vs_LLM_Analysis.md) - Detailed comparison
-- [LoRA Paper](https://arxiv.org/abs/2106.09685) - Original LoRA research
-- [Hugging Face PEFT](https://huggingface.co/docs/peft) - PEFT documentation
-
-## 🛠️ Troubleshooting
-
-### Common Issues
-
-**Out of Memory:**
-- Reduce batch size to 1-2
-- Reduce max sequence length
-- Close other applications
-
-**Slow Training:**
-- Reduce number of epochs
-- Use smaller dataset
-- Enable LoRA if disabled
-
-**Poor Results:**
-- Increase training epochs
-- Use more/better training data
-- Adjust learning rate
-
-## 📝 License
-
-This project is for demonstration purposes. Please ensure compliance with healthcare regulations (HIPAA, etc.) before production use.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit issues and pull requests.
+Open `http://localhost:8501` in your browser.
 
 ---
 
-**Built with ❤️ for Healthcare AI Innovation**
+## 📖 Usage Guide
+
+### Tab 1: Data Upload
+
+1. Upload your healthcare Q&A dataset (or use sample data)
+2. Supported formats: **CSV**, **JSON**, **JSONL**, **TXT**
+3. Preview your data before training
+
+**Sample JSON Format:**
+```json
+{
+  "instruction": "What are the symptoms of diabetes?",
+  "response": "Common symptoms include increased thirst, frequent urination..."
+}
+```
+
+### Tab 2: Training
+
+1. Select your base model (phi3:mini or llama3.2:1b)
+2. Click **"Start Training"**
+3. Watch real-time loss curves
+4. Training completes in < 5 minutes
+
+### Tab 3: Chatbot
+
+1. Ask healthcare questions
+2. See **Before** (base model) and **After** (trained model) responses
+3. Compare the improvement side-by-side
+
+---
+
+## 📁 Project Structure
+
+```
+/workspace/
+├── app.py                    # Main Streamlit application
+├── requirements.txt          # Python dependencies
+├── README.md                 # This file
+├── src/
+│   ├── __init__.py
+│   ├── config.py             # Configuration settings
+│   ├── data_processor.py     # Data processing utilities
+│   ├── fine_tuner.py         # HuggingFace fine-tuner (optional)
+│   └── ollama_client.py      # Ollama integration
+├── sample_data/
+│   ├── healthcare_qa.json    # Sample healthcare Q&A
+│   └── healthcare_qa.csv     # Alternative format
+└── docs/
+    ├── SLM_vs_LLM_Analysis.md
+    └── SLM_Sales_Presentation.md
+```
+
+---
+
+## 🔧 How Training Works
+
+This POC uses **Ollama's Modelfile approach** to embed healthcare knowledge:
+
+```
+Base Model (phi3:mini)
+        │
+        ▼
+┌───────────────────┐
+│  Healthcare Q&A   │
+│  Data Processing  │
+└───────────────────┘
+        │
+        ▼
+┌───────────────────┐
+│  Create Custom    │
+│  Modelfile with   │
+│  System Prompt    │
+└───────────────────┘
+        │
+        ▼
+Trained Model (healthcare-assistant)
+```
+
+**Note:** This is knowledge embedding via system prompts, not traditional weight-based fine-tuning. For true fine-tuning, you would need tools like llama.cpp or Unsloth.
+
+---
+
+## 💡 Key Features
+
+| Feature | Description |
+|---------|-------------|
+| 🦙 **Local Ollama** | Uses your installed Ollama models |
+| 📁 **File Upload** | CSV, JSON, JSONL, TXT support |
+| ⚡ **Fast Training** | < 5 minutes for POC demo |
+| 📊 **Real-time Charts** | Live loss and learning rate visualization |
+| 🔄 **Before/After** | Side-by-side response comparison |
+| 🔒 **Privacy** | All data stays local |
+
+---
+
+## ❓ Troubleshooting
+
+### Ollama Not Running
+
+```bash
+# Start Ollama server
+ollama serve
+
+# Check if running
+ollama list
+```
+
+### No Models Found
+
+```bash
+ollama pull phi3:mini
+ollama pull llama3.2:1b
+```
+
+### Slow First Response
+
+The first query loads the model into memory. Subsequent queries are faster.
+
+### Out of Memory
+
+- Use smaller model (`phi3:mini` instead of larger models)
+- Close other applications
+- Reduce "Max Knowledge Items" in sidebar
+
+---
+
+## 📊 Expected Performance
+
+| Model | Size | First Response | Subsequent | RAM Usage |
+|-------|------|----------------|------------|-----------|
+| phi3:mini | 2.3GB | 5-10s | 1-3s | ~4GB |
+| llama3.2:1b | 1.3GB | 3-7s | 1-2s | ~3GB |
+
+---
+
+## 🎬 Demo Script (5 Minutes)
+
+1. **[0:00]** Show Ollama status (green = running)
+2. **[0:30]** Upload sample healthcare data
+3. **[1:00]** Ask question BEFORE training → show generic response
+4. **[1:30]** Start training → watch loss curves
+5. **[3:30]** Training complete
+6. **[4:00]** Ask SAME question AFTER training → show improved response
+7. **[4:30]** Side-by-side comparison
+8. **[5:00]** Q&A
+
+---
+
+## 📝 License
+
+This project is for demonstration purposes only. Ensure compliance with healthcare regulations (HIPAA, etc.) before production use.
+
+---
+
+**Built for Healthcare AI Innovation 🏥**
