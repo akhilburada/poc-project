@@ -1,0 +1,23 @@
+# Healthcare SLM Fine-tuning POC
+# Using Local Ollama Models (Phi3, Llama 3.2)
+
+# Web Interface
+streamlit>=1.28.0
+plotly>=5.18.0
+
+# HTTP Client (for Ollama API)
+requests>=2.31.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# File Handling
+python-docx>=0.8.11
+PyPDF2>=3.0.0
+openpyxl>=3.1.0
+
+# Optional: For HuggingFace model fine-tuning (if needed later)
+# torch>=2.0.0
+# transformers>=4.35.0
+# peft>=0.6.0
