@@ -304,6 +304,23 @@ When asked "How do you deploy ML models to production?", structure your answer:
 
 ---
 
+---
+
+## Real-World Examples
+
+For detailed, production-ready examples with actual deployment commands and cost breakdowns, see:
+
+**[Real-World Deployment Examples](./real-world-examples.md)**
+
+Includes:
+- E-Commerce Product Recommendation System (AWS)
+- Customer Support Chatbot with RAG (GCP)  
+- Real-Time Fraud Detection System (AWS)
+
+Each example includes complete architecture diagrams, deployment commands, and monthly cost estimates.
+
+---
+
 ## Next Steps
 
 Continue to [Chapter 2: ML/DL Deployment](../02-ml-dl-deployment/README.md) to learn specific deployment techniques for traditional ML and deep learning models.

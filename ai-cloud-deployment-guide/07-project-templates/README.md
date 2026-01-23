@@ -988,3 +988,22 @@ Pick 2-3 projects that align with your target role and build them end-to-end. Be
 - What you'd improve
 
 Good luck with your interview preparation!
+
+---
+
+## Complete Step-by-Step Guide
+
+For a detailed walkthrough of deploying your first ML application from scratch, see:
+
+**[End-to-End Deployment Guide](./end-to-end-deployment-guide.md)**
+
+This guide takes you through:
+1. Training and saving a sentiment analysis model
+2. Creating a FastAPI application
+3. Containerizing with Docker
+4. Deploying to AWS ECS
+5. Deploying to GCP Cloud Run
+6. Setting up CI/CD with GitHub Actions
+7. Adding monitoring
+
+Every step includes actual commands you can copy and run!

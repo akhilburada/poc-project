@@ -22,6 +22,7 @@ A comprehensive guide for deploying ML/DL, GenAI, and Agentic AI applications on
 - Cloud deployment concepts
 - AWS vs GCP service comparison
 - Essential tools (Docker, APIs, CI/CD)
+- **NEW:** [Real-World Deployment Examples](./01-fundamentals/real-world-examples.md) - E-commerce recommendations, RAG chatbot, fraud detection
 
 ### 2. [ML/DL Deployment](./02-ml-dl-deployment/README.md)
 - AWS SageMaker deployment
@@ -34,6 +35,7 @@ A comprehensive guide for deploying ML/DL, GenAI, and Agentic AI applications on
 - RAG system design and deployment
 - AWS Bedrock integration
 - GCP Vertex AI for GenAI
+- **NEW:** [Complete RAG Example](./03-genai-deployment/complete-rag-example.md) - Full HR Policy Chatbot with code
 
 ### 4. [Agentic AI Deployment](./04-agentic-ai-deployment/README.md)
 - Agent architectures
@@ -56,6 +58,7 @@ A comprehensive guide for deploying ML/DL, GenAI, and Agentic AI applications on
 - Ready-to-use code templates
 - Sample projects to build and showcase
 - Folder structures
+- **NEW:** [End-to-End Deployment Guide](./07-project-templates/end-to-end-deployment-guide.md) - Complete walkthrough from training to production
 
 ---
 

@@ -806,6 +806,25 @@ Answer structure:
 
 ---
 
+---
+
+## Complete Working Example
+
+For a fully working RAG system you can deploy immediately, see:
+
+**[Complete RAG Example: HR Policy Chatbot](./complete-rag-example.md)**
+
+Includes:
+- Full project structure and all code files
+- Document ingestion pipeline
+- Vector store setup (OpenSearch)
+- LLM integration (Bedrock Claude)
+- Safety guardrails and escalation logic
+- Deployment commands for AWS and GCP
+- Evaluation script for quality testing
+
+---
+
 ## Next Steps
 
 Continue to [Chapter 4: Agentic AI Deployment](../04-agentic-ai-deployment/README.md) to learn about deploying AI agents and multi-agent systems.
