@@ -1,15 +1,16 @@
 # System Design Interview Preparation
 
-A comprehensive learning resource for software engineers with 2 years of experience preparing for system design interviews.
+A comprehensive learning resource for software engineers with 2-3 years of experience preparing for system design interviews.
 
 ## Contents
 
 - [System Design Learning Plan](SYSTEM_DESIGN_LEARNING_PLAN.md) - Complete 7-day roadmap with concepts, practice problems, and interview strategies
 - [System Design Notes](SYSTEM_DESIGN_NOTES.md) - Concise study notes for quick revision and memorization
+- [3 YOE Interview Examples](SYSTEM_DESIGN_3YOE_INTERVIEW_EXAMPLES.md) - Real interview questions with detailed walkthroughs and diagrams (Twitter Feed, WhatsApp, Rate Limiter)
 
 ## Overview
 
-This repository contains a structured learning plan specifically designed for Associate/Junior SDE candidates (2 YOE) who are preparing for system design interviews during their job search.
+This repository contains a structured learning plan specifically designed for SDE-1/SDE-2 candidates (2-3 YOE) who are preparing for system design interviews during their job search.
 
 ### What's Included
 
@@ -22,9 +23,9 @@ This repository contains a structured learning plan specifically designed for As
 
 ### Target Audience
 
-- Software engineers with 1-3 years of experience
-- Candidates preparing for Associate/Junior level positions
-- Anyone who needs to learn system design from fundamentals
+- Software engineers with 2-3 years of experience
+- Candidates preparing for SDE-1/SDE-2/Mid-level positions
+- Anyone who needs to learn system design from fundamentals to interview-ready
 
 ### How to Use
 
