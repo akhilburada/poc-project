@@ -5,6 +5,7 @@ A comprehensive learning resource for software engineers with 2 years of experie
 ## Contents
 
 - [System Design Learning Plan](SYSTEM_DESIGN_LEARNING_PLAN.md) - Complete 7-day roadmap with concepts, practice problems, and interview strategies
+- [System Design Notes](SYSTEM_DESIGN_NOTES.md) - Concise study notes for quick revision and memorization
 
 ## Overview
 
