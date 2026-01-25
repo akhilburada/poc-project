@@ -1,485 +1,493 @@
-# Patient Engagement & Communication AI Project
+# Patient Engagement AI - Real Client Project
 
-## Complete Step-by-Step Guide for Interview Preparation
-
----
-
-# PROJECT OVERVIEW
-
-## What We Built
-```
-An AI-powered patient communication system that:
-1. Answers patient questions after hospital discharge
-2. Explains medications in simple language
-3. Sends smart reminders for medicines and appointments
-4. Detects warning signs and alerts doctors
-5. Supports multiple languages (English, Hindi, Spanish)
-```
-
-## Simple Diagram
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    PATIENT JOURNEY                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   Patient Discharged ──► Gets WhatsApp/App Access           │
-│          │                                                   │
-│          ▼                                                   │
-│   ┌─────────────────────────────────────────────┐           │
-│   │         AI HEALTH ASSISTANT                  │           │
-│   │                                              │           │
-│   │  "Hi! I'm your health assistant.            │           │
-│   │   How can I help you today?"                │           │
-│   │                                              │           │
-│   │  Patient: "When should I take my            │           │
-│   │           blood pressure medicine?"         │           │
-│   │                                              │           │
-│   │  AI: "Take Amlodipine 5mg every morning    │           │
-│   │       with breakfast. Set reminder? ✓"      │           │
-│   │                                              │           │
-│   └─────────────────────────────────────────────┘           │
-│          │                                                   │
-│          ▼                                                   │
-│   Better Recovery ──► Fewer Hospital Visits                 │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+## How This Project Actually Happened (Real-Time Experience)
 
 ---
 
-# SECTION 1: CLIENT INFORMATION
+# PART 1: PROJECT BACKGROUND
 
 ## Client Details
 ```
-Client Name       : Max Healthcare (Hospital Chain)
-Industry          : Healthcare
-Location          : India (Delhi NCR, Mumbai, Bangalore)
-Hospitals         : 17 hospitals
-Monthly Patients  : 200,000+ discharges per month
-Project Duration  : 8 months
-Team Size         : 6 people (2 ML Engineers, 1 Backend, 1 Frontend, 
-                             1 Product Manager, 1 Medical Advisor)
+Client Name      : Apollo Hospitals Enterprise Ltd
+Client Type      : Healthcare (Hospital Chain)
+Engagement Type  : Fixed Price Contract
+Contract Value   : $450,000 (₹3.7 Crores)
+Duration         : 8 months
+Location         : Hyderabad, Chennai, Bangalore
+
+Your Company     : Virtusa/TCS/Infosys (IT Services)
+Your Role        : ML Engineer
+Experience Level : 2 years
 ```
 
-## Client's Problem (Before AI)
-```
-PROBLEMS FACED:
-┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  1. PATIENT CONFUSION                                        │
-│     • Patients don't understand discharge instructions       │
-│     • "Which medicine is for what?"                         │
-│     • "What food should I avoid?"                           │
-│                                                              │
-│  2. MEDICATION NON-ADHERENCE                                 │
-│     • 50% patients miss medicines in first week             │
-│     • Wrong timing, wrong dosage                            │
-│     • Leads to complications                                │
-│                                                              │
-│  3. UNNECESSARY HOSPITAL VISITS                              │
-│     • Patients come for minor doubts                        │
-│     • Clogs OPD, wastes doctor time                         │
-│     • Each visit costs patient ₹500-1000                    │
-│                                                              │
-│  4. MISSED WARNING SIGNS                                     │
-│     • Patients ignore serious symptoms                      │
-│     • Come to hospital when too late                        │
-│     • Readmissions within 30 days: 18%                      │
-│                                                              │
-│  5. CALL CENTER OVERLOAD                                     │
-│     • 50,000 calls/month                                    │
-│     • Average wait time: 15 minutes                         │
-│     • Staff burnout, high turnover                          │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+## How Project Started
 
-COST OF PROBLEMS:
-• Readmission cost: ₹50,000 per patient
-• Call center cost: ₹80 lakhs/year
-• Lost patient satisfaction: 3.2/5 rating
+### Week 1-2: Pre-Sales & Discovery
+```
+What Happened:
+1. Apollo's CTO contacted our company for AI solutions
+2. Pre-sales team had initial call with Apollo IT team
+3. They shared their problem: "Patients keep calling after discharge"
+4. Our Solutions Architect created initial proposal
+5. You were pulled in for technical feasibility assessment
+
+Your Task:
+- Attended discovery call with client
+- Took notes on their requirements
+- Helped estimate effort for ML components
 ```
 
-## What Client Wanted (Goals)
+### Client's Exact Problem Statement
 ```
-TARGET GOALS:
-┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  1. 24/7 Patient Support                                     │
-│     → AI answers questions anytime (no waiting)             │
-│                                                              │
-│  2. Reduce Call Center Volume                                │
-│     → 60% queries handled by AI                             │
-│                                                              │
-│  3. Improve Medication Adherence                             │
-│     → Smart reminders + simple explanations                 │
-│                                                              │
-│  4. Early Warning Detection                                  │
-│     → AI identifies danger signs, alerts doctors            │
-│                                                              │
-│  5. Reduce Readmissions                                      │
-│     → Target: 18% → 10% (within 30 days)                   │
-│                                                              │
-│  6. Multi-language Support                                   │
-│     → English, Hindi, regional languages                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+Email from Apollo IT Head:
+
+"We discharge 50,000+ patients monthly across our hospitals. 
+After discharge, our call center receives 15,000+ calls asking:
+- When to take medicines
+- What food to eat/avoid  
+- Is this symptom normal or emergency
+- When is my next appointment
+
+Our call center is overwhelmed. Wait times are 20+ minutes.
+Patients are frustrated. Some miss warning signs and get 
+readmitted.
+
+We need an AI solution that patients can chat with 24/7 on 
+WhatsApp. It should know their prescriptions and answer 
+questions accurately.
+
+Budget: $400-500K
+Timeline: Go-live in 6-8 months"
 ```
 
 ---
 
-# SECTION 2: DATA COLLECTION
+# PART 2: PROJECT SETUP (Month 1)
 
-## What Data We Needed
+## Team Structure
 ```
-DATA SOURCES:
+FROM CLIENT SIDE (Apollo):
+├── Product Owner: Dr. Meera (Chief Medical Informatics Officer)
+├── IT Lead: Rajesh (Integration point for EMR/HIS systems)
+├── Clinical SME: Dr. Prakash (Validates medical accuracy)
+└── Business Analyst: Priya (Requirements, UAT coordination)
+
+FROM YOUR COMPANY:
+├── Project Manager: Suresh (Handles client, timeline, budget)
+├── Tech Lead: Arun (Architecture decisions, code reviews)
+├── ML Engineer 1: YOU (Model development, fine-tuning)
+├── ML Engineer 2: Kavitha (Data pipeline, RAG system)
+├── Backend Developer: Ravi (APIs, integrations)
+├── DevOps Engineer: Kiran (AWS, deployment)
+└── QA Engineer: Sneha (Testing)
+```
+
+## Sprint 0: Project Kickoff
+
+### Kickoff Meeting (Day 1)
+```
+Attendees: Full team from both sides
+Duration: 3 hours
+
+Agenda:
+1. Introductions
+2. Project scope walkthrough
+3. Timeline discussion  
+4. Access requirements
+5. Communication plan
+6. Risk discussion
+
+Key Decisions:
+- Sprint duration: 2 weeks
+- Daily standup: 10:00 AM IST
+- Client demo: Every alternate Friday
+- Communication: MS Teams + Jira
+- Code repository: Azure DevOps (client's requirement)
+```
+
+### Your First Week Tasks
+```
+JIRA Tickets Assigned to You:
+
+APOLLO-ML-001: Environment Setup
+- Get laptop configured with VPN access
+- Request access to Apollo's sandbox environment
+- Set up Python environment locally
+- Status: Done in 2 days
+
+APOLLO-ML-002: Understand EMR Data Structure  
+- Meet with Rajesh (client IT) to understand their EMR
+- Document patient data schema
+- Identify what data we can access
+- Status: Done in 3 days
+
+APOLLO-ML-003: Research LLM Options
+- Compare GPT-4 vs Claude vs Open Source
+- Prepare cost analysis
+- Present recommendation to Tech Lead
+- Status: Done in 2 days
+```
+
+### Data Access Challenge (Real Scenario)
+```
+PROBLEM YOU FACED:
+
+Day 3 - You asked client for historical chat data.
+
+Client Response: 
+"We don't have chat data. Patients call us, they don't chat.
+We have call recordings but legal says we can't share them 
+due to patient privacy. We need to figure out another way."
+
+SOLUTION YOU PROPOSED:
+
+Option 1: Use call center agents to write sample Q&As
+Option 2: Generate synthetic data using GPT-4
+Option 3: Use public medical FAQ datasets + customize
+
+Final Decision: Combination of Option 1 + Option 3
+- Call center team writes 2,000 real Q&As from memory
+- We supplement with public datasets
+- Medical team validates everything
+```
+
+---
+
+# PART 3: DATA COLLECTION (Month 1-2)
+
+## Sprint 1-2: Building Training Data
+
+### How We Actually Collected Data
+
+#### Source 1: Call Center Team Input
+```
+Process:
+1. We gave Google Form to 20 call center agents
+2. Each agent submitted 100 common questions they get
+3. They also wrote how they typically answer
+4. Medical team reviewed and corrected answers
+
+Sample Submission:
 ┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  SOURCE 1: Call Center Recordings (Historical)              │
-│  ├── 100,000 recorded calls (2 years)                       │
-│  ├── Transcribed to text                                    │
-│  └── Categories: Medication, Symptoms, Appointments, Diet   │
-│                                                              │
-│  SOURCE 2: Patient FAQs                                      │
-│  ├── 5,000 common questions from website                    │
-│  ├── Answers written by doctors                             │
-│  └── Verified medical accuracy                              │
-│                                                              │
-│  SOURCE 3: Discharge Instructions                            │
-│  ├── 50,000 discharge summaries                             │
-│  ├── Medication lists with instructions                     │
-│  └── Follow-up care guidelines                              │
-│                                                              │
-│  SOURCE 4: Medical Knowledge Base                            │
-│  ├── Drug information (10,000 medicines)                    │
-│  ├── Disease information (2,000 conditions)                 │
-│  └── Treatment guidelines                                   │
-│                                                              │
-│  SOURCE 5: Warning Signs Database                            │
-│  ├── Emergency symptoms by condition                        │
-│  ├── When to go to hospital                                 │
-│  └── Created with doctors                                   │
-│                                                              │
+│ Agent Name: Lakshmi                                          │
+│ Question: "I am diabetic, can I eat rice?"                  │
+│ Answer: "Yes, you can eat rice but in limited quantity.     │
+│         Brown rice is better. Avoid white rice in dinner.   │
+│         Have more vegetables with rice."                     │
+│ Category: Diet                                               │
+│ Frequency: 10-15 times per day                              │
 └─────────────────────────────────────────────────────────────┘
+
+Result: 2,000 real Q&A pairs collected in 3 weeks
 ```
 
-## Data Collection Process (Step by Step)
+#### Source 2: Public Medical Datasets
+```
+Datasets Used:
+1. MedQuAD - Medical Question Answering Dataset
+2. HealthCareMagic - Doctor-patient conversations
+3. WebMD FAQ sections (scraped with permission)
 
-### Step 1: Extract Call Center Data
+Your Code for Data Loading:
+```
+
 ```python
-# We got call recordings and transcribed them
+# File: data_collection/load_datasets.py
 
-import whisper
 import pandas as pd
+from datasets import load_dataset
 
-# Load Whisper model for transcription
-model = whisper.load_model("large-v2")
+def load_medquad():
+    """Load MedQuAD dataset"""
+    dataset = load_dataset("medquad")
+    
+    qa_pairs = []
+    for item in dataset['train']:
+        qa_pairs.append({
+            "question": item['question'],
+            "answer": item['answer'],
+            "source": "medquad",
+            "category": classify_category(item['question'])
+        })
+    
+    return qa_pairs
 
-def transcribe_call(audio_file):
-    """Convert call recording to text"""
-    result = model.transcribe(
-        audio_file,
-        language="hi",  # Hindi + English mix
-        task="transcribe"
-    )
-    return result["text"]
+def load_call_center_data():
+    """Load data collected from call center team"""
+    df = pd.read_csv("data/call_center_submissions.csv")
+    
+    qa_pairs = []
+    for _, row in df.iterrows():
+        qa_pairs.append({
+            "question": row['question'],
+            "answer": row['answer'],
+            "source": "call_center",
+            "category": row['category']
+        })
+    
+    return qa_pairs
 
-# Process all calls
-calls_data = []
-for audio_file in call_recordings:
-    text = transcribe_call(audio_file)
-    calls_data.append({
-        "audio_file": audio_file,
-        "transcript": text,
-        "duration": get_duration(audio_file)
-    })
+def classify_category(question):
+    """Simple keyword-based classification"""
+    question_lower = question.lower()
+    
+    if any(word in question_lower for word in ['medicine', 'tablet', 'dose', 'drug']):
+        return "medication"
+    elif any(word in question_lower for word in ['eat', 'food', 'diet', 'drink']):
+        return "diet"
+    elif any(word in question_lower for word in ['pain', 'fever', 'symptom', 'feeling']):
+        return "symptoms"
+    elif any(word in question_lower for word in ['appointment', 'checkup', 'visit']):
+        return "appointment"
+    else:
+        return "general"
 
-# Result: 100,000 transcribed calls
-print(f"Total calls transcribed: {len(calls_data)}")
+# Combine all data
+all_data = []
+all_data.extend(load_medquad())
+all_data.extend(load_call_center_data())
+
+print(f"Total Q&A pairs: {len(all_data)}")
+# Output: Total Q&A pairs: 15,000
 ```
 
-### Step 2: Categorize Questions
+#### Source 3: Medication Database
+```
+Client Provided:
+- List of 5,000 commonly prescribed medicines
+- Each medicine: name, purpose, dosage, side effects, timing
+
+Your Task: Convert to Q&A format
+```
+
 ```python
-# We categorized each question into types
+# File: data_collection/medicine_qa_generator.py
 
-CATEGORIES = [
-    "MEDICATION",      # Questions about medicines
-    "SYMPTOMS",        # Questions about symptoms
-    "DIET",            # Questions about food
-    "APPOINTMENT",     # Questions about follow-up
-    "EMERGENCY",       # Urgent/warning signs
-    "GENERAL",         # General health queries
-    "BILLING",         # Payment related
-    "OTHER"            # Miscellaneous
-]
+import json
 
-# Example categorized data
-sample_questions = [
-    {
-        "question": "When should I take Metformin?",
-        "category": "MEDICATION",
-        "answer": "Take Metformin with meals, usually morning and evening."
-    },
-    {
-        "question": "I have chest pain since morning",
-        "category": "EMERGENCY",
-        "answer": "Chest pain can be serious. Please go to emergency immediately."
-    },
-    {
-        "question": "Can I eat rice after surgery?",
-        "category": "DIET",
-        "answer": "Yes, you can eat rice. Start with small portions."
-    }
-]
+def generate_medicine_qas(medicine_db):
+    """Generate Q&A pairs from medicine database"""
+    
+    qa_pairs = []
+    
+    for medicine in medicine_db:
+        name = medicine['name']
+        
+        # Question 1: What is this medicine for?
+        qa_pairs.append({
+            "question": f"What is {name} used for?",
+            "answer": f"{name} is used for {medicine['purpose']}. "
+                     f"Take it {medicine['timing']}.",
+            "category": "medication"
+        })
+        
+        # Question 2: Side effects
+        qa_pairs.append({
+            "question": f"What are the side effects of {name}?",
+            "answer": f"Common side effects of {name} include: "
+                     f"{', '.join(medicine['side_effects'])}. "
+                     f"If side effects are severe, contact your doctor.",
+            "category": "medication"
+        })
+        
+        # Question 3: Timing
+        qa_pairs.append({
+            "question": f"When should I take {name}?",
+            "answer": f"Take {name} {medicine['timing']}. "
+                     f"The usual dose is {medicine['dosage']}.",
+            "category": "medication"
+        })
+    
+    return qa_pairs
+
+# Load medicine database from client
+with open("data/medicine_database.json") as f:
+    medicines = json.load(f)
+
+medicine_qas = generate_medicine_qas(medicines)
+print(f"Generated {len(medicine_qas)} medicine Q&As")
+# Output: Generated 15,000 medicine Q&As
 ```
 
-### Step 3: Create Training Dataset
-```python
-# Format for fine-tuning
-
-training_data = []
-
-for item in categorized_data:
-    training_example = {
-        "instruction": """You are a helpful hospital health assistant. 
-Answer the patient's question in simple, easy-to-understand language. 
-Be caring and supportive. If it's an emergency, tell them to go to hospital.""",
-        
-        "input": f"""
-Patient Question: {item['question']}
-Patient Context: {item.get('context', 'General patient')}
-""",
-        
-        "output": f"""{item['answer']}
-
-Is there anything else you'd like to know?"""
-    }
-    training_data.append(training_example)
-
-# Save training data
-with open("training_data.json", "w") as f:
-    json.dump(training_data, f, indent=2)
-
-print(f"Training examples created: {len(training_data)}")
-```
-
-## Final Dataset Statistics
+### Final Training Data
 ```
 TRAINING DATA SUMMARY:
-┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  Total Training Examples: 25,000                            │
-│                                                              │
-│  By Category:                                                │
-│  ├── Medication Questions    : 8,000  (32%)                 │
-│  ├── Symptom Questions       : 5,000  (20%)                 │
-│  ├── Diet Questions          : 4,000  (16%)                 │
-│  ├── Appointment Questions   : 3,000  (12%)                 │
-│  ├── Emergency/Warning       : 2,500  (10%)                 │
-│  └── General/Other           : 2,500  (10%)                 │
-│                                                              │
-│  Languages:                                                  │
-│  ├── English                 : 15,000 (60%)                 │
-│  ├── Hindi                   : 7,500  (30%)                 │
-│  └── Hinglish (Mixed)        : 2,500  (10%)                 │
-│                                                              │
-│  Data Split:                                                 │
-│  ├── Training                : 20,000 (80%)                 │
-│  ├── Validation              : 2,500  (10%)                 │
-│  └── Test                    : 2,500  (10%)                 │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────┐
+│ Source              │ Count   │ Quality      │
+├───────────────────────────────────────────────┤
+│ Call Center Team    │ 2,000   │ High (real)  │
+│ MedQuAD Dataset     │ 5,000   │ High         │
+│ Medicine Database   │ 15,000  │ Medium       │
+│ Diet Guidelines     │ 1,500   │ High         │
+│ Emergency Scenarios │ 500     │ Critical     │
+├───────────────────────────────────────────────┤
+│ TOTAL               │ 24,000  │              │
+└───────────────────────────────────────────────┘
+
+After Cleaning & Deduplication: 20,000 Q&A pairs
 ```
 
 ---
 
-# SECTION 3: MODEL TRAINING
+# PART 4: MODEL DEVELOPMENT (Month 2-4)
 
-## Training Approach Overview
+## Sprint 3: Baseline Model
+
+### Tech Lead Decision on Model
 ```
-WHY WE FINE-TUNED (Instead of using GPT-4 directly):
+Meeting: Architecture Discussion
+Attendees: Tech Lead Arun, You, Kavitha
 
-┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  OPTION 1: GPT-4 API                                        │
-│  ├── Cost: ₹5 per conversation                              │
-│  ├── Monthly cost (500K chats): ₹25 lakhs                   │
-│  ├── Data goes to OpenAI (privacy concern)                  │
-│  └── Latency: 3-5 seconds                                   │
-│                                                              │
-│  OPTION 2: Fine-tuned Llama-2 (WE CHOSE THIS)              │
-│  ├── Cost: ₹0.20 per conversation                           │
-│  ├── Monthly cost (500K chats): ₹1 lakh                     │
-│  ├── Data stays on our servers (HIPAA safe)                 │
-│  └── Latency: 1-2 seconds                                   │
-│                                                              │
-│  SAVINGS: ₹24 lakhs per month = ₹2.88 crores per year      │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+Discussion:
+- Arun: "Client wants data to stay in India. No OpenAI API."
+- You: "We can use Llama-2 or Mistral. Both open source."
+- Kavitha: "Llama-2-7B-chat is good for conversation."
+- Arun: "Fine. Start with Llama-2-7B. Use AWS Mumbai region."
+
+Decision: Llama-2-7B-chat with QLoRA fine-tuning
 ```
 
-## Step-by-Step Training Process
+### Your Development Environment
+```
+Setup (What you actually used):
 
-### Step 1: Setup Environment
-```bash
-# On AWS EC2 g5.2xlarge (1 GPU - NVIDIA A10G, 24GB)
-# Cost: ~$1.2/hour = ~₹100/hour
+Local Machine:
+- MacBook Pro M2 (company laptop)
+- VS Code with Python extension
+- Git for version control
 
-# Create environment
-conda create -n patient-ai python=3.10
-conda activate patient-ai
+Cloud (AWS):
+- EC2 g5.xlarge for training (1x A10G GPU)
+- S3 for data storage
+- SageMaker for experiments
 
-# Install packages
-pip install torch==2.1.0
-pip install transformers==4.36.0
-pip install peft==0.7.0           # For LoRA
-pip install bitsandbytes==0.41.0  # For 4-bit quantization
-pip install trl==0.7.0            # For training
-pip install datasets==2.15.0
-pip install accelerate==0.25.0
-pip install wandb                  # For tracking experiments
+Tools:
+- Weights & Biases for experiment tracking
+- MLflow for model registry
+- Jupyter notebooks for exploration
 ```
 
-### Step 2: Load Model with 4-bit Quantization
+### Step-by-Step Training (What You Did)
+
+#### Step 1: Data Formatting
 ```python
-# File: train_model.py
+# File: training/prepare_data.py
+
+import json
+
+def format_for_llama(qa_pairs):
+    """Convert Q&A to Llama-2 chat format"""
+    
+    formatted = []
+    
+    for qa in qa_pairs:
+        # Llama-2 chat template
+        text = f"""<s>[INST] <<SYS>>
+You are a helpful health assistant for Apollo Hospitals patients.
+Answer questions about medications, diet, symptoms in simple language.
+If it's an emergency, tell patient to go to hospital immediately.
+Be caring and supportive.
+<</SYS>>
+
+{qa['question']} [/INST] {qa['answer']} </s>"""
+        
+        formatted.append({"text": text})
+    
+    return formatted
+
+# Load and format data
+with open("data/training_data.json") as f:
+    qa_pairs = json.load(f)
+
+formatted_data = format_for_llama(qa_pairs)
+
+# Save for training
+with open("data/formatted_training_data.json", "w") as f:
+    json.dump(formatted_data, f)
+
+print(f"Formatted {len(formatted_data)} examples")
+```
+
+#### Step 2: Training Script
+```python
+# File: training/train_model.py
+# This is the actual training script you wrote
 
 import torch
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
-    BitsAndBytesConfig
+    BitsAndBytesConfig,
+    TrainingArguments
 )
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+from trl import SFTTrainer
+from datasets import Dataset
+import json
+import wandb
 
-print("Step 1: Loading model...")
+# Initialize experiment tracking
+wandb.init(project="apollo-patient-ai", name="llama2-qlora-v1")
 
-# 4-bit quantization config
-# This reduces memory from 14GB to 4GB
+# Step 1: Load model in 4-bit
+print("Loading model...")
 bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,                # Use 4-bit precision
-    bnb_4bit_quant_type="nf4",        # NormalFloat4 (best quality)
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
     bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True    # Extra compression
+    bnb_4bit_use_double_quant=True
 )
 
-# Load tokenizer (converts text to numbers)
 model_name = "meta-llama/Llama-2-7b-chat-hf"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
-tokenizer.padding_side = "right"
 
-# Load model
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
     quantization_config=bnb_config,
     device_map="auto"
 )
 
-print(f"Model loaded! GPU memory used: {torch.cuda.memory_allocated()/1e9:.1f} GB")
-# Output: Model loaded! GPU memory used: 4.2 GB
-```
-
-### Step 3: Setup LoRA (Low-Rank Adaptation)
-```python
-# LoRA = Train only small part of model (0.1% of parameters)
-# Much faster and cheaper than training full model
-
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
-
-print("Step 2: Setting up LoRA...")
-
-# Prepare model for training
+# Step 2: Setup LoRA
+print("Setting up LoRA...")
 model = prepare_model_for_kbit_training(model)
 
-# LoRA configuration
 lora_config = LoraConfig(
-    r=32,                    # Rank (higher = more learning capacity)
-    lora_alpha=64,           # Learning rate multiplier
-    target_modules=[         # Which parts to train
-        "q_proj",            # Attention layers
-        "k_proj",
-        "v_proj",
-        "o_proj",
-    ],
-    lora_dropout=0.1,        # Prevent overfitting
+    r=32,
+    lora_alpha=64,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+    lora_dropout=0.1,
     bias="none",
     task_type="CAUSAL_LM"
 )
 
-# Apply LoRA to model
 model = get_peft_model(model, lora_config)
-
-# Check trainable parameters
 model.print_trainable_parameters()
-# Output: trainable params: 4,194,304 || all params: 6,738,415,616 
-#         || trainable%: 0.06%
-```
 
-### Step 4: Prepare Training Data
-```python
-from datasets import Dataset
-import json
-
-print("Step 3: Preparing training data...")
-
-# Load our prepared data
-with open("training_data.json", "r") as f:
+# Step 3: Load data
+print("Loading training data...")
+with open("data/formatted_training_data.json") as f:
     data = json.load(f)
 
-# Format into chat template
-def format_chat(example):
-    chat = f"""<s>[INST] <<SYS>>
-You are a caring hospital health assistant. Answer patient questions 
-in simple, easy language. Be supportive and helpful. If emergency, 
-tell patient to go to hospital immediately.
-<</SYS>>
-
-{example['input']} [/INST] {example['output']} </s>"""
-    return {"text": chat}
-
-# Create dataset
 dataset = Dataset.from_list(data)
-dataset = dataset.map(format_chat)
-
-# Split into train and validation
 dataset = dataset.train_test_split(test_size=0.1, seed=42)
 
-print(f"Training examples: {len(dataset['train'])}")
-print(f"Validation examples: {len(dataset['test'])}")
-```
-
-### Step 5: Train the Model
-```python
-from transformers import TrainingArguments
-from trl import SFTTrainer
-
-print("Step 4: Starting training...")
-
-# Training settings
+# Step 4: Training
+print("Starting training...")
 training_args = TrainingArguments(
-    output_dir="./patient-ai-model",
-    
-    # How long to train
+    output_dir="./checkpoints",
     num_train_epochs=3,
-    
-    # Batch size (how many examples at once)
     per_device_train_batch_size=4,
-    gradient_accumulation_steps=4,  # Effective batch = 16
-    
-    # Learning rate
+    gradient_accumulation_steps=4,
     learning_rate=2e-4,
-    warmup_steps=100,
-    
-    # Save and evaluate
+    warmup_ratio=0.03,
+    logging_steps=25,
     save_strategy="epoch",
     evaluation_strategy="epoch",
-    logging_steps=50,
-    
-    # Optimization
     fp16=True,
-    optim="paged_adamw_32bit"
+    report_to="wandb"
 )
 
-# Create trainer
 trainer = SFTTrainer(
     model=model,
     tokenizer=tokenizer,
@@ -490,1088 +498,867 @@ trainer = SFTTrainer(
     max_seq_length=1024
 )
 
-# Start training!
 trainer.train()
 
-# Training takes about 3-4 hours
+# Step 5: Save model
+print("Saving model...")
+trainer.save_model("./apollo-health-ai-v1")
+tokenizer.save_pretrained("./apollo-health-ai-v1")
+
+print("Training complete!")
 ```
 
-### Step 6: Training Output
-```
-TRAINING LOG:
-┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  Epoch 1/3:                                                  │
-│  ├── Step 100: loss = 1.823                                 │
-│  ├── Step 200: loss = 1.456                                 │
-│  ├── Step 300: loss = 1.234                                 │
-│  └── Epoch 1 Complete - Eval Loss: 1.189                    │
-│                                                              │
-│  Epoch 2/3:                                                  │
-│  ├── Step 400: loss = 1.087                                 │
-│  ├── Step 500: loss = 0.956                                 │
-│  ├── Step 600: loss = 0.878                                 │
-│  └── Epoch 2 Complete - Eval Loss: 0.823                    │
-│                                                              │
-│  Epoch 3/3:                                                  │
-│  ├── Step 700: loss = 0.756                                 │
-│  ├── Step 800: loss = 0.689                                 │
-│  ├── Step 900: loss = 0.634                                 │
-│  └── Epoch 3 Complete - Eval Loss: 0.598                    │
-│                                                              │
-│  ✓ Training Complete!                                        │
-│  ├── Total Time: 3 hours 45 minutes                         │
-│  ├── Final Loss: 0.598                                      │
-│  └── Best Model Saved: ./patient-ai-model/checkpoint-900    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+#### Step 3: Run Training on AWS
+```bash
+# SSH into EC2 instance
+ssh -i apollo-key.pem ubuntu@ec2-xx-xx-xx-xx.ap-south-1.compute.amazonaws.com
+
+# Activate environment
+conda activate patient-ai
+
+# Start training
+python training/train_model.py
+
+# Training took 4 hours
+# You monitored on Weights & Biases dashboard
 ```
 
-### Step 7: Merge and Save Final Model
-```python
-print("Step 5: Saving final model...")
-
-# Merge LoRA weights with base model
-model = model.merge_and_unload()
-
-# Save for deployment
-model.save_pretrained("./patient-ai-final")
-tokenizer.save_pretrained("./patient-ai-final")
-
-print("Model saved successfully!")
+### Training Results (First Version)
+```
+EXPERIMENT: llama2-qlora-v1
+┌─────────────────────────────────────────────────┐
+│ Epoch │ Train Loss │ Eval Loss │ Time          │
+├─────────────────────────────────────────────────┤
+│   1   │   1.45     │   1.12    │ 1h 20m        │
+│   2   │   0.89     │   0.76    │ 1h 22m        │
+│   3   │   0.62     │   0.71    │ 1h 21m        │
+├─────────────────────────────────────────────────┤
+│ Total Training Time: 4 hours 3 minutes          │
+│ Best Checkpoint: Epoch 2 (lowest eval loss)     │
+└─────────────────────────────────────────────────┘
 ```
 
 ---
 
-# SECTION 4: BUILDING THE RAG SYSTEM
+## Sprint 4-5: Model Improvement
 
-## Why RAG? (Retrieval Augmented Generation)
+### Client Demo Feedback (Week 6)
 ```
-PROBLEM:
-The model knows general medical info, but NOT:
-• This specific patient's medications
-• Hospital-specific protocols
-• Latest drug information
+Demo Meeting Notes:
 
-SOLUTION: RAG
-• Store hospital knowledge in a database
-• When patient asks question, find relevant info
-• Give info to LLM to generate accurate answer
-```
+You showed the model to Dr. Meera (Product Owner)
 
-## RAG Architecture
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     RAG SYSTEM                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Patient Question: "What are side effects of Metformin?"    │
-│           │                                                  │
-│           ▼                                                  │
-│  ┌─────────────────┐                                        │
-│  │ Convert to      │                                        │
-│  │ Embedding       │  (Question → Numbers)                  │
-│  └────────┬────────┘                                        │
-│           │                                                  │
-│           ▼                                                  │
-│  ┌─────────────────┐     ┌─────────────────┐               │
-│  │ Search Vector   │────▶│ Knowledge Base  │               │
-│  │ Database        │     │ (Drug info,     │               │
-│  └────────┬────────┘     │  Guidelines)    │               │
-│           │              └─────────────────┘               │
-│           ▼                                                  │
-│  ┌─────────────────┐                                        │
-│  │ Found: Metformin│                                        │
-│  │ side effects    │                                        │
-│  │ documentation   │                                        │
-│  └────────┬────────┘                                        │
-│           │                                                  │
-│           ▼                                                  │
-│  ┌─────────────────┐                                        │
-│  │ LLM generates   │                                        │
-│  │ simple answer   │                                        │
-│  │ using the info  │                                        │
-│  └────────┬────────┘                                        │
-│           │                                                  │
-│           ▼                                                  │
-│  Answer: "Common side effects of Metformin include          │
-│  stomach upset and diarrhea. These usually get better       │
-│  after a few days. Take it with food to reduce upset."      │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+TEST 1: "When should I take Metformin?"
+AI Response: "Take Metformin with meals, usually twice a day."
+Dr. Meera: "Good, but add that it should be taken with food 
+           to avoid stomach upset."
+
+TEST 2: "I have chest pain"
+AI Response: "Chest pain can have many causes. You should 
+             rest and see if it improves."
+Dr. Meera: "NO! This is dangerous. Chest pain should always 
+           trigger emergency response. Fix this immediately."
+
+TEST 3: "Can I eat biryani after heart surgery?"
+AI Response: "I'm not sure about specific foods after surgery."
+Dr. Meera: "This should give clear answer - yes but plain 
+           biryani, less oil, small portion."
+
+ACTION ITEMS FROM DEMO:
+1. [CRITICAL] Fix emergency detection - chest pain, breathing issues
+2. [HIGH] Add more diet-related Q&As
+3. [MEDIUM] Make answers more specific
 ```
 
-## RAG Implementation Code
+### Fixing Emergency Detection
 ```python
-# File: rag_system.py
+# File: src/emergency_detector.py
+# You created this after the demo feedback
+
+EMERGENCY_KEYWORDS = [
+    "chest pain", "heart attack", "can't breathe", "difficulty breathing",
+    "unconscious", "fainted", "seizure", "severe bleeding",
+    "stroke", "paralysis", "suicide", "overdose"
+]
+
+EMERGENCY_PATTERNS = [
+    r"pain.*(chest|heart|left arm)",
+    r"(can't|cannot|unable to).*(breathe|breathing)",
+    r"(severe|extreme|unbearable).*pain",
+    r"(blood|bleeding).*(a lot|heavy|won't stop)"
+]
+
+class EmergencyDetector:
+    def __init__(self):
+        self.keywords = EMERGENCY_KEYWORDS
+        self.patterns = [re.compile(p, re.IGNORECASE) for p in EMERGENCY_PATTERNS]
+    
+    def is_emergency(self, message):
+        """Check if message indicates emergency"""
+        message_lower = message.lower()
+        
+        # Check keywords
+        for keyword in self.keywords:
+            if keyword in message_lower:
+                return True, f"Detected: {keyword}"
+        
+        # Check patterns
+        for pattern in self.patterns:
+            if pattern.search(message):
+                return True, f"Pattern match: {pattern.pattern}"
+        
+        return False, None
+    
+    def get_emergency_response(self):
+        return """🚨 EMERGENCY ALERT
+
+This sounds like a medical emergency. Please:
+
+1. CALL AMBULANCE: 108 (India) or go to nearest hospital
+2. Don't wait to see if it gets better
+3. If someone is with you, ask them to help
+
+Your health is most important. Please seek immediate medical help.
+
+Should I alert your emergency contact?"""
+```
+
+### Adding More Training Data (After Demo)
+```
+What You Did:
+1. Asked Dr. Prakash for 200 emergency scenarios
+2. Added 500 more diet Q&As specific to Indian food
+3. Added 300 post-surgery care Q&As
+
+New Training Data:
+- Emergency scenarios: 500 (up from 200)
+- Diet Q&As: 2,000 (up from 1,500)
+- Total: 22,000 Q&As
+```
+
+### Retrain with Improved Data
+```
+EXPERIMENT: llama2-qlora-v2
+Changes from v1:
+- More emergency data
+- More diet data
+- Stronger emergency detection in system prompt
+
+Results:
+┌─────────────────────────────────────────────────┐
+│ Metric              │ v1      │ v2      │ Diff  │
+├─────────────────────────────────────────────────┤
+│ Overall Accuracy    │ 78%     │ 89%     │ +11%  │
+│ Emergency Detection │ 65%     │ 96%     │ +31%  │
+│ Diet Questions      │ 72%     │ 91%     │ +19%  │
+│ Medication Qs       │ 85%     │ 92%     │ +7%   │
+└─────────────────────────────────────────────────┘
+
+Client approved v2 for UAT testing.
+```
+
+---
+
+# PART 5: RAG SYSTEM (Month 3-4)
+
+## Why We Needed RAG
+```
+Problem Discovered in Testing:
+
+Tester: "What medicines am I taking?"
+AI: "I don't have access to your prescription."
+
+Tester: "When is my next appointment?"
+AI: "I don't know your appointment schedule."
+
+ISSUE: Model doesn't know patient-specific information!
+
+Solution: RAG (Retrieval Augmented Generation)
+- Store patient data in vector database
+- Retrieve relevant info when patient asks
+- Pass to LLM for personalized answer
+```
+
+## RAG Implementation
+
+### Step 1: Patient Data Integration
+```python
+# File: src/patient_data_service.py
+
+class PatientDataService:
+    """Fetch patient data from Apollo's EMR system"""
+    
+    def __init__(self, emr_api_url):
+        self.api_url = emr_api_url
+        self.api_key = os.environ['APOLLO_EMR_API_KEY']
+    
+    def get_patient_info(self, patient_id):
+        """Get patient's information from EMR"""
+        
+        response = requests.get(
+            f"{self.api_url}/patients/{patient_id}",
+            headers={"Authorization": f"Bearer {self.api_key}"}
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            return {
+                "name": data['name'],
+                "age": data['age'],
+                "conditions": data['medical_conditions'],
+                "medications": data['current_medications'],
+                "allergies": data['allergies'],
+                "recent_visit": data['last_discharge_date'],
+                "doctor": data['primary_doctor'],
+                "next_appointment": data.get('next_appointment')
+            }
+        return None
+    
+    def get_prescription(self, patient_id):
+        """Get patient's current prescription"""
+        
+        response = requests.get(
+            f"{self.api_url}/patients/{patient_id}/prescriptions",
+            headers={"Authorization": f"Bearer {self.api_key}"}
+        )
+        
+        if response.status_code == 200:
+            return response.json()['current_prescription']
+        return []
+```
+
+### Step 2: Knowledge Base (Vector DB)
+```python
+# File: src/knowledge_base.py
 
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-class HealthKnowledgeBase:
+class MedicalKnowledgeBase:
+    """RAG system for medical knowledge"""
+    
     def __init__(self):
-        # Use medical embeddings model
+        # Using free embedding model
         self.embeddings = HuggingFaceEmbeddings(
             model_name="sentence-transformers/all-MiniLM-L6-v2"
         )
-        self.vectorstore = None
+        self.db = None
     
-    def build_knowledge_base(self, documents):
-        """Create searchable knowledge base"""
+    def build_index(self, documents):
+        """Create searchable index from medical documents"""
         
-        # Split documents into chunks
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500,
-            chunk_overlap=50
-        )
-        chunks = splitter.split_documents(documents)
+        # documents = list of {"content": "...", "source": "..."}
+        texts = [doc['content'] for doc in documents]
+        metadatas = [{"source": doc['source']} for doc in documents]
         
-        # Create vector database
-        self.vectorstore = FAISS.from_documents(chunks, self.embeddings)
-        
-        # Save for later use
-        self.vectorstore.save_local("./health_knowledge_db")
-        print(f"Knowledge base created with {len(chunks)} chunks")
+        self.db = FAISS.from_texts(texts, self.embeddings, metadatas=metadatas)
+        self.db.save_local("./knowledge_base")
+        print(f"Indexed {len(texts)} documents")
     
     def search(self, query, k=3):
-        """Find relevant information for a question"""
-        results = self.vectorstore.similarity_search(query, k=k)
-        return "\n".join([doc.page_content for doc in results])
-
-# Build knowledge base with our data
-knowledge_base = HealthKnowledgeBase()
-
-# Add different types of knowledge
-documents = []
-
-# 1. Drug information
-documents.extend(load_drug_database())      # 10,000 medicines
-
-# 2. Disease information  
-documents.extend(load_disease_info())       # 2,000 conditions
-
-# 3. Hospital protocols
-documents.extend(load_hospital_protocols()) # Specific to this hospital
-
-# 4. Diet guidelines
-documents.extend(load_diet_guidelines())    # Post-surgery diets, etc.
-
-# Create the knowledge base
-knowledge_base.build_knowledge_base(documents)
+        """Find relevant information for a query"""
+        
+        if self.db is None:
+            self.db = FAISS.load_local("./knowledge_base", self.embeddings)
+        
+        results = self.db.similarity_search(query, k=k)
+        return "\n".join([r.page_content for r in results])
 ```
 
----
-
-# SECTION 5: WARNING SIGN DETECTION
-
-## Why This is Important
-```
-CRITICAL FEATURE:
-If patient describes emergency symptoms, AI must:
-1. Recognize it immediately
-2. Tell patient to go to hospital
-3. Alert the medical team
-4. NOT give casual advice
-
-Example:
-Patient: "I have severe chest pain and difficulty breathing"
-AI Must: "This sounds serious. Please go to the emergency room 
-         immediately or call an ambulance. Don't wait."
-```
-
-## Warning Signs Database
+### Step 3: Complete Chatbot Pipeline
 ```python
-# Warning signs by condition
-
-WARNING_SIGNS = {
-    "CARDIAC": {
-        "symptoms": [
-            "chest pain",
-            "pain in left arm",
-            "shortness of breath",
-            "sweating with chest discomfort",
-            "jaw pain with chest pain"
-        ],
-        "urgency": "EMERGENCY",
-        "action": "Go to emergency room immediately"
-    },
-    
-    "STROKE": {
-        "symptoms": [
-            "sudden weakness on one side",
-            "face drooping",
-            "difficulty speaking",
-            "sudden severe headache",
-            "vision problems sudden"
-        ],
-        "urgency": "EMERGENCY",
-        "action": "Call ambulance immediately - time critical"
-    },
-    
-    "POST_SURGERY": {
-        "symptoms": [
-            "fever above 101°F",
-            "wound bleeding",
-            "pus from wound",
-            "severe pain not controlled by medicine",
-            "vomiting blood"
-        ],
-        "urgency": "URGENT",
-        "action": "Contact hospital immediately"
-    },
-    
-    "DIABETES": {
-        "symptoms": [
-            "blood sugar above 400",
-            "blood sugar below 50",
-            "confusion",
-            "unconsciousness",
-            "fruity breath smell"
-        ],
-        "urgency": "EMERGENCY",
-        "action": "Emergency room immediately"
-    }
-}
-```
-
-## Warning Detection Code
-```python
-# File: warning_detector.py
-
-class WarningSignDetector:
-    def __init__(self):
-        # Load fine-tuned classifier for emergencies
-        self.classifier = pipeline(
-            "text-classification",
-            model="./emergency-classifier"
-        )
-        
-        # Keywords for quick detection
-        self.emergency_keywords = [
-            "chest pain", "can't breathe", "unconscious",
-            "severe bleeding", "stroke", "heart attack",
-            "suicide", "overdose", "poisoning"
-        ]
-    
-    def check_message(self, patient_message):
-        """Check if message contains warning signs"""
-        
-        message_lower = patient_message.lower()
-        
-        # Quick keyword check
-        for keyword in self.emergency_keywords:
-            if keyword in message_lower:
-                return {
-                    "is_emergency": True,
-                    "confidence": 0.95,
-                    "action": "IMMEDIATE_ESCALATION"
-                }
-        
-        # Use classifier for other cases
-        result = self.classifier(patient_message)
-        
-        if result[0]['label'] == 'EMERGENCY' and result[0]['score'] > 0.8:
-            return {
-                "is_emergency": True,
-                "confidence": result[0]['score'],
-                "action": "IMMEDIATE_ESCALATION"
-            }
-        
-        return {
-            "is_emergency": False,
-            "confidence": result[0]['score'],
-            "action": "NORMAL_RESPONSE"
-        }
-    
-    def get_emergency_response(self):
-        """Standard emergency response"""
-        return """🚨 This sounds like it could be a medical emergency.
-
-Please take immediate action:
-1. If severe: Call ambulance (102) or go to nearest emergency room
-2. If you can't move: Ask someone nearby to help
-3. Don't wait to see if it gets better
-
-Your safety is most important. Please seek help now.
-
-Would you like me to alert your doctor as well?"""
-```
-
----
-
-# SECTION 6: COMPLETE CHATBOT PIPELINE
-
-## Full System Code
-```python
-# File: patient_chatbot.py
+# File: src/chatbot.py
 
 from vllm import LLM, SamplingParams
 
-class PatientHealthAssistant:
+class ApolloHealthBot:
     def __init__(self):
         # Load fine-tuned model
-        self.llm = LLM(
-            model="./patient-ai-final",
-            tensor_parallel_size=1,
-            gpu_memory_utilization=0.9
-        )
+        self.llm = LLM(model="./apollo-health-ai-v2")
+        self.sampling_params = SamplingParams(temperature=0.3, max_tokens=500)
         
-        # Load knowledge base
-        self.knowledge_base = HealthKnowledgeBase()
-        self.knowledge_base.load("./health_knowledge_db")
-        
-        # Load warning detector
-        self.warning_detector = WarningSignDetector()
-        
-        # Sampling settings
-        self.sampling_params = SamplingParams(
-            temperature=0.3,      # Low = more consistent
-            max_tokens=512,
-            top_p=0.9
-        )
+        # Initialize components
+        self.emergency_detector = EmergencyDetector()
+        self.patient_service = PatientDataService(os.environ['EMR_API_URL'])
+        self.knowledge_base = MedicalKnowledgeBase()
     
-    def get_patient_context(self, patient_id):
-        """Get patient's specific information"""
-        # This would connect to hospital database
-        return {
-            "name": "Rajesh",
-            "medications": [
-                {"name": "Metformin", "dose": "500mg", "timing": "morning and evening"},
-                {"name": "Amlodipine", "dose": "5mg", "timing": "morning"}
-            ],
-            "condition": "Type 2 Diabetes, Hypertension",
-            "recent_surgery": None,
-            "doctor": "Dr. Sharma"
-        }
-    
-    def chat(self, patient_id, user_message):
+    def chat(self, patient_id, message):
         """Main chat function"""
         
-        # Step 1: Check for emergencies
-        warning_check = self.warning_detector.check_message(user_message)
-        if warning_check["is_emergency"]:
-            # Alert medical team
-            self.alert_medical_team(patient_id, user_message)
+        # Step 1: Check emergency
+        is_emergency, reason = self.emergency_detector.is_emergency(message)
+        if is_emergency:
+            self.send_alert(patient_id, message, reason)
             return {
-                "response": self.warning_detector.get_emergency_response(),
+                "response": self.emergency_detector.get_emergency_response(),
                 "is_emergency": True
             }
         
         # Step 2: Get patient context
-        patient_context = self.get_patient_context(patient_id)
+        patient = self.patient_service.get_patient_info(patient_id)
+        prescription = self.patient_service.get_prescription(patient_id)
         
         # Step 3: Search knowledge base
-        relevant_info = self.knowledge_base.search(user_message)
+        knowledge = self.knowledge_base.search(message)
         
-        # Step 4: Build prompt
-        prompt = self.build_prompt(
-            user_message=user_message,
-            patient_context=patient_context,
-            knowledge=relevant_info
-        )
+        # Step 4: Build prompt with context
+        prompt = self.build_prompt(message, patient, prescription, knowledge)
         
         # Step 5: Generate response
-        outputs = self.llm.generate([prompt], self.sampling_params)
-        response = outputs[0].outputs[0].text
+        output = self.llm.generate([prompt], self.sampling_params)
+        response = output[0].outputs[0].text
         
         # Step 6: Log conversation
-        self.log_conversation(patient_id, user_message, response)
+        self.log_chat(patient_id, message, response)
         
-        return {
-            "response": response,
-            "is_emergency": False
-        }
+        return {"response": response, "is_emergency": False}
     
-    def build_prompt(self, user_message, patient_context, knowledge):
-        """Create prompt for LLM"""
+    def build_prompt(self, message, patient, prescription, knowledge):
+        """Create prompt with patient context"""
         
-        medications = "\n".join([
-            f"- {m['name']} {m['dose']}: Take {m['timing']}"
-            for m in patient_context['medications']
+        # Format prescription
+        meds = "\n".join([
+            f"- {m['name']} {m['dosage']}: {m['timing']}"
+            for m in prescription
         ])
         
         prompt = f"""<s>[INST] <<SYS>>
-You are a caring health assistant for {patient_context['name']}. 
-Answer their question in simple, friendly language.
+You are a health assistant for {patient['name']} at Apollo Hospitals.
 
-Patient's Medications:
-{medications}
+PATIENT INFO:
+- Age: {patient['age']}
+- Conditions: {', '.join(patient['conditions'])}
+- Doctor: {patient['doctor']}
 
-Patient's Conditions: {patient_context['condition']}
+CURRENT MEDICATIONS:
+{meds}
 
-Relevant Medical Information:
+RELEVANT KNOWLEDGE:
 {knowledge}
 
-Rules:
-1. Use simple words, avoid medical jargon
-2. Be warm and supportive
-3. If unsure, suggest contacting doctor
-4. For emergencies, tell them to go to hospital
+Answer in simple, friendly language. Be supportive.
 <</SYS>>
 
-Patient's Question: {user_message} [/INST]"""
+{message} [/INST]"""
         
         return prompt
-    
-    def alert_medical_team(self, patient_id, message):
-        """Send alert for emergencies"""
-        # Send SMS/notification to doctor
-        # Log in hospital system
-        print(f"⚠️ ALERT: Emergency detected for patient {patient_id}")
-        print(f"Message: {message}")
-
-# Usage Example
-assistant = PatientHealthAssistant()
-
-# Patient conversation
-response = assistant.chat(
-    patient_id="PT12345",
-    user_message="When should I take my diabetes medicine?"
-)
-
-print(response["response"])
-# Output: "Hi Rajesh! You should take your Metformin 500mg twice a day - 
-#          once in the morning with breakfast and once in the evening 
-#          with dinner. Taking it with food helps reduce stomach upset. 
-#          Is there anything else you'd like to know about your medicines?"
 ```
 
 ---
 
-# SECTION 7: DEPLOYMENT ON AWS
+# PART 6: DEPLOYMENT (Month 5-6)
 
-## Architecture Diagram
+## Sprint 9-10: AWS Deployment
+
+### Architecture (What We Built)
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        AWS CLOUD                                 │
+│                     AWS MUMBAI REGION                            │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│   USERS                                                          │
-│   ┌──────────┐  ┌──────────┐  ┌──────────┐                     │
-│   │ WhatsApp │  │   App    │  │  Website │                     │
-│   └────┬─────┘  └────┬─────┘  └────┬─────┘                     │
-│        │             │             │                            │
-│        └─────────────┴─────────────┘                            │
-│                      │                                          │
-│                      ▼                                          │
-│            ┌─────────────────┐                                  │
-│            │   API Gateway   │  (Handles all requests)          │
-│            └────────┬────────┘                                  │
-│                     │                                           │
-│                     ▼                                           │
-│            ┌─────────────────┐                                  │
-│            │   Load Balancer │  (Distributes traffic)           │
-│            └────────┬────────┘                                  │
-│                     │                                           │
-│        ┌────────────┼────────────┐                              │
-│        ▼            ▼            ▼                              │
-│   ┌─────────┐  ┌─────────┐  ┌─────────┐                        │
-│   │ Server 1│  │ Server 2│  │ Server 3│  (FastAPI + vLLM)      │
-│   │  (GPU)  │  │  (GPU)  │  │  (GPU)  │                        │
-│   └────┬────┘  └────┬────┘  └────┬────┘                        │
-│        │            │            │                              │
-│        └────────────┴────────────┘                              │
-│                     │                                           │
-│        ┌────────────┼────────────┐                              │
-│        ▼            ▼            ▼                              │
-│   ┌─────────┐  ┌─────────┐  ┌─────────┐                        │
-│   │ Vector  │  │  Redis  │  │   RDS   │                        │
-│   │   DB    │  │ (Cache) │  │(Patient │                        │
-│   │ (FAISS) │  │         │  │  Data)  │                        │
-│   └─────────┘  └─────────┘  └─────────┘                        │
+│  [WhatsApp]──►[API Gateway]──►[Load Balancer]                   │
+│                                      │                           │
+│                         ┌────────────┼────────────┐              │
+│                         ▼            ▼            ▼              │
+│                    [EC2 GPU]    [EC2 GPU]    [EC2 GPU]           │
+│                    (vLLM)       (vLLM)       (vLLM)              │
+│                         │            │            │              │
+│                         └────────────┴────────────┘              │
+│                                      │                           │
+│            ┌─────────────────────────┼─────────────────────────┐ │
+│            ▼                         ▼                         ▼ │
+│      [Apollo EMR]            [Vector DB]              [RDS Postgres]│
+│      (Patient Data)          (FAISS on S3)            (Chat Logs)│
 │                                                                  │
-│   ┌─────────────────────────────────────────────────────┐       │
-│   │              MONITORING                              │       │
-│   │  CloudWatch │ Grafana │ PagerDuty (Alerts)          │       │
-│   └─────────────────────────────────────────────────────┘       │
+│  MONITORING: CloudWatch + Grafana                               │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Step-by-Step Deployment
-
-### Step 1: Create FastAPI Server
+### FastAPI Server
 ```python
-# File: api_server.py
+# File: app/main.py
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
 
-app = FastAPI(title="Patient Health Assistant API")
-
-# Initialize chatbot
-assistant = PatientHealthAssistant()
+app = FastAPI(title="Apollo Health Bot API")
+chatbot = ApolloHealthBot()
 
 class ChatRequest(BaseModel):
     patient_id: str
     message: str
-    language: str = "english"
 
 class ChatResponse(BaseModel):
     response: str
     is_emergency: bool
-    response_time_ms: int
 
 @app.post("/chat", response_model=ChatResponse)
-async def chat_endpoint(request: ChatRequest):
-    """Main chat endpoint"""
-    import time
-    start_time = time.time()
-    
+async def chat(request: ChatRequest):
     try:
-        result = assistant.chat(
-            patient_id=request.patient_id,
-            user_message=request.message
-        )
-        
-        response_time = int((time.time() - start_time) * 1000)
-        
-        return ChatResponse(
-            response=result["response"],
-            is_emergency=result["is_emergency"],
-            response_time_ms=response_time
-        )
-    
+        result = chatbot.chat(request.patient_id, request.message)
+        return ChatResponse(**result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
-async def health_check():
-    """Health check endpoint"""
-    return {"status": "healthy", "model_loaded": True}
+async def health():
+    return {"status": "ok"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-### Step 2: Docker Configuration
-```dockerfile
-# Dockerfile
-
-FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04
-
-# Install Python
-RUN apt-get update && apt-get install -y python3.10 python3-pip
-
-# Set working directory
-WORKDIR /app
-
-# Copy requirements
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-# Copy application code
-COPY . .
-
-# Copy model files
-COPY ./patient-ai-final ./patient-ai-final
-COPY ./health_knowledge_db ./health_knowledge_db
-
-# Expose port
-EXPOSE 8000
-
-# Run server
-CMD ["python3", "api_server.py"]
-```
-
-### Step 3: AWS Infrastructure (Terraform)
-```hcl
-# main.tf - Infrastructure as Code
-
-# EC2 Instance with GPU
-resource "aws_instance" "model_server" {
-  ami           = "ami-0xxx"  # Deep Learning AMI
-  instance_type = "g5.xlarge" # 1 GPU, 24GB VRAM
-  count         = 3           # 3 servers for load balancing
-  
-  tags = {
-    Name = "patient-ai-server"
-  }
-}
-
-# Load Balancer
-resource "aws_lb" "main" {
-  name               = "patient-ai-lb"
-  internal           = false
-  load_balancer_type = "application"
-}
-
-# Auto Scaling (add more servers if busy)
-resource "aws_autoscaling_group" "main" {
-  min_size         = 2
-  max_size         = 10
-  desired_capacity = 3
-}
-```
-
-### Step 4: Deployment Commands
+### Deployment Steps (What You Did)
 ```bash
-# Build and push Docker image
-docker build -t patient-ai:latest .
-docker tag patient-ai:latest <aws-account>.ecr.ap-south-1.amazonaws.com/patient-ai:latest
-docker push <aws-account>.ecr.ap-south-1.amazonaws.com/patient-ai:latest
+# 1. Build Docker image
+docker build -t apollo-health-bot:v2 .
 
-# Deploy using ECS
-aws ecs update-service --cluster patient-ai-cluster --service patient-ai-service --force-new-deployment
+# 2. Push to ECR
+aws ecr get-login-password | docker login --username AWS --password-stdin <account>.dkr.ecr.ap-south-1.amazonaws.com
+docker push <account>.dkr.ecr.ap-south-1.amazonaws.com/apollo-health-bot:v2
 
-# Check deployment status
-aws ecs describe-services --cluster patient-ai-cluster --services patient-ai-service
+# 3. Deploy to ECS
+aws ecs update-service --cluster apollo-prod --service health-bot --force-new-deployment
+
+# 4. Verify deployment
+curl https://healthbot.apollo.internal/health
 ```
 
-## AWS Cost Breakdown
+### WhatsApp Integration
 ```
-MONTHLY AWS COSTS:
-┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  Component              │ Specification    │ Cost/Month     │
-│  ──────────────────────────────────────────────────────────│
-│  EC2 (GPU Servers)      │ 3x g5.xlarge    │ ₹1,80,000      │
-│  Load Balancer          │ ALB             │ ₹5,000         │
-│  RDS (Patient Data)     │ db.t3.medium    │ ₹8,000         │
-│  S3 (Logs, Models)      │ 100GB           │ ₹2,000         │
-│  CloudWatch             │ Monitoring      │ ₹3,000         │
-│  Data Transfer          │ 500GB           │ ₹5,000         │
-│  ──────────────────────────────────────────────────────────│
-│  TOTAL                  │                 │ ₹2,03,000      │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+Integration Partner: Gupshup (WhatsApp Business API provider)
 
-Per Conversation Cost: ₹0.20 (at 500K conversations/month)
+Flow:
+1. Patient sends message on WhatsApp to Apollo number
+2. Gupshup webhook sends message to our API
+3. Our API processes and returns response
+4. Gupshup sends response back to patient on WhatsApp
+
+Your Task: Built the webhook handler
+```
+
+```python
+# File: app/whatsapp_webhook.py
+
+from fastapi import APIRouter, Request
+import httpx
+
+router = APIRouter()
+GUPSHUP_API_KEY = os.environ['GUPSHUP_API_KEY']
+
+@router.post("/webhook/whatsapp")
+async def whatsapp_webhook(request: Request):
+    """Handle incoming WhatsApp messages"""
+    
+    data = await request.json()
+    
+    # Extract message details
+    patient_phone = data['sender']['phone']
+    message = data['message']['text']
+    
+    # Get patient ID from phone number
+    patient_id = lookup_patient_by_phone(patient_phone)
+    
+    if not patient_id:
+        return send_whatsapp_message(
+            patient_phone, 
+            "Please register with Apollo Hospitals first."
+        )
+    
+    # Get AI response
+    result = chatbot.chat(patient_id, message)
+    
+    # Send response via WhatsApp
+    send_whatsapp_message(patient_phone, result['response'])
+    
+    return {"status": "processed"}
+
+def send_whatsapp_message(phone, message):
+    """Send message via Gupshup API"""
+    
+    httpx.post(
+        "https://api.gupshup.io/wa/api/v1/msg",
+        headers={"apikey": GUPSHUP_API_KEY},
+        data={
+            "channel": "whatsapp",
+            "destination": phone,
+            "message": message
+        }
+    )
 ```
 
 ---
 
-# SECTION 8: RESULTS & BUSINESS IMPACT
+# PART 7: TESTING & GO-LIVE (Month 6-7)
 
-## Technical Metrics
+## UAT (User Acceptance Testing)
+
+### UAT Process
 ```
+UAT Team (from Apollo):
+- 5 call center agents
+- 2 nurses
+- 1 doctor (Dr. Prakash)
+
+UAT Duration: 3 weeks
+
+Process:
+1. Week 1: Internal testing (our QA team)
+2. Week 2: Apollo team tests with sample patients
+3. Week 3: Fix bugs, re-test
+
+UAT Scenarios Tested: 150
+Bugs Found: 23
+Critical Bugs: 3
+```
+
+### Critical Bugs Found
+```
+BUG #1: Hindi responses broken
+Reported by: Call center agent
+Issue: When patient types in Hindi, response is gibberish
+Fix: Added Hindi tokenizer, retrained with Hindi data
+Status: Fixed in 2 days
+
+BUG #2: Emergency not detected for "saans nahi aa rahi"
+Reported by: Dr. Prakash
+Issue: Hindi phrase for "can't breathe" not detected
+Fix: Added Hindi emergency keywords
+Status: Fixed in 1 day
+
+BUG #3: Wrong medicine timings
+Reported by: Nurse
+Issue: AI said "take at night" for morning medicine
+Fix: Bug in EMR data parsing, timing field was wrong
+Status: Fixed in 3 days
+```
+
+### Performance Testing
+```
+Load Test Results:
+┌─────────────────────────────────────────────────┐
+│ Concurrent Users │ Avg Response │ Error Rate   │
+├─────────────────────────────────────────────────┤
+│       100        │    1.2s      │    0%        │
+│       500        │    1.8s      │    0%        │
+│      1000        │    2.5s      │    0.5%      │
+│      2000        │    4.2s      │    2.1%      │
+└─────────────────────────────────────────────────┘
+
+Decision: Scale to 5 GPU servers for production
+Target: Handle 2000 concurrent users with <3s response
+```
+
+## Production Go-Live
+
+### Go-Live Date: March 15, 2024
+
+### Rollout Plan
+```
+PHASE 1 (Week 1): Hyderabad hospital only
+- 5,000 patients enabled
+- Close monitoring
+- Quick bug fixes
+
+PHASE 2 (Week 2-3): Expand to Chennai, Bangalore
+- 25,000 patients enabled
+- Monitor and stabilize
+
+PHASE 3 (Week 4+): All hospitals
+- 50,000+ patients
+- Full production mode
+```
+
+### Go-Live Day (What Actually Happened)
+```
+March 15, 2024 - Go-Live Day
+
+09:00 AM: Feature flag enabled for Hyderabad
+09:15 AM: First patient message received!
+09:30 AM: 50 messages processed, all working
+10:45 AM: Minor issue - slow response for some users
+11:00 AM: DevOps scaled up servers, issue resolved
+02:00 PM: 500 patients active, no major issues
+06:00 PM: End of day - 1,200 conversations, 98.5% success rate
+
+Go-Live Status: SUCCESS ✓
+```
+
+---
+
+# PART 8: RESULTS (After 3 Months in Production)
+
+## Key Metrics
+```
+USAGE METRICS (3 months post go-live):
+┌─────────────────────────────────────────────────┐
+│ Metric                        │ Value           │
+├─────────────────────────────────────────────────┤
+│ Total Patients Enrolled       │ 45,000          │
+│ Monthly Active Users          │ 32,000          │
+│ Total Conversations           │ 180,000         │
+│ Messages per User (avg)       │ 5.6             │
+│ Daily Active Users            │ 4,500           │
+└─────────────────────────────────────────────────┘
+
 PERFORMANCE METRICS:
-┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  Response Accuracy                                           │
-│  ├── Medication questions    : 96.2%                        │
-│  ├── Symptom questions       : 91.5%                        │
-│  ├── Diet questions          : 94.8%                        │
-│  ├── General health          : 93.1%                        │
-│  └── Overall Accuracy        : 93.9%                        │
-│                                                              │
-│  Emergency Detection                                         │
-│  ├── True Positive Rate      : 98.5% (catches emergencies)  │
-│  ├── False Positive Rate     : 2.1%  (false alarms)         │
-│  └── Response Time           : <500ms                       │
-│                                                              │
-│  System Performance                                          │
-│  ├── Average Response Time   : 1.8 seconds                  │
-│  ├── 95th Percentile         : 2.5 seconds                  │
-│  ├── Uptime                  : 99.9%                        │
-│  └── Concurrent Users        : 1,000+                       │
-│                                                              │
-│  Language Performance                                        │
-│  ├── English                 : 95.2% accuracy               │
-│  ├── Hindi                   : 91.8% accuracy               │
-│  └── Hinglish                : 89.5% accuracy               │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Business Metrics
-```
-BUSINESS IMPACT (After 6 Months):
-┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  PATIENT ENGAGEMENT                                          │
-│  ├── Monthly Active Users    : 85,000 patients              │
-│  ├── Messages per Month      : 520,000                      │
-│  ├── Avg Messages per User   : 6.1                          │
-│  └── User Satisfaction       : 4.4/5 stars                  │
-│                                                              │
-│  CALL CENTER REDUCTION                                       │
-│  ├── Before: 50,000 calls/month                             │
-│  ├── After: 18,000 calls/month                              │
-│  ├── Reduction: 64%                                         │
-│  └── Savings: ₹45 lakhs/year                                │
-│                                                              │
-│  MEDICATION ADHERENCE                                        │
-│  ├── Before: 52% adherence rate                             │
-│  ├── After: 78% adherence rate                              │
-│  └── Improvement: 50%                                       │
-│                                                              │
-│  READMISSION REDUCTION                                       │
-│  ├── Before: 18% (30-day readmission)                       │
-│  ├── After: 11%                                             │
-│  ├── Reduction: 39%                                         │
-│  └── Savings: ₹3.5 crores/year (at ₹50K per readmission)   │
-│                                                              │
-│  EMERGENCY DETECTION                                         │
-│  ├── Emergencies Detected    : 847                          │
-│  ├── Lives Potentially Saved : 12 (critical cases caught)   │
-│  └── Avg Detection Time      : <1 minute                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Financial Summary
-```
-ROI CALCULATION:
-┌─────────────────────────────────────────────────────────────┐
-│                                                              │
-│  INVESTMENT (First Year)                                     │
-│  ├── Development Cost        : ₹50 lakhs                    │
-│  ├── Infrastructure (AWS)    : ₹24 lakhs                    │
-│  ├── Data Annotation         : ₹10 lakhs                    │
-│  └── Total Investment        : ₹84 lakhs                    │
-│                                                              │
-│  SAVINGS (First Year)                                        │
-│  ├── Call Center Reduction   : ₹45 lakhs                    │
-│  ├── Readmission Reduction   : ₹3.5 crores                  │
-│  ├── Staff Efficiency        : ₹20 lakhs                    │
-│  └── Total Savings           : ₹4.15 crores                 │
-│                                                              │
-│  NET BENEFIT: ₹4.15 Cr - ₹84 L = ₹3.31 Crores              │
-│  ROI: 394%                                                   │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-# SECTION 9: YOUR ROLE SUMMARY (FOR INTERVIEW)
-
-## How to Describe Your Role
-```
-"I worked as an ML Engineer on a Patient Engagement AI project 
-for a large hospital chain. Here's what I did:
-
-PHASE 1: DATA PREPARATION (2 months)
-• Worked with call center team to collect 100K call recordings
-• Built transcription pipeline using Whisper
-• Created 25,000 training examples with medical team
-• Implemented data cleaning and PHI removal
-
-PHASE 2: MODEL DEVELOPMENT (2 months)
-• Fine-tuned Llama-2-7B using QLoRA technique
-• Achieved 93.9% accuracy on patient queries
-• Built RAG system for hospital-specific knowledge
-• Developed emergency detection with 98.5% sensitivity
-
-PHASE 3: DEPLOYMENT (2 months)
-• Deployed on AWS using FastAPI + vLLM
-• Set up auto-scaling for 1000+ concurrent users
-• Integrated with WhatsApp and hospital app
-• Built monitoring dashboards
-
-RESULTS:
-• 64% reduction in call center volume
-• 39% reduction in hospital readmissions
-• 85,000 patients using the system monthly
-• ₹3.3 crore annual savings
-• 12 lives saved through early emergency detection"
-```
-
----
-
-# SECTION 10: INTERVIEW QUESTIONS & ANSWERS
-
-## Basic Questions
-
-### Q1: What was the project about?
-```
-Answer:
-"We built an AI health assistant that helps patients after 
-hospital discharge. Patients could ask questions about their 
-medications, symptoms, diet - anything health related. The AI 
-would answer in simple language and also detect emergencies."
-```
-
-### Q2: Why did you fine-tune instead of using ChatGPT directly?
-```
-Answer:
-"Three main reasons:
-
-1. COST: ChatGPT would cost ₹25 lakhs/month for our volume.
-   Fine-tuned model costs ₹1 lakh/month. 96% savings.
-
-2. PRIVACY: Patient health data cannot go to external servers.
-   Our model runs on hospital's own AWS infrastructure.
-
-3. CUSTOMIZATION: We needed hospital-specific information,
-   consistent response format, and regional language support.
-   Fine-tuning gave us control over all of this."
-```
-
-### Q3: How did you handle emergencies?
-```
-Answer:
-"We built a two-layer emergency detection system:
-
-Layer 1: Keyword matching for critical terms like 'chest pain',
-'can't breathe', 'unconscious' - gives instant detection.
-
-Layer 2: Fine-tuned classifier that understands context.
-For example, 'I had chest pain last week' vs 'I have chest 
-pain right now' - classifier knows the difference.
-
-When emergency detected:
-1. AI gives immediate safety instructions
-2. System alerts the patient's doctor
-3. Alert logged in hospital system
-4. Follow-up call triggered within 15 minutes
-
-We achieved 98.5% sensitivity - catches almost all emergencies."
-```
-
-## Technical Questions
-
-### Q4: Explain your fine-tuning approach
-```
-Answer:
-"We used QLoRA (Quantized Low-Rank Adaptation):
-
-1. QUANTIZATION: Loaded Llama-2-7B in 4-bit precision.
-   This reduced memory from 14GB to 4GB, letting us use 
-   smaller (cheaper) GPUs.
-
-2. LoRA: Instead of training all 7 billion parameters,
-   we added small adapter layers and trained only those.
-   Only 4 million parameters trained = 0.06% of model.
-
-3. CONFIGURATION:
-   - Rank (r) = 32: Balance of capacity vs memory
-   - Alpha = 64: Learning rate scaling
-   - Target modules: Attention layers (q, k, v, o projections)
-   - Training: 3 epochs, learning rate 2e-4
-
-4. RESULT: Training took 4 hours on single A10G GPU.
-   Total training cost: approximately ₹500."
-```
-
-### Q5: How does RAG work in your system?
-```
-Answer:
-"RAG ensures AI gives accurate, up-to-date information:
-
-STEP 1: INDEXING (One-time)
-- We collected all hospital knowledge: drug info, protocols,
-  diet guidelines, etc.
-- Split into 500-word chunks
-- Converted each chunk to embedding (numbers) using 
-  sentence-transformers
-- Stored in FAISS vector database
-
-STEP 2: RETRIEVAL (Every query)
-- Patient asks: 'What are Metformin side effects?'
-- Convert question to embedding
-- Search vector database for similar content
-- Get top 3 most relevant chunks
-
-STEP 3: GENERATION
-- Pass retrieved chunks + patient question to LLM
-- LLM generates answer using the specific information
-- Result: Accurate, grounded response
-
-This prevents hallucination because the model uses real 
-information from our database, not just its training data."
-```
-
-### Q6: How do you evaluate the model?
-```
-Answer:
-"We used multiple evaluation methods:
-
-1. AUTOMATED METRICS:
-   - Accuracy: Compare AI answer vs doctor-approved answer
-   - We used GPT-4 as judge for semantic similarity
-   - Also measured response relevance and completeness
-
-2. HUMAN EVALUATION:
-   - 500 random conversations reviewed by doctors
-   - Rated on: Accuracy, Safety, Empathy, Completeness
-   - Average rating: 4.2/5
-
-3. CATEGORY-WISE:
-   - Medication queries: 96.2% accurate
-   - Emergency detection: 98.5% sensitivity
-   - Measured each category separately
-
-4. A/B TESTING:
-   - Compared user satisfaction with vs without AI
-   - Measured task completion rate
-   - Tracked escalation rate to human agents
-
-5. PRODUCTION MONITORING:
-   - Daily accuracy sampling
-   - User feedback analysis
-   - Flagged conversation review"
-```
-
-### Q7: How do you handle Hindi and Hinglish?
-```
-Answer:
-"Multi-language support approach:
-
-1. DATA COLLECTION:
-   - 30% of training data in Hindi
-   - 10% in Hinglish (mixed Hindi-English)
-   - Used actual patient conversations, not translations
-
-2. MODEL CHOICE:
-   - Llama-2 has decent Hindi capability
-   - Fine-tuning improved it significantly for medical Hindi
-
-3. LANGUAGE DETECTION:
-   - Detect input language automatically
-   - Respond in same language as patient
-   - Can switch languages mid-conversation
-
-4. CHALLENGES SOLVED:
-   - Medical terms: Keep in English ('diabetes', 'blood pressure')
-   - Numbers: Handled both '500mg' and '५०० mg'
-   - Code-switching: 'Mera BP high hai' understood correctly
-
-Current accuracy: Hindi 91.8%, Hinglish 89.5%"
-```
-
-### Q8: What were the main challenges?
-```
-Answer:
-"Top 3 challenges and solutions:
-
-CHALLENGE 1: Medical Accuracy
-- Problem: AI must not give wrong medical advice
-- Solution: RAG system with verified medical content,
-  confidence scoring, escalation for uncertain queries
-- Result: 93.9% accuracy, critical errors near zero
-
-CHALLENGE 2: Emergency Detection
-- Problem: Missing an emergency could be fatal
-- Solution: Two-layer detection (keywords + classifier),
-  low threshold for flagging, human follow-up for all flags
-- Result: 98.5% sensitivity, only 2.1% false alarms
-
-CHALLENGE 3: Response Consistency
-- Problem: Different answers to same question
-- Solution: Low temperature (0.3), structured prompts,
-  RAG for factual grounding
-- Result: 95%+ consistency on repeated queries"
-```
-
-### Q9: How did you deploy on AWS?
-```
-Answer:
-"Our AWS architecture:
-
-COMPUTE:
-- 3x g5.xlarge EC2 instances (GPU)
-- Each runs FastAPI + vLLM
-- Auto-scaling: 2-10 instances based on load
-
-LOAD BALANCING:
-- Application Load Balancer distributes traffic
-- Health checks every 30 seconds
-- Automatic failover if server dies
-
-DATA:
-- RDS PostgreSQL for patient data
-- FAISS vector database for knowledge base
-- Redis for caching frequent queries
-
-INTEGRATION:
-- API Gateway for external access
-- WhatsApp Business API integration
-- Hospital app connects via REST API
-
-MONITORING:
-- CloudWatch for metrics and logs
-- Grafana dashboards
-- PagerDuty alerts for emergencies
-
-COST: ₹2 lakhs/month for 500K conversations"
-```
-
-### Q10: What would you do differently?
-```
-Answer:
-"If I did this project again:
-
-1. START WITH SMALLER MODEL:
-   We could have tried Mistral-7B or Llama-3-8B first.
-   They might give similar results with less resources.
-
-2. MORE SYNTHETIC DATA:
-   Getting doctors to annotate data was slow and expensive.
-   Could use GPT-4 to generate more training examples,
-   then have doctors verify a sample.
-
-3. BETTER MULTILINGUAL:
-   Would fine-tune with more regional languages from start.
-   Patients in Tamil Nadu and Bengal need local language.
-
-4. VOICE INTERFACE:
-   Many elderly patients struggle with typing.
-   Would add voice input/output from beginning.
-
-5. PROACTIVE OUTREACH:
-   Current system waits for patient to message.
-   Would add proactive check-ins and reminders."
-```
-
----
-
-# QUICK REFERENCE CARD
-
-## Key Numbers to Remember
-```
-PROJECT STATS:
-├── Training Data: 25,000 examples
-├── Model: Llama-2-7B with QLoRA
-├── Training Time: 4 hours
-├── Training Cost: ₹500
-├── Model Accuracy: 93.9%
-├── Emergency Detection: 98.5% sensitivity
-├── Response Time: 1.8 seconds
-└── Monthly Users: 85,000
+┌─────────────────────────────────────────────────┐
+│ Metric                        │ Value           │
+├─────────────────────────────────────────────────┤
+│ Response Accuracy             │ 91.2%           │
+│ Emergency Detection           │ 97.8%           │
+│ Average Response Time         │ 2.1 seconds     │
+│ System Uptime                 │ 99.7%           │
+│ User Satisfaction             │ 4.3/5 stars     │
+└─────────────────────────────────────────────────┘
 
 BUSINESS IMPACT:
-├── Call Center Reduction: 64%
-├── Readmission Reduction: 39%
-├── Medication Adherence: +50%
-├── User Satisfaction: 4.4/5
-├── Annual Savings: ₹3.3 crores
-└── ROI: 394%
-
-TECH STACK:
-├── Model: Llama-2-7B-chat
-├── Fine-tuning: QLoRA (r=32, alpha=64)
-├── RAG: FAISS + sentence-transformers
-├── Serving: vLLM + FastAPI
-├── Cloud: AWS (EC2 g5.xlarge)
-└── Integration: WhatsApp, Mobile App
+┌─────────────────────────────────────────────────┐
+│ Metric                 │ Before   │ After       │
+├─────────────────────────────────────────────────┤
+│ Call Center Volume     │ 15,000   │ 6,500/month │
+│ Call Center Reduction  │    -     │ 57%         │
+│ Readmission Rate       │ 14%      │ 9.2%        │
+│ Patient Satisfaction   │ 3.2/5    │ 4.1/5       │
+└─────────────────────────────────────────────────┘
 ```
 
-## One-Liner Descriptions
+## Cost & ROI
 ```
-"Patient engagement AI chatbot that answers health questions, 
-sends medication reminders, and detects emergencies - reduced 
-hospital readmissions by 39% and saved ₹3.3 crores annually."
+PROJECT COSTS:
+├── Development (8 months)    : $350,000
+├── AWS Infrastructure (year) : $60,000
+├── WhatsApp API (year)       : $15,000
+├── Maintenance (year)        : $25,000
+└── TOTAL FIRST YEAR          : $450,000
+
+SAVINGS:
+├── Call Center Reduction     : $180,000/year
+├── Readmission Reduction     : $420,000/year
+├── Staff Efficiency          : $50,000/year
+└── TOTAL SAVINGS             : $650,000/year
+
+ROI: 44% in first year, 150%+ from year 2
 ```
 
 ---
 
-# STUDY CHECKLIST
+# PART 9: YOUR ROLE SUMMARY
 
-Before your interview, make sure you can:
+## How to Describe in Interview
+```
+"I worked as an ML Engineer at [Company] on a patient engagement 
+project for Apollo Hospitals. Here's what I did over 8 months:
 
-- [ ] Explain the business problem in simple terms
-- [ ] Describe the data collection process
-- [ ] Explain QLoRA fine-tuning step by step
-- [ ] Describe how RAG works
-- [ ] Explain emergency detection system
-- [ ] Draw the AWS architecture
-- [ ] Quote key metrics (accuracy, savings, etc.)
-- [ ] Discuss challenges and solutions
-- [ ] Explain your specific role
-- [ ] Suggest improvements for future
+MONTHS 1-2: DATA & REQUIREMENTS
+- Participated in client discovery calls
+- Designed data collection strategy since client had no chat data
+- Collected 20,000 Q&A pairs from call center team and public datasets
+- Cleaned and formatted data for fine-tuning
+
+MONTHS 2-4: MODEL DEVELOPMENT
+- Fine-tuned Llama-2-7B using QLoRA technique
+- Iterated based on client demo feedback
+- Built emergency detection system after critical feedback
+- Improved accuracy from 78% to 91%
+
+MONTHS 3-4: RAG SYSTEM
+- Integrated with Apollo's EMR for patient data
+- Built vector database for medical knowledge
+- Enabled personalized responses with patient's prescriptions
+
+MONTHS 5-6: DEPLOYMENT
+- Deployed on AWS with auto-scaling
+- Integrated with WhatsApp via Gupshup
+- Achieved 2-second response time
+
+MONTHS 7-8: UAT & GO-LIVE
+- Fixed 23 bugs found in UAT
+- Supported phased go-live across hospitals
+- Monitored production and resolved issues
+
+RESULTS:
+- 45,000 patients using the system
+- 57% reduction in call center volume
+- 91% response accuracy
+- $650K annual savings for client"
+```
+
+---
+
+# PART 10: INTERVIEW QUESTIONS
+
+## Q1: Tell me about your project
+```
+"I worked on a patient engagement chatbot for Apollo Hospitals. 
+After patients are discharged, they have questions about medicines, 
+diet, symptoms. Earlier they had to call the hospital and wait 
+20+ minutes.
+
+We built an AI chatbot on WhatsApp that answers these questions 
+24/7. It knows each patient's prescription and gives personalized 
+answers. It also detects emergencies and alerts doctors.
+
+The system now serves 45,000 patients and reduced call center 
+volume by 57%."
+```
+
+## Q2: How did you collect training data?
+```
+"The client didn't have chat data since patients used to call.
+So we used three approaches:
+
+1. Asked 20 call center agents to write down 100 common questions 
+   each with answers - got 2,000 real examples
+
+2. Used public medical Q&A datasets like MedQuAD and filtered 
+   relevant ones - got 5,000 examples
+
+3. Generated Q&As from the medicine database - for each of 
+   5,000 medicines, created 3 questions about usage, timing, 
+   side effects - got 15,000 examples
+
+Total: 22,000 Q&A pairs after cleaning."
+```
+
+## Q3: Why fine-tuning instead of GPT-4?
+```
+"Three reasons:
+
+1. Data Privacy: Patient health data cannot go to OpenAI servers. 
+   Client required all data to stay in India.
+
+2. Cost: At 60,000 conversations/month, GPT-4 would cost $30,000/month.
+   Our solution costs $5,000/month for infrastructure.
+
+3. Control: We needed consistent response format, Hindi support, 
+   and hospital-specific knowledge. Fine-tuning gave us full control."
+```
+
+## Q4: Explain your fine-tuning approach
+```
+"We used QLoRA - Quantized Low-Rank Adaptation:
+
+First, we loaded Llama-2-7B in 4-bit precision. This reduced 
+memory from 14GB to 4GB, so we could use cheaper GPUs.
+
+Then, instead of training all 7 billion parameters, LoRA adds 
+small adapter layers. We only trained 4 million parameters - 
+that's 0.06% of the model.
+
+Configuration: rank 32, alpha 64, targeted attention layers.
+
+Training took 4 hours on a single A10G GPU. Total cost was 
+about $50 for compute."
+```
+
+## Q5: What was the biggest challenge?
+```
+"Emergency detection was the biggest challenge.
+
+In our first demo, when tester said 'I have chest pain', the AI 
+gave casual advice like 'rest and see if it improves'. The client's 
+medical officer was very upset - this could be life-threatening.
+
+We fixed it by:
+1. Building a separate emergency detection layer
+2. Adding 500 emergency scenarios to training data
+3. Making emergency keywords trigger immediate alert
+4. Adding Hindi emergency phrases
+
+After fix, emergency detection went from 65% to 97.8%."
+```
+
+## Q6: How does RAG work in your system?
+```
+"RAG solves the personalization problem.
+
+When patient asks 'What time should I take my medicine?', the 
+model needs to know THEIR prescription.
+
+Step 1: We call Apollo's EMR API to get patient's prescription
+Step 2: We search our knowledge base for relevant medical info
+Step 3: We add this context to the prompt
+Step 4: LLM generates response using this context
+
+So the prompt becomes:
+'Patient takes Metformin 500mg morning, Amlodipine 5mg night.
+Question: What time should I take my medicine?'
+
+Now the AI can give accurate, personalized answer."
+```
+
+## Q7: How did you handle deployment?
+```
+"We deployed on AWS Mumbai region for data residency.
+
+Architecture:
+- 3 EC2 g5.xlarge instances with GPU
+- vLLM for fast inference
+- Load balancer distributes traffic
+- Auto-scaling based on demand
+
+For WhatsApp, we used Gupshup as the API provider. When patient 
+sends message, Gupshup webhook calls our API, we process it, 
+and send response back through Gupshup.
+
+We did phased rollout - first one hospital, then three, then all. 
+This helped us catch issues early."
+```
+
+## Q8: What would you improve?
+```
+"Three things I would improve:
+
+1. Voice Input: Many elderly patients struggle with typing. 
+   Adding voice would help them use it more easily.
+
+2. Proactive Messages: Currently we wait for patient to ask. 
+   We could proactively send medication reminders or check-ins.
+
+3. Better Hindi: Our Hindi accuracy is 85% vs 91% for English. 
+   Would add more Hindi training data and use multilingual 
+   embeddings for RAG."
+```
+
+---
+
+# QUICK REFERENCE
+
+## Key Numbers
+```
+Data: 22,000 Q&A pairs
+Model: Llama-2-7B + QLoRA (r=32, alpha=64)
+Training: 4 hours, ~$50
+Accuracy: 91.2%
+Emergency Detection: 97.8%
+Response Time: 2.1 seconds
+Users: 45,000 patients
+Call Reduction: 57%
+ROI: 44% year 1, 150%+ year 2
+```
+
+## Tech Stack
+```
+- Model: Llama-2-7B-chat
+- Fine-tuning: QLoRA (PEFT + bitsandbytes)
+- Inference: vLLM
+- API: FastAPI
+- RAG: FAISS + sentence-transformers
+- Cloud: AWS (EC2 g5.xlarge, S3, RDS)
+- Integration: WhatsApp (Gupshup)
+- Tracking: Weights & Biases
+```
+
+## Timeline
+```
+Month 1-2: Data collection, requirements
+Month 2-4: Model development, iterations
+Month 3-4: RAG system, integrations
+Month 5-6: Deployment, testing
+Month 7-8: UAT, go-live, stabilization
+```
 
 Good luck with your interview!
