@@ -878,7 +878,380 @@ asyncio.run(load_test(num_requests=100, concurrent=10))
 
 ---
 
-# PART 4: INTERVIEW Q&A
+# PART 4: RAG SYSTEM (RETRIEVAL AUGMENTED GENERATION)
+
+## 4.1 Why We Used RAG in This Project
+
+```
+THE PROBLEM WITH FINE-TUNING ALONE:
+
+Fine-tuned model knows:
+✓ How to talk to patients
+✓ General medical knowledge
+✓ Emergency detection
+✓ Hindi/English responses
+
+Fine-tuned model does NOT know:
+✗ THIS patient's specific medications
+✗ THIS patient's medical history
+✗ Hospital's latest protocols
+✗ Drug interactions for 10,000+ medicines
+✗ Information that changes frequently
+
+EXAMPLE PROBLEM:
+Patient: "Can I take Crocin with my current medicines?"
+
+Without RAG:
+AI: "Generally Crocin is safe..." (Generic, not personalized)
+
+With RAG:
+AI: "Rajesh, you're taking Warfarin for blood thinning. 
+     Crocin (paracetamol) is safe with Warfarin. But avoid 
+     Aspirin or Ibuprofen as they can increase bleeding risk 
+     with your medication." (Personalized, accurate)
+```
+
+## 4.2 What is RAG? (Simple Explanation)
+
+```
+RAG = Retrieval Augmented Generation
+
+Think of it like an open-book exam:
+
+WITHOUT RAG (Closed-book):
+- Student relies only on memory
+- May forget details
+- Can't answer about new topics
+
+WITH RAG (Open-book):
+- Student can look up notes
+- Finds relevant pages quickly
+- Answers with accurate, specific details
+
+Our AI + RAG:
+1. Patient asks question
+2. AI searches knowledge base (the "book")
+3. Finds relevant information
+4. Uses that info to generate accurate answer
+```
+
+## 4.3 How RAG Works Step-by-Step
+
+```
+STEP-BY-STEP FLOW:
+
+┌─────────────────────────────────────────────────────────────┐
+│ Patient asks: "What are side effects of my BP medicine?"   │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 1: CONVERT QUESTION TO EMBEDDING                       │
+│                                                              │
+│ Question → Embedding Model → [0.23, -0.45, 0.12, ...]       │
+│ (Text)     (sentence-transformers)  (Numbers/Vector)        │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 2: SEARCH VECTOR DATABASE                              │
+│                                                              │
+│ Compare question embedding with all stored embeddings       │
+│ Find most similar chunks (using cosine similarity)          │
+│                                                              │
+│ Results:                                                     │
+│ - Chunk 1: "Amlodipine side effects include..." (0.89)     │
+│ - Chunk 2: "Blood pressure medications may cause..." (0.85)│
+│ - Chunk 3: "Common side effects of BP drugs..." (0.82)     │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 3: GET PATIENT CONTEXT                                 │
+│                                                              │
+│ From hospital database:                                      │
+│ - Patient: Rajesh Kumar                                     │
+│ - Current medications: Amlodipine 5mg, Metformin 500mg     │
+│ - Conditions: Hypertension, Type 2 Diabetes                │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 4: BUILD PROMPT WITH CONTEXT                           │
+│                                                              │
+│ System: You are a health assistant...                       │
+│                                                              │
+│ Retrieved Information:                                       │
+│ [Chunk 1 + Chunk 2 + Chunk 3]                              │
+│                                                              │
+│ Patient Context:                                             │
+│ Name: Rajesh, Medications: Amlodipine 5mg...               │
+│                                                              │
+│ Question: What are side effects of my BP medicine?          │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 5: LLM GENERATES RESPONSE                              │
+│                                                              │
+│ "Rajesh, your BP medicine Amlodipine may cause:            │
+│  - Ankle swelling (most common)                            │
+│  - Dizziness when standing up quickly                      │
+│  - Headache in first few days                              │
+│                                                              │
+│  These usually get better after 1-2 weeks. If swelling     │
+│  is severe or you feel chest pain, contact your doctor."   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## 4.4 RAG Implementation Code
+
+```python
+# File: rag_system.py
+
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.document_loaders import DirectoryLoader
+
+class HealthKnowledgeBase:
+    def __init__(self):
+        # Embedding model - converts text to vectors
+        self.embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2"
+        )
+        self.vectorstore = None
+    
+    def build_knowledge_base(self, documents_path):
+        """Create searchable knowledge base from documents"""
+        
+        # Step 1: Load documents
+        loader = DirectoryLoader(documents_path, glob="**/*.txt")
+        documents = loader.load()
+        
+        # Step 2: Split into chunks
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=500,      # Each chunk ~500 characters
+            chunk_overlap=50,    # Overlap to maintain context
+            separators=["\n\n", "\n", ". ", " "]
+        )
+        chunks = splitter.split_documents(documents)
+        
+        # Step 3: Create embeddings and store
+        self.vectorstore = FAISS.from_documents(
+            chunks, 
+            self.embeddings
+        )
+        
+        # Step 4: Save for later use
+        self.vectorstore.save_local("./health_knowledge_db")
+        print(f"Created knowledge base with {len(chunks)} chunks")
+    
+    def search(self, query, k=3):
+        """Find relevant information for a query"""
+        
+        # Search for similar chunks
+        results = self.vectorstore.similarity_search(query, k=k)
+        
+        # Combine results into context string
+        context = "\n\n".join([doc.page_content for doc in results])
+        return context
+    
+    def load(self, path):
+        """Load existing knowledge base"""
+        self.vectorstore = FAISS.load_local(
+            path, 
+            self.embeddings,
+            allow_dangerous_deserialization=True
+        )
+
+
+# ============================================
+# KNOWLEDGE BASE CONTENTS
+# ============================================
+
+# What we stored in the knowledge base:
+
+# 1. DRUG INFORMATION (10,000+ medicines)
+#    - Drug name, uses, dosage
+#    - Side effects
+#    - Drug interactions
+#    - Precautions
+
+# 2. DISEASE INFORMATION (2,000+ conditions)
+#    - Symptoms
+#    - Treatment guidelines
+#    - When to see doctor
+
+# 3. HOSPITAL PROTOCOLS
+#    - Post-surgery care
+#    - Discharge instructions
+#    - Follow-up schedules
+
+# 4. DIET GUIDELINES
+#    - Diabetes diet
+#    - Post-surgery diet
+#    - Food-drug interactions
+
+# 5. EMERGENCY SIGNS
+#    - Warning symptoms by condition
+#    - When to go to ER
+```
+
+## 4.5 How RAG Connects with Fine-tuned Model
+
+```python
+# File: complete_pipeline.py
+
+class PatientAssistant:
+    def __init__(self):
+        # Load fine-tuned model
+        self.llm = LLM(model="./patient-ai-final")
+        
+        # Load RAG knowledge base
+        self.knowledge_base = HealthKnowledgeBase()
+        self.knowledge_base.load("./health_knowledge_db")
+        
+        # Load patient database connection
+        self.patient_db = PatientDatabase()
+    
+    def answer_question(self, patient_id, question):
+        """Complete pipeline: RAG + Fine-tuned LLM"""
+        
+        # STEP 1: Get patient context
+        patient = self.patient_db.get_patient(patient_id)
+        patient_context = f"""
+Patient: {patient['name']}
+Medications: {', '.join(patient['medications'])}
+Conditions: {', '.join(patient['conditions'])}
+Recent procedures: {patient.get('recent_surgery', 'None')}
+"""
+        
+        # STEP 2: Search knowledge base (RAG)
+        relevant_info = self.knowledge_base.search(question, k=3)
+        
+        # STEP 3: Build complete prompt
+        prompt = f"""<s>[INST] <<SYS>>
+You are a caring health assistant for Max Healthcare.
+Use the provided information to give accurate, personalized answers.
+Speak in simple language. Be warm and supportive.
+<</SYS>>
+
+PATIENT INFORMATION:
+{patient_context}
+
+RELEVANT MEDICAL INFORMATION:
+{relevant_info}
+
+PATIENT'S QUESTION: {question}
+
+Provide a helpful, personalized response. [/INST]"""
+        
+        # STEP 4: Generate response with fine-tuned model
+        response = self.llm.generate([prompt], sampling_params)
+        
+        return response[0].outputs[0].text
+
+
+# ============================================
+# HOW THEY WORK TOGETHER
+# ============================================
+
+"""
+FINE-TUNED MODEL provides:
+├── Tone and personality (caring, supportive)
+├── Response format (simple language)
+├── Emergency awareness
+├── Hindi/English capability
+└── Healthcare conversation skills
+
+RAG provides:
+├── Accurate drug information
+├── Patient-specific context
+├── Up-to-date medical guidelines
+├── Hospital-specific protocols
+└── Prevents hallucination
+
+TOGETHER:
+Fine-tuned model GENERATES the response
+RAG GROUNDS the response in accurate facts
+Result: Personalized + Accurate + Safe
+"""
+```
+
+## 4.6 RAG vs Fine-tuning: When to Use Which
+
+```
+COMPARISON:
+
+┌─────────────────────────────────────────────────────────────┐
+│                    FINE-TUNING                              │
+├─────────────────────────────────────────────────────────────┤
+│ Best for:                                                    │
+│ ├── Teaching model HOW to respond                           │
+│ ├── Changing tone/personality                               │
+│ ├── Learning domain-specific language                       │
+│ └── Consistent response format                              │
+│                                                              │
+│ Not good for:                                                │
+│ ├── Frequently changing information                         │
+│ ├── Large knowledge bases (10,000+ documents)              │
+│ └── Patient-specific information                            │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                        RAG                                   │
+├─────────────────────────────────────────────────────────────┤
+│ Best for:                                                    │
+│ ├── Providing accurate facts                                │
+│ ├── Information that updates frequently                     │
+│ ├── Large knowledge bases                                   │
+│ └── Patient-specific context                                │
+│                                                              │
+│ Not good for:                                                │
+│ ├── Changing how model responds                             │
+│ ├── Teaching new conversation styles                        │
+│ └── Tasks requiring reasoning beyond retrieved info         │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│              FINE-TUNING + RAG (What we used)               │
+├─────────────────────────────────────────────────────────────┤
+│ Combines benefits of both:                                   │
+│ ├── Model knows HOW to be a health assistant (fine-tuning) │
+│ ├── Model has ACCESS to accurate info (RAG)                │
+│ ├── Personalized + Accurate responses                       │
+│ └── Can update knowledge without retraining                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## 4.7 RAG Numbers and Metrics
+
+```
+OUR RAG SYSTEM:
+
+Knowledge Base Size:
+├── Total documents: 15,000+
+├── Total chunks: 45,000
+├── Drug information: 10,000 medicines
+├── Disease information: 2,000 conditions
+├── Hospital protocols: 500 documents
+
+Performance:
+├── Search latency: 50ms (very fast)
+├── Retrieval accuracy: 89% (correct info in top 3)
+├── Embedding model: all-MiniLM-L6-v2 (fast & good quality)
+├── Vector database: FAISS (Facebook's library)
+
+Storage:
+├── Vector database size: 2GB
+├── Update frequency: Weekly
+└── Last update includes latest drug interactions
+```
+
+---
+
+# PART 5: INTERVIEW Q&A
 
 ## Common Questions You'll Be Asked
 
@@ -1052,7 +1425,72 @@ ANSWER:
 This was critical because we had 500K+ conversations/month."
 ```
 
-### Q7: "What would you do differently?"
+### Q7: "Explain how RAG works in your project"
+
+```
+ANSWER:
+
+"RAG stands for Retrieval Augmented Generation. We used it to give 
+accurate, personalized answers.
+
+THE PROBLEM IT SOLVES:
+Our fine-tuned model knows HOW to talk to patients, but doesn't know
+specific drug information or this patient's medications.
+
+HOW IT WORKS:
+1. Patient asks: 'What are side effects of my BP medicine?'
+
+2. RETRIEVAL: We search our knowledge base (10,000+ medicines)
+   - Convert question to embedding (numbers)
+   - Find similar content using vector search
+   - Get relevant drug information
+
+3. AUGMENTATION: Combine retrieved info with patient context
+   - Patient's actual medications from database
+   - Relevant drug side effects from knowledge base
+
+4. GENERATION: Fine-tuned model generates response
+   - Uses retrieved info for accuracy
+   - Uses fine-tuning for tone and format
+
+RESULT:
+Without RAG: 'BP medicines may cause dizziness...' (generic)
+With RAG: 'Rajesh, your Amlodipine may cause ankle swelling...' (personalized)
+
+Our RAG improved factual accuracy from 78% to 94%."
+```
+
+### Q8: "Why did you use both fine-tuning AND RAG?"
+
+```
+ANSWER:
+
+"They solve different problems:
+
+FINE-TUNING gives us:
+- Caring, supportive tone
+- Simple language (not medical jargon)
+- Emergency detection capability
+- Hindi/English support
+- Consistent response format
+
+RAG gives us:
+- Accurate drug information
+- Patient-specific context
+- Up-to-date medical guidelines
+- Information about 10,000+ medicines
+
+EXAMPLE:
+Fine-tuning alone: Model is caring but might give wrong drug info
+RAG alone: Accurate info but robotic tone
+
+Together: Accurate AND caring responses
+
+It's like having a doctor (RAG knowledge) with great bedside 
+manner (fine-tuning)."
+```
+
+### Q9: "What would you do differently?"
 
 ```
 ANSWER:
