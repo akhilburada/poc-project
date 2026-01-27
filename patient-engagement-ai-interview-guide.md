@@ -20,7 +20,7 @@ Think of Llama-2 as a medical graduate who knows general medicine.
 Fine-tuning is like giving them specialized training for THIS hospital.
 
 Before Fine-tuning: "I know about medicines in general"
-After Fine-tuning:  "I know exactly how to talk to Max Healthcare patients,
+After Fine-tuning:  "I know exactly how to talk to the hospital patients,
                      in their language, about their specific concerns"
 ```
 
@@ -34,8 +34,8 @@ A: "Three reasons:
 1. MEMORY: Full fine-tuning needs 28GB+ GPU memory.
    QLoRA needs only 4-6GB. We could use cheaper GPUs.
 
-2. COST: Full fine-tuning = ₹50,000+ for compute
-   QLoRA = ₹500 for same result
+2. COST: Full fine-tuning = $600+ for compute
+   QLoRA = $60 for same result
 
 3. SPEED: Full fine-tuning = days
    QLoRA = 4 hours
@@ -288,7 +288,7 @@ trainer = SFTTrainer(
     eval_dataset=dataset['test'],
     args=training_args,
     dataset_text_field="text",       # Column name with formatted text
-    max_seq_length=1024,             # Maximum tokens per example
+    max_seq_length=9114,             # Maximum tokens per example
     packing=False,                   # Don't pack multiple examples
 )
 
@@ -1132,7 +1132,7 @@ Recent procedures: {patient.get('recent_surgery', 'None')}
         
         # STEP 3: Build complete prompt
         prompt = f"""<s>[INST] <<SYS>>
-You are a caring health assistant for Max Healthcare.
+You are a caring health assistant for the hospital.
 Use the provided information to give accurate, personalized answers.
 Speak in simple language. Be warm and supportive.
 <</SYS>>
@@ -1374,7 +1374,7 @@ RESULT:
 ```
 ANSWER:
 
-"We needed to support Hindi because 60% of patients in North India
+"We needed to support Hindi because 60% of patients in North US
 prefer communicating in Hindi.
 
 APPROACH:
@@ -1532,7 +1532,7 @@ TRAINING:
 ├── Technique: QLoRA (r=32, alpha=64)
 ├── Trainable Parameters: 0.06%
 ├── Training Time: 4 hours
-├── Training Cost: ~₹500
+├── Training Cost: ~$60
 └── GPU: AWS g5.xlarge (A10G 24GB)
 
 ACCURACY:
@@ -1552,7 +1552,7 @@ BUSINESS IMPACT:
 ├── Call Center Reduction: 64%
 ├── Readmission Reduction: 39%
 ├── User Satisfaction: 4.4/5
-├── Annual Savings: ₹3.3 crores
+├── Annual Savings: ~$400K
 └── ROI: 394%
 ```
 
@@ -1582,23 +1582,23 @@ SFTTrainer = Supervised Fine-Tuning Trainer
 ## Your Role Summary (for resume/interviews)
 
 ```
-"As an ML Engineer on the Patient Engagement AI project, I:
+"As an ML Engineer on a Patient Engagement AI team project for 
+a US hospital chain, I contributed to:
 
-• Fine-tuned Llama-2-7B using QLoRA, achieving 93.9% accuracy 
+• Fine-tuning Llama-2-7B using QLoRA, achieving 93.9% accuracy 
   on patient health queries
 
-• Designed and implemented evaluation framework including 
+• Designing and implementing evaluation framework including 
   automated metrics, emergency detection testing (98.5% 
   sensitivity), and human evaluation protocols
 
-• Optimized model serving using vLLM, achieving 1.8s response 
-  time and 1000+ concurrent user support
+• Supporting deployment on AWS using vLLM
 
-• Contributed to deployment on AWS, including Docker 
-  containerization and load testing
+Note: This was a 6-person team project. My main responsibilities 
+were fine-tuning and evaluation.
 
-Results: 64% call center reduction, 39% readmission reduction,
-₹3.3 crore annual savings"
+Team Results: 64% call center reduction, 39% readmission reduction,
+~~$400K annual savings"
 ```
 
 ---

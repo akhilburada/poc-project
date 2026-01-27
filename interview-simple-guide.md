@@ -2,7 +2,7 @@
 
 ## Your Project in One Line
 
-> "I built an AI chatbot for Max Healthcare that answers patient questions after they leave the hospital - like a 24/7 health assistant on WhatsApp."
+> "I worked with a team to build an AI chatbot for a large US hospital chain that answers patient questions after they leave the hospital - like a 24/7 health assistant."
 
 ---
 
@@ -12,14 +12,15 @@
 
 | Item | Details |
 |------|---------|
-| Client | Max Healthcare (Hospital Chain) |
-| Location | Delhi, Mumbai, Bangalore |
+| Client | Large US Hospital Chain |
+| Location | United States |
 | Hospitals | 17 hospitals |
-| Patients | 2 lakh+ patients discharged per month |
+| Patients | 200,000+ patients discharged per month |
 | Project Duration | 8 months |
 | Team Size | 6 people |
 | Your Role | ML Engineer (Fine-tuning & Evaluation) |
 | Your Experience | 2 years |
+| Note | This was a team project - I contributed to specific parts |
 
 ---
 
@@ -56,7 +57,7 @@ NUMBERS:
 RESULT:
 Patients frustrated with waiting.
 Staff burnout, people quitting jobs.
-Hospital spending ₹80 lakhs/year on call center.
+Hospital spending $100K/year on call center.
 ```
 
 ### Problem 3: Missed Warning Signs
@@ -68,7 +69,7 @@ They come to hospital only when it's too late.
 
 NUMBERS:
 - 18% patients readmitted within 30 days
-- Each readmission costs ₹50,000
+- Each readmission costs $600
 
 RESULT:
 Patients' health gets worse.
@@ -137,7 +138,7 @@ Patient sends message:
 AI replies immediately:
 "This sounds serious. Chest pain needs immediate attention.
 Please go to the nearest emergency room right now or call 
-ambulance at 102. I'm also alerting your doctor.
+ambulance at 911. I'm also alerting your doctor.
 Don't wait to see if it gets better."
 
 [Doctor gets SMS alert automatically]
@@ -181,11 +182,11 @@ BEFORE FINE-TUNING (Fresh Graduate):
 - Doesn't know how to talk to patients
 - Doesn't know this specific hospital's rules
 
-FINE-TUNING = 6 months training at Max Healthcare
+FINE-TUNING = 6 months training at the hospital
 
 AFTER FINE-TUNING (Trained Doctor):
 - Knows how to talk to patients kindly
-- Knows Max Healthcare's specific guidelines
+- Knows the hospital's specific guidelines
 - Knows when to escalate to senior doctor
 - Uses simple language patients understand
 ```
@@ -274,13 +275,13 @@ You want to make your house better for guests.
 OPTION 1: FULL RENOVATION (Full Fine-tuning)
 - Demolish everything
 - Rebuild from scratch
-- Cost: ₹50 lakhs
+- Cost: $60K
 - Time: 6 months
 
 OPTION 2: SMART RENOVATION (QLoRA)
 - Keep the structure
 - Just add nice furniture and paint
-- Cost: ₹2 lakhs
+- Cost: $2.5K
 - Time: 1 week
 - Result: Just as good for guests!
 
@@ -314,14 +315,14 @@ You want to add new features to an app.
 OPTION 1: REBUILD APP (Full Fine-tuning)
 - Rewrite entire app from scratch
 - Takes 6 months
-- Costs ₹50 lakhs
+- Costs $60K
 
 OPTION 2: ADD PLUGIN (QLoRA)
 - Keep existing app
 - Just add a small plugin
 - Plugin is only 0.06% of app size
 - Takes 4 hours
-- Costs ₹500
+- Costs $60
 - Works just as well!
 
 QLoRA = Adding a plugin, not rebuilding the app.
@@ -352,19 +353,19 @@ Result = Fast, cheap, and effective fine-tuning
 ```
 WITHOUT QLoRA (Full Fine-tuning):
 ├── GPU Memory Needed: 28 GB
-├── GPU Cost: ₹3,000/hour
+├── GPU Cost: $40/hour
 ├── Training Time: 3 days
-├── Total Cost: ~₹2,00,000
+├── Total Cost: ~$2,400
 └── Need: Very expensive GPU
 
 WITH QLoRA:
 ├── GPU Memory Needed: 6 GB
-├── GPU Cost: ₹100/hour
+├── GPU Cost: $100/hour
 ├── Training Time: 4 hours
-├── Total Cost: ~₹500
+├── Total Cost: ~$60
 └── Need: Regular GPU works
 
-SAVINGS: ₹1,99,500 and 3 days of time!
+SAVINGS: $1,99,500 and 3 days of time!
 ```
 
 ---
@@ -409,7 +410,7 @@ Example 2:
 {
   "question": "I have severe chest pain",
   "answer": "Chest pain can be serious. Please go to emergency 
-            room immediately or call ambulance at 102.",
+            room immediately or call ambulance at 911.",
   "category": "EMERGENCY"
 }
 
@@ -483,7 +484,7 @@ WHAT EACH PART MEANS:
 
 THE SYSTEM PROMPT WE USED:
 
-"You are a caring health assistant for Max Healthcare hospital.
+"You are a caring health assistant for the hospital hospital.
 
 Your job:
 1. Answer patient questions in simple, easy language
@@ -755,8 +756,8 @@ Ready for deployment!
 COMPARISON:
 
                     ChatGPT API          Our Fine-tuned Model
-Cost per chat:      ₹5                   ₹0.20
-Monthly (500K):     ₹25,00,000           ₹1,00,000
+Cost per chat:      $0.60                   $0.02
+Monthly (500K):     $30,000           $1,200
 Data privacy:       Goes to OpenAI       Stays on our servers
 Customization:      Limited              Full control
 Response time:      3-5 seconds          1-2 seconds
@@ -774,12 +775,12 @@ Patient data is sensitive:
 
 With ChatGPT:
 ├── Every patient question goes to OpenAI servers
-├── Data leaves India
+├── Data leaves US
 ├── Hospital loses control
 
 With our model:
 ├── Data stays on hospital's AWS servers
-├── Data stays in India
+├── Data stays in US
 ├── Hospital has full control
 ├── Compliant with regulations
 
@@ -787,9 +788,9 @@ With our model:
 
 ANNUAL SAVINGS:
 
-ChatGPT: ₹25 lakhs/month × 12 = ₹3 crores/year
-Our model: ₹1 lakh/month × 12 = ₹12 lakhs/year
-Savings: ₹2.88 crores/year
+ChatGPT: $30K/month × 12 = $3 K/year
+Our model: $1.2K/month × 12 = $15K/year
+Savings: $350K/year
 
 Plus: Better privacy, faster responses, full control
 ```
@@ -1432,7 +1433,7 @@ SERVERS:
 ├── Type: AWS EC2 g5.xlarge
 ├── GPU: NVIDIA A10G (24GB memory)
 ├── Count: 3 servers (for redundancy)
-├── Location: Mumbai region (low latency for India)
+├── Location: US East region (low latency for US)
 
 LOAD BALANCER:
 ├── Type: Application Load Balancer (ALB)
@@ -1455,16 +1456,16 @@ AUTO-SCALING:
 
 MONTHLY COST:
 
-EC2 GPU Servers (3):    ₹1,80,000
-Load Balancer:          ₹5,000
-Database (RDS):         ₹8,000
-Storage (S3):           ₹2,000
-Monitoring:             ₹3,000
-Data Transfer:          ₹5,000
+EC2 GPU Servers (3):    $22,000
+Load Balancer:          $60
+Database (RDS):         $100
+Storage (S3):           $25
+Monitoring:             $40
+Data Transfer:          $60
 ─────────────────────────────────
-TOTAL:                  ₹2,03,000/month
+TOTAL:                  $25,000/month
 
-Cost per conversation: ₹0.20 (at 500K conversations)
+Cost per conversation: $0.02 (at 500K conversations)
 ```
 
 ---
@@ -2022,8 +2023,8 @@ CHALLENGE 4: Hindi queries
 
 **Answer:**
 ```
-"I worked on a Patient Engagement AI project for Max Healthcare, 
-a chain of 17 hospitals in India with 2 lakh+ patient discharges 
+"I worked with a team on a Patient Engagement AI project for a large 
+US hospital chain with 17 hospitals and 200,000+ patient discharges 
 per month.
 
 THE PROBLEM:
@@ -2050,7 +2051,7 @@ RESULTS:
 - 98.5% emergency detection rate
 - 64% reduction in call center calls
 - 39% reduction in readmissions
-- ₹3.3 crore annual savings for the hospital"
+- ~$400K annual savings for the hospital"
 ```
 
 ## Question 2: "What is fine-tuning and why did you do it?"
@@ -2063,7 +2064,7 @@ specific job.
 We started with Llama-2, a general-purpose AI from Meta. 
 It's smart but doesn't know:
 - How to talk to hospital patients
-- Max Healthcare's specific guidelines
+- the hospital's specific guidelines
 - When symptoms are emergencies
 - How to respond in Hindi
 
@@ -2075,8 +2076,8 @@ WHY NOT USE ChatGPT DIRECTLY?
 
 Three reasons:
 
-1. COST: ChatGPT would cost ₹25 lakhs per month for our 
-   volume. Our model costs ₹1 lakh. We save ₹24 lakhs 
+1. COST: ChatGPT would cost $30K per month for our 
+   volume. Our model costs $1.2K. We save $29K 
    monthly.
 
 2. PRIVACY: Patient health data is sensitive. With ChatGPT, 
@@ -2110,8 +2111,8 @@ It's like: Instead of rebuilding an entire house, we just add
 new furniture and paint. Much faster, much cheaper, same result.
 
 THE BENEFIT:
-- Without QLoRA: ₹2 lakh cost, 3 days time
-- With QLoRA: ₹500 cost, 4 hours time
+- Without QLoRA: $2 K cost, 3 days time
+- With QLoRA: $60 cost, 4 hours time
 - Same quality!"
 ```
 
@@ -2220,7 +2221,7 @@ RESULT:
 **Answer:**
 ```
 "Supporting Hindi was important because many patients in 
-North India prefer it.
+North US prefer it.
 
 OUR APPROACH:
 
@@ -2289,13 +2290,13 @@ CALL CENTER:
 - Before: 50,000 calls/month
 - After: 18,000 calls/month
 - Reduction: 64%
-- Savings: ₹45 lakhs/year
+- Savings: $55K/year
 
 READMISSIONS:
 - Before: 18% readmitted within 30 days
 - After: 11%
 - Reduction: 39%
-- Savings: ₹3.5 crores/year (at ₹50K per readmission)
+- Savings: $420K/year (at $0.600K per readmission)
 
 USER ADOPTION:
 - 85,000 patients using monthly
@@ -2303,8 +2304,8 @@ USER ADOPTION:
 - 4.4/5 satisfaction rating
 
 TOTAL FINANCIAL IMPACT:
-- Annual savings: ₹3.3 crores
-- Project cost: ₹84 lakhs
+- Annual savings: ~$400K
+- Project cost: $100K
 - ROI: 394%
 
 LIVES SAVED:
@@ -2360,7 +2361,7 @@ TRAINING NUMBERS:
 ├── LoRA Alpha: 64
 ├── Parameters Trained: 0.06% (4 million)
 ├── Training Time: 4 hours
-├── Training Cost: ₹500
+├── Training Cost: $60
 └── GPU Used: AWS g5.xlarge (A10G 24GB)
 
 ACCURACY NUMBERS:
@@ -2376,37 +2377,37 @@ PERFORMANCE NUMBERS:
 ├── Response Time: 1.8 seconds
 ├── Concurrent Users: 1000+
 ├── Uptime: 99.9%
-└── Monthly Cost: ₹2 lakhs
+└── Monthly Cost: $2.5K
 
 BUSINESS IMPACT NUMBERS:
 ├── Call Center Reduction: 64%
 ├── Readmission Reduction: 39%
 ├── User Satisfaction: 4.4/5
 ├── Monthly Users: 85,000
-├── Annual Savings: ₹3.3 crores
+├── Annual Savings: ~$400K
 └── ROI: 394%
 ```
 
 ## Your Role Summary (Use This in Resume)
 
 ```
-"ML Engineer with 2 years experience. Fine-tuned Llama-2-7B 
-using QLoRA for Max Healthcare's patient engagement system. 
-Achieved 93.9% accuracy and 98.5% emergency detection rate. 
-Designed evaluation framework including automated testing, 
-emergency detection metrics, and doctor reviews. Supported 
-deployment using vLLM and FastAPI on AWS. Project reduced 
-call center volume by 64% and hospital readmissions by 39%, 
-saving ₹3.3 crores annually."
+"ML Engineer with 2 years experience. Contributed to a team 
+project building a patient engagement AI system for a US 
+hospital chain. My responsibilities included fine-tuning 
+Llama-2-7B using QLoRA (achieved 93.9% accuracy) and designing 
+the evaluation framework (98.5% emergency detection rate). 
+Also supported deployment using vLLM on AWS. The project 
+reduced call center volume by 64% and hospital readmissions 
+by 39%, saving ~~$400K annually."
 ```
 
 ## One-Liner Project Description
 
 ```
-"Built an AI health assistant for Max Healthcare that answers 
-patient questions on WhatsApp, achieving 94% accuracy and 
-detecting emergencies with 98.5% sensitivity - reduced hospital 
-readmissions by 39% and saved ₹3.3 crores annually."
+"Worked with a team to build an AI health assistant for a US 
+hospital chain. I handled fine-tuning and evaluation. The system 
+achieved 94% accuracy and 98.5% emergency detection - reduced 
+hospital readmissions by 39% and saved ~~$400K annually."
 ```
 
 ---
@@ -2418,7 +2419,7 @@ readmissions by 39% and saved ₹3.3 crores annually."
 ```
 1. Read this guide 2-3 times
 2. Practice speaking answers out loud
-3. Have numbers ready (93.9%, 98.5%, ₹3.3 crores)
+3. Have numbers ready (93.9%, 98.5%, ~$400K)
 4. Prepare 1-2 questions to ask interviewer
 ```
 
@@ -2426,7 +2427,7 @@ readmissions by 39% and saved ₹3.3 crores annually."
 
 ```
 1. START WITH BUSINESS PROBLEM
-   "Max Healthcare had 50,000 calls/month..."
+   "the hospital had 50,000 calls/month..."
    Shows you understand business context
 
 2. USE SIMPLE LANGUAGE
