@@ -2398,7 +2398,7 @@ Llama-2-7B using QLoRA (achieved 93.9% accuracy) and designing
 the evaluation framework (98.5% emergency detection rate). 
 Also supported deployment using vLLM on AWS. The project 
 reduced call center volume by 64% and hospital readmissions 
-by 39%, saving ~~$400K annually."
+by 39%, saving ~$400K annually."
 ```
 
 ## One-Liner Project Description
@@ -2407,7 +2407,7 @@ by 39%, saving ~~$400K annually."
 "Worked with a team to build an AI health assistant for a US 
 hospital chain. I handled fine-tuning and evaluation. The system 
 achieved 94% accuracy and 98.5% emergency detection - reduced 
-hospital readmissions by 39% and saved ~~$400K annually."
+hospital readmissions by 39% and saved ~$400K annually."
 ```
 
 ---

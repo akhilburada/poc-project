@@ -1598,7 +1598,7 @@ Note: This was a 6-person team project. My main responsibilities
 were fine-tuning and evaluation.
 
 Team Results: 64% call center reduction, 39% readmission reduction,
-~~$400K annual savings"
+~$400K annual savings"
 ```
 
 ---
